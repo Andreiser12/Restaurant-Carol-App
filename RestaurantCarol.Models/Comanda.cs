@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantCarol.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,24 @@ using System.Threading.Tasks;
 
 namespace RestaurantCarol.Models
 {
-    internal class Comanda
+    
+
+    public class Comanda
     {
+        public int IdComanda { get; set; }
+        public string CodComanda { get; set; } = string.Empty;
+        public int IdUtilizator { get; set; }
+        public DateTime DataComanda { get; set; }
+        public DateTime? OraEstimataLivrare { get; set; }
+        public StareComanda StareComanda { get; set; } = StareComanda.Inregistrata;
+
+        public decimal CostMancare { get; set; }
+        public decimal CostTransport { get; set; }
+        public decimal Discount { get; set; }
+        public decimal CostTotal { get; set; }
+
+        public Utilizator? Utilizator { get; set; }
+
+        public List<ItemComanda> Items { get; set; } = new();
     }
 }

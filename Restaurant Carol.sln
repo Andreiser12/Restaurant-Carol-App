@@ -11,6 +11,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.WPF", "RestaurantCarol.WPF\RestaurantCarol.WPF.csproj", "{7F591A55-7A90-4794-84C9-DF0456EC8F1B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		Database\01_TabeleIndependente.sql = Database\01_TabeleIndependente.sql
+		Database\02_PreparatSiMeniu.sql = Database\02_PreparatSiMeniu.sql
+		Database\03_JunctionTables.sql = Database\03_JunctionTables.sql
+		Database\04_ComandaSiItemComanda.sql = Database\04_ComandaSiItemComanda.sql
+		Database\05_DateDeTest.sql = Database\05_DateDeTest.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

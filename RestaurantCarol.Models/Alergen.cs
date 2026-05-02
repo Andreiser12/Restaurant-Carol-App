@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RestaurantCarol.Models
 {
-    internal class Alergen
+    public class Alergen
     {
+        public int IdAlergen { get; set; }
+        public string Denumire { get; set; } = string.Empty;
     }
 }

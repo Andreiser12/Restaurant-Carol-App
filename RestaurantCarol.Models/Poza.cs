@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace RestaurantCarol.Models
 {
-    internal class Poza
+    public class Poza
     {
+        public int IdFotografie { get; set; }
+        public int IdPreparat { get; set; }
+        public string CaleFisier { get; set; } = string.Empty;
     }
 }

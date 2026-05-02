@@ -14,8 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RestaurantCarol.DataAccess\RestaurantCarol.DataAccess.csproj" />
     <ProjectReference Include="..\RestaurantCarol.Models\RestaurantCarol.Models.csproj" />
     <ProjectReference Include="..\RestaurantCarol.Services\RestaurantCarol.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

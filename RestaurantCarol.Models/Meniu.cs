@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace RestaurantCarol.Models
 {
-    internal class Meniu
+    public class Meniu
     {
+        public int IdMeniu { get; set; }
+        public string Denumire { get; set; } = string.Empty;
+
+        public int IdCategorie { get; set; }
+        public Categorie? Categorie { get; set; }
+
+        public List<MeniuPreparatItem> Componente { get; set; } = new();
     }
 }
