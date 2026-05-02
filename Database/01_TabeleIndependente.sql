@@ -1,0 +1,23 @@
+
+
+CREATE TABLE Categorie (
+    IdCategorie INT PRIMARY KEY IDENTITY(1,1),
+    Denumire NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Alergen (
+    IdAlergen INT PRIMARY KEY IDENTITY(1,1),
+    Denumire NVARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE Utilizator (
+    IdUtilizator INT PRIMARY KEY IDENTITY(1,1),
+    Nume NVARCHAR(100) NOT NULL,
+    Prenume NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(200) NOT NULL UNIQUE,
+    Telefon NVARCHAR(20) NULL,
+    AdresaLivrare NVARCHAR(500) NULL,
+    ParolaHash NVARCHAR(500) NOT NULL,
+    Rol NVARCHAR(20) NOT NULL CHECK (Rol IN ('Client', 'Angajat'))
+);
+GO
