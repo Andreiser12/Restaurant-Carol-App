@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37216.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.Models", "RestaurantCarol.Models\RestaurantCarol.Models.csproj", "{17A1C25A-C08D-4304-AA00-51B55833DE5D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.DataAccess", "RestaurantCarol.DataAccess\RestaurantCarol.DataAccess.csproj", "{2E1866DE-1811-4DA1-94CA-30CD7D2E68AF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.Services", "RestaurantCarol.Services\RestaurantCarol.Services.csproj", "{68DE6EB6-FC02-4272-BDA1-ED707A9187C5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCarol.WPF", "RestaurantCarol.WPF\RestaurantCarol.WPF.csproj", "{7F591A55-7A90-4794-84C9-DF0456EC8F1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
@@ -26,18 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{17A1C25A-C08D-4304-AA00-51B55833DE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17A1C25A-C08D-4304-AA00-51B55833DE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17A1C25A-C08D-4304-AA00-51B55833DE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17A1C25A-C08D-4304-AA00-51B55833DE5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E1866DE-1811-4DA1-94CA-30CD7D2E68AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E1866DE-1811-4DA1-94CA-30CD7D2E68AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E1866DE-1811-4DA1-94CA-30CD7D2E68AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E1866DE-1811-4DA1-94CA-30CD7D2E68AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68DE6EB6-FC02-4272-BDA1-ED707A9187C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68DE6EB6-FC02-4272-BDA1-ED707A9187C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68DE6EB6-FC02-4272-BDA1-ED707A9187C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68DE6EB6-FC02-4272-BDA1-ED707A9187C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F591A55-7A90-4794-84C9-DF0456EC8F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F591A55-7A90-4794-84C9-DF0456EC8F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F591A55-7A90-4794-84C9-DF0456EC8F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU

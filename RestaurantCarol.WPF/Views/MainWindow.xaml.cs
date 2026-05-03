@@ -1,13 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using RestaurantCarol.DataAccess.Helpers;
+﻿
+using RestaurantCarol.Views;
 using System.Windows;
 
-namespace RestaurantCarol.WPF;
+namespace RestaurantCarol.Views;
 
 public partial class MainWindow : Window
 {
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void VeziCategorii_Click(object sender, RoutedEventArgs e)
+    {
+        CategoriiView window = new CategoriiView();
+        window.Show();
     }
 }

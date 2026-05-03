@@ -1,6 +1,6 @@
 ﻿namespace RestaurantCarol.DataAccess
 {
-    public class PreparatData
+    public class PreparatDAL
     {
 
     }

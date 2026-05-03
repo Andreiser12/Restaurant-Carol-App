@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <RootNamespace>$(MSBuildProjectName.Replace("RestaurantCarol.WPF", "RestaurantCarol"))</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RestaurantCarol.DataAccess\RestaurantCarol.DataAccess.csproj" />
-    <ProjectReference Include="..\RestaurantCarol.Models\RestaurantCarol.Models.csproj" />
-    <ProjectReference Include="..\RestaurantCarol.Services\RestaurantCarol.Services.csproj" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.7" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantCarol.WPF.ViewModels
+namespace RestaurantCarol.ViewModels
 {
     class MeniuRestaurantViewModel
     {

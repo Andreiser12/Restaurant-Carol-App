@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantCarol.Services.Configuration
+namespace RestaurantCarol.Layers
 {
-    internal class ConfigurationService
+    internal class AutentificareService
     {
     }
 }

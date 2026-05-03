@@ -1,0 +1,21 @@
+﻿<Window x:Class="RestaurantCarol.Views.CategoriiView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:RestaurantCarol.ViewModels"
+        Title="Test Categorii" Height="500" Width="400">
+    
+    <Window.DataContext>
+        <vm:CategorieViewModel/>
+    </Window.DataContext>
+    <Grid Margin="10">
+        <DataGrid ItemsSource="{Binding CategoriiList}" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Denumire" 
+                                    Binding="{Binding Denumire}" 
+                                    Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
