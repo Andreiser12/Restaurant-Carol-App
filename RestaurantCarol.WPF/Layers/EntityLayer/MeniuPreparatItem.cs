@@ -1,4 +1,4 @@
-﻿namespace RestaurantCarol.Models
+namespace RestaurantCarol.Layers
 {
     public class MeniuPreparatItem
     {

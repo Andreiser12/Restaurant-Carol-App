@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using RestaurantCarol.Models;
+using Microsoft.Data.SqlClient;
+using RestaurantCarol.Layers;
 using System.Collections.ObjectModel;
 using System.Data;
 
@@ -9,13 +9,13 @@ namespace RestaurantCarol.Layers
     {
         public ObservableCollection<Categorie> GetAllCategorii()
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAllCategorii", con);
+                SqlCommand command = new("GetAllCategorii", connection);
                 ObservableCollection<Categorie> result = new ObservableCollection<Categorie>();
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -29,6 +29,58 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-        // Add, Modify, Delete vor veni
+
+        public void AddCategorie(Categorie categorie)
+        {
+            using (SqlConnection connection = DALHelper.Connection)
+            {
+                SqlCommand command = new("AddCategorie", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter paramDenumire = new("@denumire", categorie.Denumire);
+                SqlParameter paramId = new("@idCategorie", SqlDbType.Int);
+                paramId.Direction = ParameterDirection.Output;
+
+                command.Parameters.Add(paramDenumire);
+                command.Parameters.Add(paramId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                categorie.IdCategorie = (int)paramId.Value;
+            }
+        }
+
+        public void ModifyCategorie(Categorie categorie)
+        {
+            using (SqlConnection connection = DALHelper.Connection)
+            {
+                SqlCommand command = new("ModifyCategorie", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@idCategorie", categorie.IdCategorie));
+                command.Parameters.Add(new SqlParameter("@denumire", categorie.Denumire));
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteCategorie(Categorie categorie)
+        {
+            using (SqlConnection connection = DALHelper.Connection)
+            {
+                SqlCommand command = new("DeleteCategorie", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@idCategorie", categorie.IdCategorie));
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+
     }
 }
+

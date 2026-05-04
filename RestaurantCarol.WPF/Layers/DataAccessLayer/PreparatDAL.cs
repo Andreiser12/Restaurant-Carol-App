@@ -1,7 +1,8 @@
-﻿namespace RestaurantCarol.DataAccess
+namespace RestaurantCarol.Layers
 {
     public class PreparatDAL
     {
 
     }
 }
+

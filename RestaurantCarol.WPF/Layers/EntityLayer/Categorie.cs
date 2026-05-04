@@ -1,4 +1,4 @@
-﻿using RestaurantCarol.WPF.Layers.EntityLayer;
+using RestaurantCarol.Layers;
 
 namespace RestaurantCarol.Layers
 {
@@ -34,3 +34,5 @@ namespace RestaurantCarol.Layers
         }
     }
 }
+
+

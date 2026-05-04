@@ -1,6 +1,8 @@
-﻿using System.Windows.Input;
+using System.Windows;
+using System.Windows.Input;
+using RestaurantCarol.Exceptions;
 
-namespace RestaurantCarol.ViewModels
+namespace RestaurantCarol.Commands
 {
     public class RelayCommand<T> : ICommand
     {
@@ -24,6 +26,22 @@ namespace RestaurantCarol.ViewModels
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public void Execute(object? parameter) => commandTask((T)parameter!);
+        public void Execute(object? parameter)
+        {
+            try
+            {
+                commandTask((T)parameter!);
+            }
+            catch (RestaurantException ex)
+            {
+                MessageBox.Show(ex.Message, "Atentie",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"A aparut o eroare: {ex.Message}", "Eroare",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

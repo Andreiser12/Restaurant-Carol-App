@@ -1,11 +1,11 @@
-﻿using RestaurantCarol.Models.Enums;
+using RestaurantCarol.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantCarol.Models
+namespace RestaurantCarol.Layers
 {
     public class Utilizator
     {
@@ -19,3 +19,5 @@ namespace RestaurantCarol.Models
         public RolUtilizator RolUtilizator { get; set; } = RolUtilizator.Client;
     }
 }
+
+

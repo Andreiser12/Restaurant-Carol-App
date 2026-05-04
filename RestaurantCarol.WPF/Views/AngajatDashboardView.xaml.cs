@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RestaurantCarol.WPF.Views
+namespace RestaurantCarol.Views
 {
     /// <summary>
     /// Interaction logic for AngajatDashboardView.xaml
@@ -25,3 +25,4 @@ namespace RestaurantCarol.WPF.Views
         }
     }
 }
+
