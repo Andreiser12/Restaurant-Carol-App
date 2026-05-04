@@ -1,19 +1,64 @@
-
+using Microsoft.Win32;
 using RestaurantCarol.Views;
+using System.Diagnostics;
 using System.Windows;
+using RestaurantCarol.Layers;
 
-namespace RestaurantCarol.Views;
-
-public partial class MainWindow : Window
+namespace RestaurantCarol
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
-    }
+        private const string GOOGLE_FORM_URL = "https://forms.google.com/PLACEHOLDER";
 
-    private void VeziCategorii_Click(object sender, RoutedEventArgs e)
-    {
-        CategoriiView window = new CategoriiView();
-        window.Show();
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void AcceseazaCaOaspete_Click(object sender, RoutedEventArgs e)
+        {
+            MeniuRestaurantView meniu = new MeniuRestaurantView();
+            meniu.Show();
+            this.Close();
+        }
+
+        private void IntraInCont_Click(object sender, RoutedEventArgs e)
+        {
+            LoginView login = new LoginView(RolUtilizator.Client);
+            login.Show();
+            this.Close();
+        }
+
+        private void Inregistreaza_Click(object sender, RoutedEventArgs e)
+        {
+            //RegisterView register = new RegisterView();
+            //register.Show();
+
+            MessageBox.Show("Aici se va deschide Meniul Restaurant", "TODO");
+        }
+
+        private void IntraCaAngajat_Click(object sender, RoutedEventArgs e)
+        {
+            LoginView login = new LoginView(RolUtilizator.Angajat);
+            login.Show();
+            this.Close();
+        }
+
+        private void Contacteaza_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = GOOGLE_FORM_URL,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nu s-a putut deschide formularul: {ex.Message}",
+                    "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

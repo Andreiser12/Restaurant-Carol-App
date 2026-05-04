@@ -1,28 +1,54 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RestaurantCarol.Layers;
+using RestaurantCarol.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RestaurantCarol.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginView.xaml
-    /// </summary>
     public partial class LoginView : Window
     {
-        public LoginView()
+        private LoginViewModel viewModel;
+
+        public LoginView(RolUtilizator rolAsteptat = RolUtilizator.Client)
         {
             InitializeComponent();
+
+            viewModel = new LoginViewModel
+            {
+                RolAsteptat = rolAsteptat,
+                OnLoginSuccess = HandleLoginSuccess
+            };
+            DataContext = viewModel;
+
+            // Schimba titlul in functie de rol
+            if (rolAsteptat == RolUtilizator.Angajat)
+            {
+                titluText.Text = "Intra ca angajat";
+                Title = "Restaurant Carol - Autentificare Angajat";
+            }
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox pb && viewModel != null)
+            {
+                viewModel.Parola = pb.Password;
+            }
+        }
+
+        private void HandleLoginSuccess()
+        {
+            MessageBox.Show($"Bine ai venit, {UserSession.CurrentUser?.Prenume}!",
+                "Login reusit", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            this.Close();
+        }
+
+        private void Inapoi_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mw = new MainWindow();
+            mw.Show();
+            this.Close();
         }
     }
 }
-
