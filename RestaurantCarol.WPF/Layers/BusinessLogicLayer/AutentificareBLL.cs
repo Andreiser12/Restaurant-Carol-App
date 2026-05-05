@@ -44,5 +44,15 @@ namespace RestaurantCarol.Layers
 
             return utilizator;
         }
+
+        public void DirectLogin(Utilizator utilizator)
+        {
+            if(utilizator==null)
+            {
+                throw new RestaurantException("Utilizator invalid.");
+            }
+
+            UserSession.Login(utilizator);
+        }
     }
 }

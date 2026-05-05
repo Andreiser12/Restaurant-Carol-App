@@ -31,10 +31,9 @@ namespace RestaurantCarol
 
         private void Inregistreaza_Click(object sender, RoutedEventArgs e)
         {
-            //RegisterView register = new RegisterView();
-            //register.Show();
-
-            MessageBox.Show("Aici se va deschide Meniul Restaurant", "TODO");
+            RegisterView register = new RegisterView();
+            register.Show();
+            this.Close();
         }
 
         private void IntraCaAngajat_Click(object sender, RoutedEventArgs e)
