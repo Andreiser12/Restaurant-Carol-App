@@ -20,7 +20,6 @@ namespace RestaurantCarol.Views
             };
             DataContext = viewModel;
 
-            // Schimba titlul in functie de rol
             if (rolAsteptat == RolUtilizator.Angajat)
             {
                 titluText.Text = "Intra ca angajat";
@@ -40,6 +39,16 @@ namespace RestaurantCarol.Views
         {
             MessageBox.Show($"Bine ai venit, {UserSession.CurrentUser?.Prenume}!",
                 "Login reusit", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            if (UserSession.IsClient)
+            {
+                MeniuRestaurantView meniu = new MeniuRestaurantView();
+                meniu.Show();
+            }
+            else if (UserSession.IsAngajat)
+            {
+                MessageBox.Show("Aici se va deschide dashboard angajat", "TODO");
+            }
 
             this.Close();
         }

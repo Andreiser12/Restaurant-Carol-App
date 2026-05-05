@@ -12,6 +12,10 @@
   <ItemGroup>
     <None Remove="Images\carol_background.jpg" />
     <None Remove="Images\carol_logo.png" />
+    <None Remove="Images\categorie_bauturi.png" />
+    <None Remove="Images\categorie_mancare.png" />
+    <None Remove="Images\categorie_populare.png" />
+    <None Remove="Images\interior_background.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +29,18 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\carol_logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\categorie_bauturi.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\categorie_mancare.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\categorie_populare.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\interior_background.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

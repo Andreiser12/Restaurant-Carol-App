@@ -41,6 +41,9 @@ namespace RestaurantCarol.Views
                 $"Bine ai venit, {Layers.UserSession.CurrentUser?.Prenume}!\n\nContul tau a fost creat cu succes.",
                 "Inregistrare reusita", MessageBoxButton.OK, MessageBoxImage.Information);
 
+            MeniuRestaurantView meniu = new MeniuRestaurantView();
+            meniu.Show();
+
             this.Close();
         }
 
