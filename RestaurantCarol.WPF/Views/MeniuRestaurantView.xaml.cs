@@ -10,6 +10,17 @@ namespace RestaurantCarol.Views
         {
             InitializeComponent();
             ConfigureazaUI();
+            NavigateToHub();
+        }
+
+        public void NavigateToHub()
+        {
+            contentArea.Content = new HubUserControl(this);
+        }
+
+        public void NavigateToListaCategorii(TipCategorie tip, string titlu)
+        {
+            contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu);
         }
 
         private void ConfigureazaUI()

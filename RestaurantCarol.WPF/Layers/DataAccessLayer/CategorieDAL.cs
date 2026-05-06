@@ -22,7 +22,34 @@ namespace RestaurantCarol.Layers
                         result.Add(new Categorie
                         {
                             IdCategorie = reader.GetInt32(0),
-                            Denumire = reader.GetString(1)
+                            Denumire = reader.GetString(1),
+                            Tip = Enum.Parse<TipCategorie>(reader.GetString(2))
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+
+        public ObservableCollection<Categorie> GetCategoriiByTip(TipCategorie tip)
+        {
+            using (SqlConnection connection = DALHelper.Connection)
+            {
+                SqlCommand command = new("GetCategoriiByTip", connection);
+                ObservableCollection<Categorie> result = new ObservableCollection<Categorie>();
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@tip", tip.ToString()));
+
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Categorie
+                        {
+                            IdCategorie = reader.GetInt32(0),
+                            Denumire = reader.GetString(1),
+                            Tip = Enum.Parse<TipCategorie>(reader.GetString(2))
                         });
                     }
                 }

@@ -32,6 +32,13 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
+
+        private TipCategorie tip;
+        public TipCategorie Tip
+        {
+            get => tip;
+            set { tip = value; NotifyPropertyChanged(); }
+        }
     }
 }
 

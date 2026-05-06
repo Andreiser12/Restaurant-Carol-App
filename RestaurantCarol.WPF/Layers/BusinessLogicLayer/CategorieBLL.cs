@@ -15,6 +15,11 @@ namespace RestaurantCarol.Layers
             return CategoriiList;
         }
 
+        public ObservableCollection<Categorie> GetCategoriiByTip(TipCategorie tip)
+        {
+            return categorieDAL.GetCategoriiByTip(tip);
+        }
+
         public void AddCategorie(Categorie categorie)
         {
             if (categorie == null)

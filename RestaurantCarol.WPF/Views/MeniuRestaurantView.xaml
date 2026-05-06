@@ -6,36 +6,6 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <Style x:Key="CircleButton" TargetType="Button">
-            <Setter Property="Width" Value="280"/>
-            <Setter Property="Height" Value="280"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse x:Name="ellipse"
-                             Stroke="#3A3A3A" 
-                             StrokeThickness="3">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
-                                        Stretch="UniformToFill"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ellipse" Property="Opacity" Value="0.8"/>
-                                <Setter TargetName="ellipse" Property="StrokeThickness" Value="5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="SidePanelButton" TargetType="Button">
             <Setter Property="Background" Value="#F4B860"/>
             <Setter Property="Foreground" Value="#3A3A3A"/>
@@ -112,85 +82,7 @@
 
             <Grid Grid.Row="1" Margin="40,20,40,40">
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Row="0"
-                Width="220" Height="220"
-                CornerRadius="110"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                ClipToBounds="True">
-                        <Border.Background>
-                            <ImageBrush ImageSource="/Images/carol_logo.png" 
-                            Stretch="UniformToFill"/>
-                        </Border.Background>
-                    </Border>
-
-                    <UniformGrid Grid.Row="1" 
-                                 Rows="1" Columns="3"
-                                 HorizontalAlignment="Stretch"
-                                 Margin="50,0,50,40">
-
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                            <Button Style="{StaticResource CircleButton}"
-                Tag="/Images/categorie_populare.png"
-                Click="Populare_Click"/>
-                            <TextBlock Text="Cele mai populare" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                            <Button Style="{StaticResource CircleButton}"
-                Tag="/Images/categorie_mancare.png"
-                Click="Mancare_Click"/>
-                            <TextBlock Text="Mancare" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                            <Button Style="{StaticResource CircleButton}"
-                Tag="/Images/categorie_bauturi.png"
-                Click="Bauturi_Click"/>
-                            <TextBlock Text="Bauturi" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
-                        </StackPanel>
-
-                    </UniformGrid>
-                </Grid>
+                <ContentControl x:Name="contentArea"/>
 
                 <StackPanel x:Name="panouDreapta"
                 VerticalAlignment="Top"
