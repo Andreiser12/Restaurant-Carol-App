@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using RestaurantCarol.Layers;
 
 namespace RestaurantCarol.Views
@@ -15,10 +17,22 @@ namespace RestaurantCarol.Views
             InitializeComponent();
         }
 
-        public ListaCategoriiUserControl(MeniuRestaurantView parent, TipCategorie tip, string titlu) : this()
+        public ListaCategoriiUserControl(MeniuRestaurantView parent, TipCategorie tip,
+                                          string titlu, string caleImagine) : this()
         {
             parentView = parent;
+
             titluText.Text = titlu;
+
+            try
+            {
+                BitmapImage bitmap = new BitmapImage(new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
+                logoImage.ImageSource = bitmap;
+            }
+            catch
+            {
+                
+            }
 
             ObservableCollection<Categorie> categorii = categorieBLL.GetCategoriiByTip(tip);
             DataContext = categorii;

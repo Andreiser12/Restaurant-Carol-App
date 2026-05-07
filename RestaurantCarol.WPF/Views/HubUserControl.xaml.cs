@@ -24,7 +24,10 @@ namespace RestaurantCarol.Views
 
         private void Mancare_Click(object sender, RoutedEventArgs e)
         {
-            parentView?.NavigateToListaCategorii(TipCategorie.Mancare, "Mancare");
+            parentView?.NavigateToListaCategorii(
+                TipCategorie.Mancare,
+                "Mancare",
+                "/Images/categorie_mancare.png");
         }
 
         private void Bauturi_Click(object sender, RoutedEventArgs e)

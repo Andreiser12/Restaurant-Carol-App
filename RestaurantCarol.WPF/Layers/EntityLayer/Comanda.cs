@@ -21,7 +21,7 @@ namespace RestaurantCarol.Layers
         public decimal CostMancare { get; set; }
         public decimal CostTransport { get; set; }
         public decimal Discount { get; set; }
-        public decimal CostTotal { get; set; }
+        public decimal CostTotal => CostMancare + CostTransport - Discount;
 
         public Utilizator? Utilizator { get; set; }
 

@@ -18,9 +18,9 @@ namespace RestaurantCarol.Views
             contentArea.Content = new HubUserControl(this);
         }
 
-        public void NavigateToListaCategorii(TipCategorie tip, string titlu)
+        public void NavigateToListaCategorii(TipCategorie tip, string titlu, string caleImagine)
         {
-            contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu);
+            contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu, caleImagine);
         }
 
         private void ConfigureazaUI()
