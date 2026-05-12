@@ -23,6 +23,11 @@ namespace RestaurantCarol.Views
             contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu, caleImagine);
         }
 
+        public void NavigateToListaPreparate(Categorie categorie, TipCategorie tipParinte)
+        {
+            contentArea.Content = new ListaPreparateUserControl(this, categorie, tipParinte);
+        }
+
         private void ConfigureazaUI()
         {
             if (UserSession.IsLoggedIn && UserSession.IsClient)

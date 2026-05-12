@@ -11,6 +11,7 @@ namespace RestaurantCarol.Views
     {
         private MeniuRestaurantView? parentView;
         private CategorieBLL categorieBLL = new CategorieBLL();
+        private TipCategorie tipParinte;
 
         public ListaCategoriiUserControl()
         {
@@ -21,7 +22,7 @@ namespace RestaurantCarol.Views
                                           string titlu, string caleImagine) : this()
         {
             parentView = parent;
-
+            tipParinte = tip;
             titluText.Text = titlu;
 
             try
@@ -47,6 +48,7 @@ namespace RestaurantCarol.Views
         {
             if (sender is Button btn && btn.Tag is Categorie categorie)
             {
+                parentView?.NavigateToListaPreparate(categorie, tipParinte);
             }
         }
     }

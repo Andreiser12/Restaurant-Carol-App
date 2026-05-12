@@ -10,12 +10,47 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\adanakebab.png" />
+    <None Remove="Images\arrabiata.png" />
+    <None Remove="Images\bruschetacugorgonzola.png" />
+    <None Remove="Images\burgercarol.png" />
     <None Remove="Images\carol_background.jpg" />
     <None Remove="Images\carol_logo.png" />
     <None Remove="Images\categorie_bauturi.png" />
     <None Remove="Images\categorie_mancare.png" />
     <None Remove="Images\categorie_populare.png" />
+    <None Remove="Images\ceafaprovance.png" />
+    <None Remove="Images\ciorbadeburta.png" />
+    <None Remove="Images\ciorbadepui.png" />
+    <None Remove="Images\coaste.png" />
+    <None Remove="Images\cotletdeporc.png" />
+    <None Remove="Images\creveti.png" />
+    <None Remove="Images\diavola.png" />
+    <None Remove="Images\filedebiban.png" />
+    <None Remove="Images\french_baghuette.png" />
+    <None Remove="Images\hummus.png" />
+    <None Remove="Images\icredestiuca.png" />
     <None Remove="Images\interior_background.jpg" />
+    <None Remove="Images\lovemetender.png" />
+    <None Remove="Images\mixgrill.png" />
+    <None Remove="Images\pastrama.png" />
+    <None Remove="Images\penne.png" />
+    <None Remove="Images\pieptdepui.png" />
+    <None Remove="Images\pizza.png" />
+    <None Remove="Images\pizzacarol.png" />
+    <None Remove="Images\puicremos.png" />
+    <None Remove="Images\pulpaderata.png" />
+    <None Remove="Images\quesadila.png" />
+    <None Remove="Images\salatacaesar.png" />
+    <None Remove="Images\salatagreceasca.png" />
+    <None Remove="Images\salatapui.png" />
+    <None Remove="Images\spaghete.png" />
+    <None Remove="Images\specialitateturceasca.png" />
+    <None Remove="Images\steaky.png" />
+    <None Remove="Images\supadelinte.png" />
+    <None Remove="Images\tigaie.png" />
+    <None Remove="Images\tiramisu.png" />
+    <None Remove="Images\tort.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +60,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\adanakebab.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\arrabiata.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\bruschetacugorgonzola.png" />
+    <Resource Include="Images\burgercarol.png" />
     <Resource Include="Images\carol_background.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -40,9 +83,40 @@
     <Resource Include="Images\categorie_populare.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\ceafaprovance.png" />
+    <Resource Include="Images\ciorbadeburta.png" />
+    <Resource Include="Images\ciorbadepui.png" />
+    <Resource Include="Images\coaste.png" />
+    <Resource Include="Images\cotletdeporc.png" />
+    <Resource Include="Images\creveti.png" />
+    <Resource Include="Images\diavola.png" />
+    <Resource Include="Images\filedebiban.png" />
+    <Resource Include="Images\french_baghuette.png" />
+    <Resource Include="Images\hummus.png" />
+    <Resource Include="Images\icredestiuca.png" />
     <Resource Include="Images\interior_background.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\lovemetender.png" />
+    <Resource Include="Images\mixgrill.png" />
+    <Resource Include="Images\pastrama.png" />
+    <Resource Include="Images\penne.png" />
+    <Resource Include="Images\pieptdepui.png" />
+    <Resource Include="Images\pizza.png" />
+    <Resource Include="Images\pizzacarol.png" />
+    <Resource Include="Images\puicremos.png" />
+    <Resource Include="Images\pulpaderata.png" />
+    <Resource Include="Images\quesadila.png" />
+    <Resource Include="Images\salatacaesar.png" />
+    <Resource Include="Images\salatagreceasca.png" />
+    <Resource Include="Images\salatapui.png" />
+    <Resource Include="Images\spaghete.png" />
+    <Resource Include="Images\specialitateturceasca.png" />
+    <Resource Include="Images\steaky.png" />
+    <Resource Include="Images\supadelinte.png" />
+    <Resource Include="Images\tigaie.png" />
+    <Resource Include="Images\tiramisu.png" />
+    <Resource Include="Images\tort.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,3 +41,5 @@ select * from Categorie order by IdCategorie
 
 select * from Preparat where IdCategorie=2
 order by IdPreparat
+
+select * from Comanda
