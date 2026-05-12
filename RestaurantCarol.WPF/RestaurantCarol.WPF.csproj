@@ -27,7 +27,6 @@
     <None Remove="Images\creveti.png" />
     <None Remove="Images\diavola.png" />
     <None Remove="Images\filedebiban.png" />
-    <None Remove="Images\french_baghuette.png" />
     <None Remove="Images\hummus.png" />
     <None Remove="Images\icredestiuca.png" />
     <None Remove="Images\interior_background.jpg" />
@@ -91,7 +90,7 @@
     <Resource Include="Images\creveti.png" />
     <Resource Include="Images\diavola.png" />
     <Resource Include="Images\filedebiban.png" />
-    <Resource Include="Images\french_baghuette.png" />
+    <Resource Include="Images\frenchbaghuette.png" />
     <Resource Include="Images\hummus.png" />
     <Resource Include="Images\icredestiuca.png" />
     <Resource Include="Images\interior_background.jpg">
