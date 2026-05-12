@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -10,5 +10,4 @@ namespace RestaurantCarol.WPF
     public partial class App : Application
     {
     }
-
 }

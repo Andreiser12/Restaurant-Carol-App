@@ -1,15 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace RestaurantCarol.Layers
 {
-    public class Alergen
+    public class Alergen : BasePropertyChanged
     {
-        public int IdAlergen { get; set; }
-        public string Denumire { get; set; } = string.Empty;
+        private int idAlergen;
+        public int IdAlergen
+        {
+            get => idAlergen;
+            set { idAlergen = value; NotifyPropertyChanged(); }
+        }
+
+        private string denumire = string.Empty;
+        public string Denumire
+        {
+            get => denumire;
+            set { denumire = value; NotifyPropertyChanged(); }
+        }
     }
 }
-

@@ -42,6 +42,31 @@ namespace RestaurantCarol.Layers
             }
         }
 
+        public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetAlergeniByPreparat", con);
+                ObservableCollection<Alergen> result = [];
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Alergen
+                        {
+                            IdAlergen = reader.GetInt32(reader.GetOrdinal("IdAlergen")),
+                            Denumire = reader.GetString(reader.GetOrdinal("Denumire"))
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+
         private string? ReadNullableString(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);

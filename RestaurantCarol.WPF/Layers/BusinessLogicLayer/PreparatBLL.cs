@@ -10,5 +10,10 @@ namespace RestaurantCarol.Layers
         {
             return preparatDAL.GetByCategorie(idCategorie);
         }
+
+        public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
+        {
+            return preparatDAL.GetAlergeniByPreparat(idPreparat);
+        }
     }
 }

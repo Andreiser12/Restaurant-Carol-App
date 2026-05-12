@@ -41,12 +41,20 @@ namespace RestaurantCarol.Views
             }
         }
 
+        private TextBlock? cosCountText;
+        private TextBlock? cosTotalText;
+        private Border? cosBorder;
+
         private void AfiseazaPanouClient()
         {
-            Border borderCos = new Border
+            cosBorder = new Border
             {
-                Style = (Style)FindResource("InfoPanel")
+                Style = (Style)FindResource("InfoPanel"),
+                Cursor = System.Windows.Input.Cursors.Hand
             };
+
+            cosBorder.MouseLeftButtonDown += Cos_Click;
+
             StackPanel sp1 = new StackPanel();
             sp1.Children.Add(new TextBlock
             {
@@ -56,16 +64,28 @@ namespace RestaurantCarol.Views
                 Foreground = System.Windows.Media.Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-            sp1.Children.Add(new TextBlock
+
+            cosCountText = new TextBlock
             {
-                Text = "Cosul este gol",
                 FontSize = 12,
                 Foreground = System.Windows.Media.Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
-            });
-            borderCos.Child = sp1;
-            panouDreapta.Children.Add(borderCos);
+            };
+            sp1.Children.Add(cosCountText);
+
+            cosTotalText = new TextBlock
+            {
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = System.Windows.Media.Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 2, 0, 0)
+            };
+            sp1.Children.Add(cosTotalText);
+
+            cosBorder.Child = sp1;
+            panouDreapta.Children.Add(cosBorder);
 
             Border borderAdresa = new Border
             {
@@ -116,6 +136,40 @@ namespace RestaurantCarol.Views
             });
             borderStare.Child = sp3;
             panouDreapta.Children.Add(borderStare);
+
+            CartSession.CartChanged += ActualizeazaPanouCos;
+            ActualizeazaPanouCos();
+        }
+
+        private void ActualizeazaPanouCos()
+        {
+            if (cosCountText == null || cosTotalText == null) return;
+
+            if (CartSession.EsteGol)
+            {
+                cosCountText.Text = "Cosul este gol";
+                cosTotalText.Text = "";
+            }
+            else
+            {
+                int nr = CartSession.NumarTotalProduse;
+                cosCountText.Text = $"{nr} {(nr == 1 ? "produs" : "produse")}";
+                cosTotalText.Text = $"{CartSession.CostTotal:F2} RON";
+            }
+        }
+
+        private void Cos_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (CartSession.EsteGol)
+            {
+                MessageBox.Show("Cosul tau este gol. Adauga produse din meniu.",
+                    "Cos gol", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            CosView cos = new CosView();
+            cos.Owner = this;
+            cos.ShowDialog();
         }
 
         private void AfiseazaPanouOaspete()
@@ -165,6 +219,12 @@ namespace RestaurantCarol.Views
             RegisterView register = new RegisterView();
             register.Show();
             this.Close();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            CartSession.CartChanged -= ActualizeazaPanouCos;
         }
     }
 }
