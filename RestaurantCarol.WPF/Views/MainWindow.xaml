@@ -7,8 +7,8 @@
 
     <Window.Resources>
         <Style x:Key="MenuButton" TargetType="Button">
-            <Setter Property="Background" Value="#F4B860"/>
-            <Setter Property="Foreground" Value="#3A3A3A"/>
+            <Setter Property="Background" Value="#D2AF6D"/>
+            <Setter Property="Foreground" Value="#373334"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Height" Value="50"/>
@@ -30,7 +30,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E0A050"/>
+                    <Setter Property="Background" Value="#D2AF6D"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -80,7 +80,7 @@
             </StackPanel>
 
             <Border Grid.Row="1" 
-                    Background="#7A6B14"
+                    Background="#373334"
                     Opacity="0.92"
                     CornerRadius="8"
                     Width="500"
@@ -109,6 +109,7 @@
 
                     <TextBlock Text="Vrei sa faci parte din echipa noastra?"
                                FontSize="16"
+                               Foreground="#D2AF6D"
                                HorizontalAlignment="Center"/>
 
                     <Button Content="Contacteaza-ne" 

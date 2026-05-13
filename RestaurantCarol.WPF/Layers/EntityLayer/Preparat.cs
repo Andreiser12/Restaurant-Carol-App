@@ -92,5 +92,14 @@ namespace RestaurantCarol.Layers
             get => primaCalePoza;
             set { primaCalePoza = value; NotifyPropertyChanged(); }
         }
+
+        private string idsAlergeni = ",";
+        public string IdsAlergeni
+        {
+            get => idsAlergeni;
+            set { idsAlergeni = value; NotifyPropertyChanged(); }
+        }
+
+
     }
 }

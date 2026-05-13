@@ -16,7 +16,7 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" 
                       HorizontalScrollBarVisibility="Disabled">
-            <Border Background="#EB7A6B14"
+            <Border Background="#373334"
                     CornerRadius="8"
                     Width="500"
                     VerticalAlignment="Center"
@@ -29,45 +29,45 @@
                     <TextBlock Text="Creeaza un cont nou"
                                FontSize="26"
                                FontWeight="Light"
-                               Foreground="White"
+                               Foreground="#D2AF6D"
                                HorizontalAlignment="Center"
                                Margin="0,0,0,25"/>
 
                     <TextBlock Text="Nume:" 
-                               Foreground="White" FontSize="14" Margin="0,0,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,0,0,5"/>
                     <TextBox Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                              Text="{Binding Nume, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Prenume:" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <TextBox Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                              Text="{Binding Prenume, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Email:" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <TextBox Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                              Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Telefon:" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <TextBox Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                              Text="{Binding Telefon, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Adresa de livrare:" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <TextBox Width="350" Height="60" FontSize="14" Padding="8,5,8,5"
                              TextWrapping="Wrap" AcceptsReturn="True"
                              VerticalScrollBarVisibility="Auto"
                              Text="{Binding AdresaLivrare, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Parola (minim 6 caractere):" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <PasswordBox x:Name="passwordBox"
                                  Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                                  PasswordChanged="PasswordBox_PasswordChanged"/>
 
                     <TextBlock Text="Confirma parola:" 
-                               Foreground="White" FontSize="14" Margin="0,12,0,5"/>
+                               Foreground="#D2AF6D" FontSize="14" Margin="0,12,0,5"/>
                     <PasswordBox x:Name="confirmPasswordBox"
                                  Width="350" Height="32" FontSize="14" Padding="8,5,8,5"
                                  PasswordChanged="ConfirmPasswordBox_PasswordChanged"/>
@@ -75,16 +75,18 @@
                     <Button Content="Inregistreaza-ma" 
                             Width="220" Height="40"
                             FontSize="16" FontWeight="SemiBold"
-                            Background="#F4B860" Foreground="#3A3A3A"
+                            Background="#D2AF6D" Foreground="#373334"
                             BorderThickness="0" Cursor="Hand"
                             Margin="0,25,0,0"
                             Command="{Binding RegisterCommand}"/>
 
                     <Button Content="Inapoi" 
-                            Width="220" Height="35"
-                            FontSize="14"
-                            Background="Transparent" Foreground="White"
-                            BorderBrush="White" BorderThickness="1"
+                            Width="220" Height="40"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Background="#D2AF6D"
+                            Foreground="#373334"
+                            BorderThickness="0"
                             Cursor="Hand"
                             Margin="0,15,0,0"
                             Click="Inapoi_Click"/>

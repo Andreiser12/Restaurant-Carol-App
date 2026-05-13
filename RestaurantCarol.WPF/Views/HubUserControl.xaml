@@ -14,10 +14,10 @@
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Ellipse x:Name="ellipse"
-                                 Stroke="#3A3A3A" 
-                                 StrokeThickness="3"/>
+                                     Stroke="#3A3A3A" 
+                                     StrokeThickness="3"/>
                             <ContentPresenter HorizontalAlignment="Stretch" 
-                                          VerticalAlignment="Stretch"/>
+                                              VerticalAlignment="Stretch"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -29,109 +29,365 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="PreparatCircle" TargetType="Button">
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Height" Value="280"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse x:Name="ellipse"
+                                     Stroke="#3A3A3A" 
+                                     StrokeThickness="3"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" 
+                                              VerticalAlignment="Stretch"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ellipse" Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="ellipse" Property="StrokeThickness" Value="5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#D2AF6D"/>
+            <Setter Property="Foreground" Value="#373334"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="18">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D2AF6D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
-                Width="220" Height="220"
-                CornerRadius="110"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                ClipToBounds="True">
-            <Border.Background>
-                <ImageBrush ImageSource="/Images/carol_logo.png" 
-                            Stretch="UniformToFill"/>
-            </Border.Background>
-        </Border>
+            <Grid Grid.Row="0" Margin="0,40,0,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <UniformGrid Grid.Row="1" 
-             Rows="1" Columns="3"
-             HorizontalAlignment="Stretch"
-             Margin="50,0,50,40">
+                <Border Grid.Column="1"
+                        Width="220" Height="220"
+                        CornerRadius="110"
+                        VerticalAlignment="Center"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Images/carol_logo.png" 
+                                    Stretch="UniformToFill"/>
+                    </Border.Background>
+                </Border>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                <Button Style="{StaticResource CircleButton}"
-                Click="Populare_Click">
-                    <Border Width="280" Height="280" 
-                    CornerRadius="140"
-                    ClipToBounds="True">
-                        <Border.Background>
-                            <ImageBrush ImageSource="/Images/categorie_populare.png" 
-                                Stretch="UniformToFill"/>
-                        </Border.Background>
+                <StackPanel Grid.Column="2" 
+                            VerticalAlignment="Center"
+                            Margin="30,0,30,0">
+
+                    <Button x:Name="opresteCautareaButton"
+                            Style="{StaticResource ActionButton}"
+                            Content="✕ Opreste cautarea"
+                            Width="450"
+                            Margin="0,0,0,10"
+                            Visibility="Collapsed"
+                            Click="OpresteCautarea_Click"/>
+
+                    <Border Background="White"
+                            CornerRadius="20"
+                            Padding="20,5,20,5"
+                            Width="450"
+                            Height="44">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       Text="🔍"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+
+                            <TextBox Grid.Column="1"
+                                     x:Name="cautareTextBox"
+                                     FontSize="15"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     VerticalAlignment="Center"
+                                     Padding="0"
+                                     TextChanged="CautareTextBox_TextChanged">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Resources>
+                                            <VisualBrush x:Key="placeholder" 
+                                                         AlignmentX="Left" 
+                                                         Stretch="None">
+                                                <VisualBrush.Visual>
+                                                    <TextBlock Text="Cauta preparate..."
+                                                               Foreground="#999999"
+                                                               FontSize="15"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Style.Resources>
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" 
+                                                        Value="{StaticResource placeholder}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
                     </Border>
-                </Button>
-                <TextBlock Text="Cele mai populare" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                    </TextBlock.Effect>
-                </TextBlock>
-            </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                <Button Style="{StaticResource CircleButton}"
-                Click="Mancare_Click">
-                    <Border Width="280" Height="280" 
-                    CornerRadius="140"
-                    ClipToBounds="True">
-                        <Border.Background>
-                            <ImageBrush ImageSource="/Images/categorie_mancare.png" 
-                                Stretch="UniformToFill"/>
-                        </Border.Background>
+                    <Button x:Name="filtreazaAlergeniButton"
+                            Style="{StaticResource ActionButton}"
+                            Content="▼ Filtreaza alergeni"
+                            Width="450"
+                            Margin="0,10,0,0"
+                            Click="FiltreazaAlergeni_Click"/>
+
+                </StackPanel>
+
+                <Border Grid.Column="3"
+                        Width="220" Height="220"
+                        CornerRadius="110"
+                        VerticalAlignment="Center"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Images/carol_logo.png" 
+                                    Stretch="UniformToFill"/>
+                    </Border.Background>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="1"
+                    x:Name="alergeniPanel"
+                    Background="#373334"
+                    CornerRadius="12"
+                    Padding="20,15,20,15"
+                    Margin="50,0,50,20"
+                    Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Text="Bifeaza alergenii pe care vrei sa-i EVITI:"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="#D2AF6D"
+                               Margin="0,0,0,10"/>
+
+                    <ItemsControl x:Name="alergeniFiltruList">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#373334"
+                                        CornerRadius="14"
+                                        Padding="10,5,10,5"
+                                        Margin="0,0,8,8"
+                                        BorderBrush="#D2AF6D"
+                                        BorderThickness="1">
+                                    <CheckBox Content="{Binding Denumire}"
+                                              Tag="{Binding}"
+                                              FontSize="13"
+                                              FontWeight="SemiBold"
+                                              Foreground="#D2AF6D"
+                                              Checked="AlergenFiltru_Changed"
+                                              Unchecked="AlergenFiltru_Changed"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Row="2">
+
+                <UniformGrid x:Name="cercuriNavigare"
+                             Rows="1" Columns="3"
+                             HorizontalAlignment="Stretch"
+                             Margin="50,0,50,40">
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button Style="{StaticResource CircleButton}"
+                                Click="Populare_Click">
+                            <Border Width="280" Height="280" 
+                                    CornerRadius="140"
+                                    ClipToBounds="True">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="/Images/categorie_populare.png" 
+                                                Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+                        </Button>
+                        <TextBlock Text="Cele mai populare" 
+                                   TextAlignment="Center"
+                                   FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   Margin="0,15,0,0"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="8" 
+                                                  ShadowDepth="2" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button Style="{StaticResource CircleButton}"
+                                Click="Mancare_Click">
+                            <Border Width="280" Height="280" 
+                                    CornerRadius="140"
+                                    ClipToBounds="True">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="/Images/categorie_mancare.png" 
+                                                Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+                        </Button>
+                        <TextBlock Text="Mancare" 
+                                   TextAlignment="Center"
+                                   FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   Margin="0,15,0,0"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="8" 
+                                                  ShadowDepth="2" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button Style="{StaticResource CircleButton}"
+                                Click="Bauturi_Click">
+                            <Border Width="280" Height="280" 
+                                    CornerRadius="140"
+                                    ClipToBounds="True">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="/Images/categorie_bauturi.png" 
+                                                Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+                        </Button>
+                        <TextBlock Text="Bauturi" 
+                                   TextAlignment="Center"
+                                   FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   Margin="0,15,0,0"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="8" 
+                                                  ShadowDepth="2" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                </UniformGrid>
+
+                <Grid x:Name="rezultateContainer" Visibility="Collapsed">
+
+                    <Border x:Name="mesajGolBorder"
+                            Background="#EB7A6B14"
+                            CornerRadius="12"
+                            Padding="30"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Margin="0,40,0,0"
+                            Visibility="Collapsed">
+                        <TextBlock x:Name="mesajGolText"
+                                   FontSize="16"
+                                   FontStyle="Italic"
+                                   Foreground="White"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="500"/>
                     </Border>
-                </Button>
-                <TextBlock Text="Mancare" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                    </TextBlock.Effect>
-                </TextBlock>
-            </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                <Button Style="{StaticResource CircleButton}"
-                Click="Bauturi_Click">
-                    <Border Width="280" Height="280" 
-                    CornerRadius="140"
-                    ClipToBounds="True">
-                        <Border.Background>
-                            <ImageBrush ImageSource="/Images/categorie_bauturi.png" 
-                                Stretch="UniformToFill"/>
-                        </Border.Background>
-                    </Border>
-                </Button>
-                <TextBlock Text="Bauturi" 
-                   TextAlignment="Center"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   Margin="0,15,0,0"
-                   HorizontalAlignment="Center">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" BlurRadius="8" 
-                                  ShadowDepth="2" Opacity="0.8"/>
-                    </TextBlock.Effect>
-                </TextBlock>
-            </StackPanel>
-
-        </UniformGrid>
-    </Grid>
+                    <ItemsControl x:Name="rezultateList"
+                                  Margin="50,0,50,40">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center" 
+                                            VerticalAlignment="Bottom"
+                                            Margin="20,20,20,40">
+                                    <Button Style="{StaticResource PreparatCircle}"
+                                            Tag="{Binding}"
+                                            Click="Preparat_Click">
+                                        <Border Width="280" Height="280" 
+                                                CornerRadius="140"
+                                                ClipToBounds="True">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding PrimaCalePoza, FallbackValue='/Images/carol_logo.png', TargetNullValue='/Images/carol_logo.png'}" 
+                                                            Stretch="UniformToFill"/>
+                                            </Border.Background>
+                                        </Border>
+                                    </Button>
+                                    <TextBlock Text="{Binding Denumire}" 
+                                               TextAlignment="Center"
+                                               FontSize="22"
+                                               FontWeight="SemiBold"
+                                               Foreground="White"
+                                               Margin="0,15,0,0"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               MaxWidth="280">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="Black" BlurRadius="8" 
+                                                              ShadowDepth="2" Opacity="0.8"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
