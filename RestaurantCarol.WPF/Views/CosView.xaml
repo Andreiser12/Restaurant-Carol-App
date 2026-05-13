@@ -202,37 +202,68 @@
             <StackPanel Grid.Row="2" Margin="0,15,0,0">
 
                 <Border Height="1" 
-                        Background="#E0E0E0" 
-                        Margin="0,0,0,15"/>
+            Background="#E0E0E0" 
+            Margin="0,0,0,15"/>
+
+                <StackPanel x:Name="adresaSection" Margin="0,0,0,15">
+                    <TextBlock Text="Adresa de livrare:"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Foreground="#444444"
+                   Margin="0,0,0,5"/>
+
+                    <ComboBox x:Name="adreseComboBox"
+                  FontSize="13"
+                  Padding="10,8,10,8"
+                  Background="#FDF1DC"
+                  BorderBrush="#F4B860"
+                  BorderThickness="1"
+                  DisplayMemberPath="AdresaText"
+                  SelectedValuePath="IdAdresa"/>
+
+                    <Border x:Name="fariAdresaText"
+                Visibility="Collapsed"
+                Background="#FDF1DC"
+                CornerRadius="6"
+                Padding="12,10,12,10"
+                BorderBrush="#F4B860"
+                BorderThickness="1">
+                        <TextBlock Text="Nu ai nicio adresa salvata. Click pe panoul ADRESA din meniu pentru a adauga."
+                       FontSize="12"
+                       FontStyle="Italic"
+                       Foreground="#7A6B14"
+                       TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
 
                 <Grid Margin="0,0,0,15">
                     <TextBlock Text="Total"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="#1A1A1A"
-                               HorizontalAlignment="Left"/>
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Foreground="#1A1A1A"
+                   HorizontalAlignment="Left"/>
                     <TextBlock x:Name="totalText"
-                               FontSize="20"
-                               FontWeight="Bold"
-                               Foreground="#1A1A1A"
-                               HorizontalAlignment="Right"/>
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="#1A1A1A"
+                   HorizontalAlignment="Right"/>
                 </Grid>
 
                 <Button x:Name="plaseazaButton"
-                        Background="#F4B860"
-                        Foreground="#3A3A3A"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Height="55"
-                        Cursor="Hand"
-                        BorderThickness="0"
-                        Click="Plaseaza_Click">
+            Background="#F4B860"
+            Foreground="#3A3A3A"
+            FontSize="16"
+            FontWeight="Bold"
+            Height="55"
+            Cursor="Hand"
+            BorderThickness="0"
+            Click="Plaseaza_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="30">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center"/>
+                        CornerRadius="30">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Button.Template>

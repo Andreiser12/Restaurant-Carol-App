@@ -6,9 +6,9 @@
 
         public static bool IsLoggedIn => CurrentUser != null;
 
-        public static bool IsClient => CurrentUser?.RolUtilizator == RolUtilizator.Client;
+        public static bool IsClient => CurrentUser?.Rol == RolUtilizator.Client;
 
-        public static bool IsAngajat => CurrentUser?.RolUtilizator == RolUtilizator.Angajat;
+        public static bool IsAngajat => CurrentUser?.Rol == RolUtilizator.Angajat;
 
         public static void Login(Utilizator utilizator)
         {

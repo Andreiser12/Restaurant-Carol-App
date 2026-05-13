@@ -44,6 +44,8 @@ namespace RestaurantCarol.Views
         private TextBlock? cosCountText;
         private TextBlock? cosTotalText;
         private Border? cosBorder;
+        private TextBlock? adresaText;
+        private Border? adresaBorder;
 
         private void AfiseazaPanouClient()
         {
@@ -87,10 +89,14 @@ namespace RestaurantCarol.Views
             cosBorder.Child = sp1;
             panouDreapta.Children.Add(cosBorder);
 
-            Border borderAdresa = new Border
+            adresaBorder = new Border
             {
-                Style = (Style)FindResource("InfoPanel")
+                Style = (Style)FindResource("InfoPanel"),
+                Cursor = System.Windows.Input.Cursors.Hand
             };
+
+            adresaBorder.MouseLeftButtonDown += Adresa_Click;
+
             StackPanel sp2 = new StackPanel();
             sp2.Children.Add(new TextBlock
             {
@@ -100,18 +106,22 @@ namespace RestaurantCarol.Views
                 Foreground = System.Windows.Media.Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-            sp2.Children.Add(new TextBlock
+
+            adresaText = new TextBlock
             {
-                Text = UserSession.CurrentUser?.AdresaLivrare ?? "Nicio adresa setata",
                 FontSize = 12,
                 Foreground = System.Windows.Media.Brushes.White,
                 TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
-            });
-            borderAdresa.Child = sp2;
-            panouDreapta.Children.Add(borderAdresa);
+            };
+            sp2.Children.Add(adresaText);
+
+            adresaBorder.Child = sp2;
+            panouDreapta.Children.Add(adresaBorder);
+
+            ActualizeazaAdresaImplicita();
 
             Border borderStare = new Border
             {
@@ -126,14 +136,39 @@ namespace RestaurantCarol.Views
                 Foreground = System.Windows.Media.Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-            sp3.Children.Add(new TextBlock
+
+            stareCmdCodText = new TextBlock
             {
                 Text = "Nicio comanda activa",
-                FontSize = 12,
+                FontSize = 11,
                 Foreground = System.Windows.Media.Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
-            });
+            };
+            sp3.Children.Add(stareCmdCodText);
+
+            stareCmdStareText = new TextBlock
+            {
+                Text = "",
+                FontSize = 12,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = System.Windows.Media.Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 2, 0, 0)
+            };
+            sp3.Children.Add(stareCmdStareText);
+
+            stareCmdOraText = new TextBlock
+            {
+                Text = "",
+                FontSize = 11,
+                FontStyle = FontStyles.Italic,
+                Foreground = System.Windows.Media.Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 2, 0, 0)
+            };
+            sp3.Children.Add(stareCmdOraText);
+
             borderStare.Child = sp3;
             panouDreapta.Children.Add(borderStare);
 
@@ -156,6 +191,25 @@ namespace RestaurantCarol.Views
                 cosCountText.Text = $"{nr} {(nr == 1 ? "produs" : "produse")}";
                 cosTotalText.Text = $"{CartSession.CostTotal:F2} RON";
             }
+        }
+
+        private ComandaBLL.RezultatPlasareComanda? ultimaComandaPlasata;
+        private TextBlock? stareCmdCodText;
+        private TextBlock? stareCmdStareText;
+        private TextBlock? stareCmdOraText;
+
+        public void ActualizeazaStareComanda(ComandaBLL.RezultatPlasareComanda rezultat)
+        {
+            ultimaComandaPlasata = rezultat;
+
+            if (stareCmdCodText != null)
+                stareCmdCodText.Text = $"Cod: {rezultat.CodComanda}";
+
+            if (stareCmdStareText != null)
+                stareCmdStareText.Text = "Inregistrata";
+
+            if (stareCmdOraText != null)
+                stareCmdOraText.Text = $"Livrare ~ {rezultat.OraEstimataLivrare:HH:mm}";
         }
 
         private void Cos_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -225,6 +279,50 @@ namespace RestaurantCarol.Views
         {
             base.OnClosed(e);
             CartSession.CartChanged -= ActualizeazaPanouCos;
+        }
+
+        private void ActualizeazaAdresaImplicita()
+        {
+            if (adresaText == null) return;
+
+            if (UserSession.CurrentUser == null)
+            {
+                adresaText.Text = "Nicio adresa setata";
+                return;
+            }
+
+            try
+            {
+                AdresaBLL adresaBLL = new AdresaBLL();
+                Adresa? adresaImplicita = adresaBLL.GetAdresaImplicita(UserSession.CurrentUser.IdUtilizator);
+
+                if (adresaImplicita != null)
+                {
+                    adresaText.Text = adresaImplicita.AdresaText;
+                }
+                else
+                {
+                    adresaText.Text = "Nicio adresa setata";
+                }
+            }
+            catch
+            {
+                adresaText.Text = "Nicio adresa setata";
+            }
+        }
+
+        private void Adresa_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (UserSession.CurrentUser == null) return;
+
+            AdreseView adreseView = new AdreseView(UserSession.CurrentUser.IdUtilizator);
+            adreseView.Owner = this;
+
+            adreseView.AdreseModificate += ActualizeazaAdresaImplicita;
+
+            adreseView.ShowDialog();
+
+            adreseView.AdreseModificate -= ActualizeazaAdresaImplicita;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace RestaurantCarol.Layers
                 throw new RestaurantException("Email sau parola incorecta.");
             }
 
-            if (utilizator.RolUtilizator != rolAsteptat)
+            if (utilizator.Rol != rolAsteptat)
             {
                 if (rolAsteptat == RolUtilizator.Angajat)
                 {

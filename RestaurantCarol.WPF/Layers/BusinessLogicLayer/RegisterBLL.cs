@@ -18,8 +18,8 @@ namespace RestaurantCarol.Layers
             RegexOptions.Compiled);
 
         public Utilizator Register(string nume, string prenume, string email,
-                                    string telefon, string adresaLivrare,
-                                    string parola, string confirmaParola)
+                            string telefon, string adresaLivrare,
+                            string parola, string confirmaParola)
         {
             ValidateInput(nume, prenume, email, telefon, adresaLivrare, parola, confirmaParola);
 
@@ -42,9 +42,8 @@ namespace RestaurantCarol.Layers
                 Prenume = prenume,
                 Email = email,
                 Telefon = telefon,
-                AdresaLivrare = adresaLivrare,
                 ParolaHash = parolaHash,
-                RolUtilizator = RolUtilizator.Client
+                Rol = RolUtilizator.Client
             };
 
             try
@@ -54,6 +53,23 @@ namespace RestaurantCarol.Layers
             catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
             {
                 throw new RestaurantException("Exista deja un cont cu acest email.");
+            }
+
+            AdresaBLL adresaBLL = new AdresaBLL();
+            Adresa adresa = new Adresa
+            {
+                IdUtilizator = utilizator.IdUtilizator,
+                AdresaText = adresaLivrare,
+                EsteImplicita = true
+            };
+
+            try
+            {
+                adresaBLL.AddAdresa(adresa);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Eroare la inserare adresa pentru utilizator nou: {ex.Message}");
             }
 
             return utilizator;

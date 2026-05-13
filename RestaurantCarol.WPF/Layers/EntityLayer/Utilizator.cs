@@ -1,23 +1,54 @@
-using RestaurantCarol.Layers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace RestaurantCarol.Layers
 {
-    public class Utilizator
+    public class Utilizator : BasePropertyChanged
     {
-        public int IdUtilizator { get; set; }
-        public string Nume { get; set; } = string.Empty;
-        public string Prenume { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string? Telefon { get; set; }
-        public string? AdresaLivrare { get; set; }
-        public string ParolaHash { get; set; } = string.Empty;
-        public RolUtilizator RolUtilizator { get; set; } = RolUtilizator.Client;
+        private int idUtilizator;
+        public int IdUtilizator
+        {
+            get => idUtilizator;
+            set { idUtilizator = value; NotifyPropertyChanged(); }
+        }
+
+        private string nume = string.Empty;
+        public string Nume
+        {
+            get => nume;
+            set { nume = value; NotifyPropertyChanged(); }
+        }
+
+        private string prenume = string.Empty;
+        public string Prenume
+        {
+            get => prenume;
+            set { prenume = value; NotifyPropertyChanged(); }
+        }
+
+        private string email = string.Empty;
+        public string Email
+        {
+            get => email;
+            set { email = value; NotifyPropertyChanged(); }
+        }
+
+        private string? telefon;
+        public string? Telefon
+        {
+            get => telefon;
+            set { telefon = value; NotifyPropertyChanged(); }
+        }
+
+        private string parolaHash = string.Empty;
+        public string ParolaHash
+        {
+            get => parolaHash;
+            set { parolaHash = value; NotifyPropertyChanged(); }
+        }
+
+        private RolUtilizator rol = RolUtilizator.Client;
+        public RolUtilizator Rol
+        {
+            get => rol;
+            set { rol = value; NotifyPropertyChanged(); }
+        }
     }
 }
-
-

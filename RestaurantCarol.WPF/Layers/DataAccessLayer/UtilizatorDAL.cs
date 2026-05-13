@@ -7,14 +7,14 @@ namespace RestaurantCarol.Layers
     {
         public Utilizator? GetByEmail(string email)
         {
-            using (SqlConnection connection = DALHelper.Connection)
+            using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand command = new("GetUtilizatorByEmail", connection);
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@email", email));
+                SqlCommand cmd = new("GetUtilizatorByEmail", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@email", email));
 
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -26,10 +26,8 @@ namespace RestaurantCarol.Layers
                             Email = reader.GetString(reader.GetOrdinal("Email")),
                             Telefon = reader.IsDBNull(reader.GetOrdinal("Telefon"))
                                 ? null : reader.GetString(reader.GetOrdinal("Telefon")),
-                            AdresaLivrare = reader.IsDBNull(reader.GetOrdinal("AdresaLivrare"))
-                                ? null : reader.GetString(reader.GetOrdinal("AdresaLivrare")),
                             ParolaHash = reader.GetString(reader.GetOrdinal("ParolaHash")),
-                            RolUtilizator = Enum.Parse<RolUtilizator>(reader.GetString(reader.GetOrdinal("Rol")))
+                            Rol = Enum.Parse<RolUtilizator>(reader.GetString(reader.GetOrdinal("Rol")))
                         };
                     }
                     return null;
@@ -39,14 +37,14 @@ namespace RestaurantCarol.Layers
 
         public bool CheckEmailExists(string email)
         {
-            using (SqlConnection connection = DALHelper.Connection)
+            using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand command = new("CheckEmailExists", connection);
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@email", email));
+                SqlCommand cmd = new("CheckEmailExists", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@email", email));
 
-                connection.Open();
-                object? result = command.ExecuteScalar();
+                con.Open();
+                object? result = cmd.ExecuteScalar();
 
                 if (result == null) return false;
                 return (int)result == 1;
@@ -65,10 +63,8 @@ namespace RestaurantCarol.Layers
                 cmd.Parameters.Add(new SqlParameter("@email", utilizator.Email));
                 cmd.Parameters.Add(new SqlParameter("@telefon",
                     (object?)utilizator.Telefon ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@adresaLivrare",
-                    (object?)utilizator.AdresaLivrare ?? DBNull.Value));
                 cmd.Parameters.Add(new SqlParameter("@parolaHash", utilizator.ParolaHash));
-                cmd.Parameters.Add(new SqlParameter("@rol", utilizator.RolUtilizator.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@rol", utilizator.Rol.ToString()));
 
                 SqlParameter paramId = new("@idUtilizator", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
@@ -80,7 +76,5 @@ namespace RestaurantCarol.Layers
                 utilizator.IdUtilizator = (int)paramId.Value;
             }
         }
-
-
     }
 }
