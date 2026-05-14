@@ -193,6 +193,7 @@ namespace RestaurantCarol.Views
 
         private void Populare_Click(object sender, RoutedEventArgs e)
         {
+            parentView?.NavigateToListaPreparatePopulare();
         }
 
         private void Mancare_Click(object sender, RoutedEventArgs e)

@@ -20,5 +20,10 @@ namespace RestaurantCarol.Layers
         {
             return preparatDAL.GetAllPreparate();
         }
+
+        public ObservableCollection<Preparat> GetTopPopulare(int top =3)
+        {
+            return preparatDAL.GetTopPopulare(top);
+        }
     }
 }

@@ -1,6 +1,7 @@
+using RestaurantCarol.Layers;
 using System.Windows;
 using System.Windows.Controls;
-using RestaurantCarol.Layers;
+using System.Windows.Media;
 
 namespace RestaurantCarol.Views
 {
@@ -63,14 +64,14 @@ namespace RestaurantCarol.Views
                 Text = "COS",
                 FontWeight = FontWeights.Bold,
                 FontSize = 14,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 
             cosCountText = new TextBlock
             {
                 FontSize = 12,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
             };
@@ -80,7 +81,7 @@ namespace RestaurantCarol.Views
             {
                 FontSize = 13,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 2, 0, 0)
             };
@@ -103,14 +104,14 @@ namespace RestaurantCarol.Views
                 Text = "ADRESA",
                 FontWeight = FontWeights.Bold,
                 FontSize = 14,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 
             adresaText = new TextBlock
             {
                 FontSize = 12,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
@@ -133,7 +134,7 @@ namespace RestaurantCarol.Views
                 Text = "STARE COMANDA",
                 FontWeight = FontWeights.Bold,
                 FontSize = 14,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 
@@ -141,7 +142,7 @@ namespace RestaurantCarol.Views
             {
                 Text = "Nicio comanda activa",
                 FontSize = 11,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
             };
@@ -152,7 +153,7 @@ namespace RestaurantCarol.Views
                 Text = "",
                 FontSize = 12,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 2, 0, 0)
             };
@@ -163,7 +164,7 @@ namespace RestaurantCarol.Views
                 Text = "",
                 FontSize = 11,
                 FontStyle = FontStyles.Italic,
-                Foreground = System.Windows.Media.Brushes.White,
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 2, 0, 0)
             };
@@ -243,6 +244,37 @@ namespace RestaurantCarol.Views
             };
             btnRegister.Click += Register_Click;
             panouDreapta.Children.Add(btnRegister);
+        }
+
+        public void NavigateToListaPreparatePopulare()
+        {
+            try
+            {
+                PreparatBLL bll = new PreparatBLL();
+                var preparatePopulare = bll.GetTopPopulare(3);
+
+                if (preparatePopulare.Count == 0)
+                {
+                    MessageBox.Show(
+                        "Nu exista inca destule comenzi pentru a determina cele mai populare preparate.\n\n" +
+                        "Plaseaza cateva comenzi si revino mai tarziu.",
+                        "Cele mai populare",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    return;
+                }
+
+                contentArea.Content = new ListaPreparateUserControl(
+                    this,
+                    preparatePopulare,
+                    "Cele mai populare",
+                    "/Images/categorie_populare.png");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Eroare la incarcare populare: {ex.Message}",
+                    "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Populare_Click(object sender, RoutedEventArgs e)

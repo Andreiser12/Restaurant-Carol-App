@@ -14,7 +14,7 @@
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Ellipse x:Name="ellipse"
-                                     Stroke="#3A3A3A" 
+                                     Stroke="#373334" 
                                      StrokeThickness="3"/>
                             <ContentPresenter HorizontalAlignment="Stretch" 
                                               VerticalAlignment="Stretch"/>
@@ -35,16 +35,16 @@
             <Setter Property="Height" Value="50"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="#F4B860"/>
+            <Setter Property="Background" Value="#D2AF6D"/>
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="#373334"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Ellipse Fill="{TemplateBinding Background}" 
-                                     Stroke="#3A3A3A" 
+                                     Stroke="#373334" 
                                      StrokeThickness="2"/>
                             <ContentPresenter HorizontalAlignment="Center" 
                                               VerticalAlignment="Center"/>

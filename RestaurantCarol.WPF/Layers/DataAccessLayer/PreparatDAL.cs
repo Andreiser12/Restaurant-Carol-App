@@ -103,6 +103,42 @@ namespace RestaurantCarol.Layers
             }
         }
 
+        public ObservableCollection<Preparat> GetTopPopulare(int top = 3)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetTopPreparatePopulare", con);
+                ObservableCollection<Preparat> result = [];
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@top", top));
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Preparat
+                        {
+                            IdPreparat = reader.GetInt32(reader.GetOrdinal("IdPreparat")),
+                            Denumire = reader.GetString(reader.GetOrdinal("Denumire")),
+                            Pret = reader.GetDecimal(reader.GetOrdinal("Pret")),
+                            CantitatePortie = (int)reader.GetDecimal(reader.GetOrdinal("CantitatePortie")),
+                            CantitateTotala = (int)reader.GetDecimal(reader.GetOrdinal("CantitateTotala")),
+                            Descriere = ReadNullableString(reader, "Descriere"),
+                            Calorii = ReadNullableInt(reader, "Calorii"),
+                            Grasimi = ReadNullableDecimal(reader, "Grasimi"),
+                            Carbohidrati = ReadNullableDecimal(reader, "Carbohidrati"),
+                            Proteine = ReadNullableDecimal(reader, "Proteine"),
+                            Sare = ReadNullableDecimal(reader, "Sare"),
+                            IdCategorie = reader.GetInt32(reader.GetOrdinal("IdCategorie")),
+                            PrimaCalePoza = ReadNullableString(reader, "PrimaCalePoza")
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+
         private string? ReadNullableString(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);

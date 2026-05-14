@@ -124,7 +124,7 @@ namespace RestaurantCarol.Views
             {
                 Text = nume,
                 FontSize = 14,
-                Foreground = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44))
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush
             };
             Grid.SetColumn(numeText, 0);
 
@@ -133,7 +133,7 @@ namespace RestaurantCarol.Views
                 Text = valoare,
                 FontSize = 14,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = new SolidColorBrush(Color.FromRgb(0x1A, 0x1A, 0x1A))
+                Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush
             };
             Grid.SetColumn(valoareText, 1);
 

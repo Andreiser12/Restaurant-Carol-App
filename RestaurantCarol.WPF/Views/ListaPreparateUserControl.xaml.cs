@@ -10,7 +10,6 @@ namespace RestaurantCarol.Views
     {
         private MeniuRestaurantView? parentView;
         private PreparatBLL preparatBLL = new PreparatBLL();
-
         private TipCategorie? tipCategorieParinte;
 
         public ListaPreparateUserControl()
@@ -23,19 +22,37 @@ namespace RestaurantCarol.Views
         {
             parentView = parent;
             tipCategorieParinte = tipParinte;
-
             titluText.Text = categorie.Denumire;
 
-            try
-            {
-                BitmapImage bitmap = new BitmapImage(
-                    new Uri("pack://application:,,,/Images/carol_logo.png", UriKind.Absolute));
-                logoImage.ImageSource = bitmap;
-            }
-            catch {}
+            SetLogo("/Images/carol_logo.png");
 
             ObservableCollection<Preparat> preparate = preparatBLL.GetByCategorie(categorie.IdCategorie);
             DataContext = preparate;
+        }
+
+        public ListaPreparateUserControl(MeniuRestaurantView parent,
+                                          ObservableCollection<Preparat> preparate,
+                                          string titlu,
+                                          string caleLogoCentral) : this()
+        {
+            parentView = parent;
+            tipCategorieParinte = null;
+
+            titluText.Text = titlu;
+            SetLogo(caleLogoCentral);
+
+            DataContext = preparate;
+        }
+
+        private void SetLogo(string caleImagine)
+        {
+            try
+            {
+                BitmapImage bitmap = new BitmapImage(
+                    new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
+                logoImage.ImageSource = bitmap;
+            }
+            catch {}
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
