@@ -6,35 +6,19 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <Style x:Key="SidePanelButton" TargetType="Button">
-            <Setter Property="Background" Value="#D2AF6D"/>
-            <Setter Property="Foreground" Value="#373334"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="Width" Value="180"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="InfoPanel" TargetType="Border">
-            <Setter Property="Background" Value="#373334"/>
+        <Style x:Key="HeaderPanel" TargetType="Border">
+            <Setter Property="Background" Value="#EB3A3A3A"/>
             <Setter Property="CornerRadius" Value="6"/>
             <Setter Property="Padding" Value="15,10,15,10"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="Width" Value="180"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="HeaderWelcome" TargetType="Border">
+            <Setter Property="Background" Value="#EB7A6B14"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="30,12,30,12"/>
         </Style>
     </Window.Resources>
 
@@ -51,44 +35,57 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="40,20,40,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" 
+        Background="#EB3A3A3A"
+        CornerRadius="0"
+        Margin="0"
+        Height="110">
+                <Grid Margin="20,0,20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="1" 
-            Background="#373334"
-            CornerRadius="6"
-            Padding="30,12,30,12">
-                    <TextBlock Text="Bine ai venit la Carol!"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Foreground="#D2AF6D"/>
-                </Border>
+                    <Border Grid.Column="0"
+                x:Name="puncteBorder"
+                Background="#EB7A6B14"
+                CornerRadius="6"
+                Padding="20,10,20,10"
+                VerticalAlignment="Center"
+                Visibility="Collapsed">
+                        <TextBlock x:Name="puncteText"
+                       Text="Puncte Carol: 0"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       VerticalAlignment="Center"/>
+                    </Border>
 
-                <Border Grid.Column="2" 
-            Background="#373334"
-            CornerRadius="6"
-            Padding="20,12,20,12"
-            HorizontalAlignment="Right">
-                    <TextBlock x:Name="prenumeText"
-                   Text="Oaspete"
-                   FontSize="18"
-                   Foreground="#D2AF6D"/>
-                </Border>
-            </Grid>
+                    <Border Grid.Column="1" 
+                Background="#EB7A6B14"
+                CornerRadius="6"
+                Padding="30,12,30,12"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                        <TextBlock Text="Bine ai venit la Carol!"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:Name="panouDreapta">
+                    </StackPanel>
+                </Grid>
+            </Border>
 
             <Grid Grid.Row="1" Margin="40,20,40,40">
-
                 <ContentControl x:Name="contentArea"/>
-
-                <StackPanel x:Name="panouDreapta"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right">
-                </StackPanel>
-
             </Grid>
         </Grid>
     </Grid>

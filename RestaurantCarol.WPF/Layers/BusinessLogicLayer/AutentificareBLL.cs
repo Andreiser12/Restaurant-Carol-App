@@ -54,5 +54,10 @@ namespace RestaurantCarol.Layers
 
             UserSession.Login(utilizator);
         }
+
+        public int GetPuncteByUtilizator(int idUtilizator)
+        {
+            return utilizatorDAL.GetPuncteByUtilizator(idUtilizator);
+        }
     }
 }

@@ -1,12 +1,27 @@
 using RestaurantCarol.Layers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RestaurantCarol.Views
 {
     public partial class MeniuRestaurantView : Window
     {
+        private TextBlock? cosCountText;
+        private TextBlock? cosTotalText;
+        private Border? cosBorder;
+        private TextBlock? adresaText;
+        private Border? adresaBorder;
+        private TextBlock? stareCmdCodText;
+        private TextBlock? stareCmdStareText;
+        private TextBlock? stareCmdOraText;
+        private Border? prenumeBorder;
+        private Popup? prenumeMenuPopup;
+
+        private ComandaBLL.RezultatPlasareComanda? ultimaComandaPlasata;
+
         public MeniuRestaurantView()
         {
             InitializeComponent();
@@ -33,27 +48,23 @@ namespace RestaurantCarol.Views
         {
             if (UserSession.IsLoggedIn && UserSession.IsClient)
             {
-                prenumeText.Text = UserSession.CurrentUser?.Prenume ?? "Client";
+                puncteBorder.Visibility = Visibility.Visible;
+                ActualizeazaPuncte();
                 AfiseazaPanouClient();
             }
             else
             {
+                puncteBorder.Visibility = Visibility.Collapsed;
                 AfiseazaPanouOaspete();
             }
         }
-
-        private TextBlock? cosCountText;
-        private TextBlock? cosTotalText;
-        private Border? cosBorder;
-        private TextBlock? adresaText;
-        private Border? adresaBorder;
 
         private void AfiseazaPanouClient()
         {
             cosBorder = new Border
             {
-                Style = (Style)FindResource("InfoPanel"),
-                Cursor = System.Windows.Input.Cursors.Hand
+                Style = (Style)FindResource("HeaderPanel"),
+                Cursor = Cursors.Hand
             };
 
             cosBorder.MouseLeftButtonDown += Cos_Click;
@@ -63,14 +74,14 @@ namespace RestaurantCarol.Views
             {
                 Text = "COS",
                 FontWeight = FontWeights.Bold,
-                FontSize = 14,
+                FontSize = 13,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 
             cosCountText = new TextBlock
             {
-                FontSize = 12,
+                FontSize = 11,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
@@ -79,7 +90,7 @@ namespace RestaurantCarol.Views
 
             cosTotalText = new TextBlock
             {
-                FontSize = 13,
+                FontSize = 12,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -92,7 +103,7 @@ namespace RestaurantCarol.Views
 
             adresaBorder = new Border
             {
-                Style = (Style)FindResource("InfoPanel"),
+                Style = (Style)FindResource("HeaderPanel"),
                 Cursor = System.Windows.Input.Cursors.Hand
             };
 
@@ -103,19 +114,20 @@ namespace RestaurantCarol.Views
             {
                 Text = "ADRESA",
                 FontWeight = FontWeights.Bold,
-                FontSize = 14,
+                FontSize = 13,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
 
             adresaText = new TextBlock
             {
-                FontSize = 12,
+                FontSize = 11,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
-                Margin = new Thickness(0, 5, 0, 0)
+                Margin = new Thickness(0, 5, 0, 0),
+                MaxWidth = 150
             };
             sp2.Children.Add(adresaText);
 
@@ -126,14 +138,14 @@ namespace RestaurantCarol.Views
 
             Border borderStare = new Border
             {
-                Style = (Style)FindResource("InfoPanel")
+                Style = (Style)FindResource("HeaderPanel")
             };
             StackPanel sp3 = new StackPanel();
             sp3.Children.Add(new TextBlock
             {
                 Text = "STARE COMANDA",
                 FontWeight = FontWeights.Bold,
-                FontSize = 14,
+                FontSize = 13,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
@@ -141,7 +153,7 @@ namespace RestaurantCarol.Views
             stareCmdCodText = new TextBlock
             {
                 Text = "Nicio comanda activa",
-                FontSize = 11,
+                FontSize = 10,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 5, 0, 0)
@@ -151,18 +163,18 @@ namespace RestaurantCarol.Views
             stareCmdStareText = new TextBlock
             {
                 Text = "",
-                FontSize = 12,
+                FontSize = 11,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 2, 0, 0)
+                Margin = new Thickness(0, 2, 0, 0),
             };
             sp3.Children.Add(stareCmdStareText);
 
             stareCmdOraText = new TextBlock
             {
                 Text = "",
-                FontSize = 11,
+                FontSize = 10,
                 FontStyle = FontStyles.Italic,
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -173,8 +185,29 @@ namespace RestaurantCarol.Views
             borderStare.Child = sp3;
             panouDreapta.Children.Add(borderStare);
 
+            prenumeBorder = new Border
+            {
+                Background = (Brush)new BrushConverter().ConvertFrom("#EB7A6B14")!,
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(20, 12, 20, 12),
+                Margin = new Thickness(5, 0, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            prenumeBorder.MouseLeftButtonDown += Prenume_Click;
+
+            TextBlock prenumeTxt = new TextBlock
+            {
+                Text = UserSession.CurrentUser?.Prenume ?? "Client",
+                FontSize = 18,
+                Foreground = Brushes.White
+            };
+            prenumeBorder.Child = prenumeTxt;
+            panouDreapta.Children.Add(prenumeBorder);
+
+            ConstruiestePopupPrenume();
             CartSession.CartChanged += ActualizeazaPanouCos;
             ActualizeazaPanouCos();
+            ActualizeazaAdresaImplicita();
         }
 
         private void ActualizeazaPanouCos()
@@ -194,11 +227,6 @@ namespace RestaurantCarol.Views
             }
         }
 
-        private ComandaBLL.RezultatPlasareComanda? ultimaComandaPlasata;
-        private TextBlock? stareCmdCodText;
-        private TextBlock? stareCmdStareText;
-        private TextBlock? stareCmdOraText;
-
         public void ActualizeazaStareComanda(ComandaBLL.RezultatPlasareComanda rezultat)
         {
             ultimaComandaPlasata = rezultat;
@@ -211,6 +239,16 @@ namespace RestaurantCarol.Views
 
             if (stareCmdOraText != null)
                 stareCmdOraText.Text = $"Livrare ~ {rezultat.OraEstimataLivrare:HH:mm}";
+
+            ActualizeazaPuncte();
+        }
+
+        public void ActualizeazaPuncte()
+        {
+            if (puncteText != null && UserSession.CurrentUser != null)
+            {
+                puncteText.Text = $"Puncte Carol: {UserSession.CurrentUser.Puncte}";
+            }
         }
 
         private void Cos_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -229,22 +267,135 @@ namespace RestaurantCarol.Views
 
         private void AfiseazaPanouOaspete()
         {
-            Button btnLogin = new Button
-            {
-                Content = "Logheaza-te",
-                Style = (Style)FindResource("SidePanelButton")
-            };
+            Button btnLogin = CreeazaButonHeader("Logheaza-te");
             btnLogin.Click += Login_Click;
             panouDreapta.Children.Add(btnLogin);
 
-            Button btnRegister = new Button
-            {
-                Content = "Inregistreaza-te",
-                Style = (Style)FindResource("SidePanelButton")
-            };
+            Button btnRegister = CreeazaButonHeader("Inregistreaza-te");
             btnRegister.Click += Register_Click;
             panouDreapta.Children.Add(btnRegister);
+
+            Border prenume = new Border
+            {
+                Background = (Brush)new BrushConverter().ConvertFrom("#EB7A6B14")!,
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(20, 12, 20, 12),
+                Margin = new Thickness(5, 0, 0, 0)
+            };
+            prenume.Child = new TextBlock
+            {
+                Text = "Oaspete",
+                FontSize = 18,
+                Foreground = Brushes.White
+            };
+            panouDreapta.Children.Add(prenume);
         }
+
+        private Button CreeazaButonHeader(string text)
+        {
+            Button btn = new Button
+            {
+                Content = text,
+                Background = (Brush)new BrushConverter().ConvertFrom("#F4B860")!,
+                Foreground = (Brush)new BrushConverter().ConvertFrom("#3A3A3A")!,
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Width = 140,
+                Height = 45,
+                Margin = new Thickness(5, 0, 5, 0),
+                Cursor = Cursors.Hand,
+                BorderThickness = new Thickness(0)
+            };
+
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
+            border.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Button.BackgroundProperty));
+            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(6));
+            FrameworkElementFactory cp = new FrameworkElementFactory(typeof(ContentPresenter));
+            cp.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            cp.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            border.AppendChild(cp);
+            template.VisualTree = border;
+            btn.Template = template;
+
+            return btn;
+        }
+
+        private void ConstruiestePopupPrenume()
+        {
+            prenumeMenuPopup = new Popup
+            {
+                PlacementTarget = prenumeBorder,
+                Placement = PlacementMode.Bottom,
+                StaysOpen = false,
+                AllowsTransparency = true,
+                PopupAnimation = PopupAnimation.Fade
+            };
+
+            Border container = new Border
+            {
+                Background = Brushes.White,
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(0),
+                Margin = new Thickness(5, 8, 5, 8),
+                MinWidth = 160
+            };
+            container.Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                Color = Colors.Black,
+                BlurRadius = 15,
+                ShadowDepth = 0,
+                Opacity = 0.3
+            };
+
+            StackPanel menu = new StackPanel();
+
+            Button btnLogout = new Button
+            {
+                Content = "Iesire din cont",
+                Background = Brushes.Transparent,
+                Foreground = (Brush)new BrushConverter().ConvertFrom("#D85A4A")!,
+                FontSize = 14,
+                FontWeight = FontWeights.SemiBold,
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(20, 12, 20, 12),
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Cursor = Cursors.Hand
+            };
+            btnLogout.Click += Logout_Click;
+            menu.Children.Add(btnLogout);
+
+            container.Child = menu;
+            prenumeMenuPopup.Child = container;
+        }
+
+        private void Prenume_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (prenumeMenuPopup != null)
+                prenumeMenuPopup.IsOpen = !prenumeMenuPopup.IsOpen;
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(
+                "Sigur vrei sa iesi din cont?",
+                "Confirmare iesire",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            if (prenumeMenuPopup != null) prenumeMenuPopup.IsOpen = false;
+
+            UserSession.Logout();
+            CartSession.Goleste();
+
+            MainWindow mw = new MainWindow();
+            mw.Show();
+            this.Close();
+        }
+
+
 
         public void NavigateToListaPreparatePopulare()
         {

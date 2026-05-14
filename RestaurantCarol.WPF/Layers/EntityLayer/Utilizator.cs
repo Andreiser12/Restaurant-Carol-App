@@ -50,5 +50,12 @@ namespace RestaurantCarol.Layers
             get => rol;
             set { rol = value; NotifyPropertyChanged(); }
         }
+
+        private int puncte;
+        public int Puncte
+        {
+            get => puncte;
+            set { puncte = value; NotifyPropertyChanged(); }
+        }
     }
 }

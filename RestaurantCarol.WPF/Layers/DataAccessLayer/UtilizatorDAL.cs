@@ -27,7 +27,8 @@ namespace RestaurantCarol.Layers
                             Telefon = reader.IsDBNull(reader.GetOrdinal("Telefon"))
                                 ? null : reader.GetString(reader.GetOrdinal("Telefon")),
                             ParolaHash = reader.GetString(reader.GetOrdinal("ParolaHash")),
-                            Rol = Enum.Parse<RolUtilizator>(reader.GetString(reader.GetOrdinal("Rol")))
+                            Rol = Enum.Parse<RolUtilizator>(reader.GetString(reader.GetOrdinal("Rol"))),
+                            Puncte = reader.GetInt32(reader.GetOrdinal("Puncte"))
                         };
                     }
                     return null;
@@ -74,6 +75,22 @@ namespace RestaurantCarol.Layers
                 cmd.ExecuteNonQuery();
 
                 utilizator.IdUtilizator = (int)paramId.Value;
+            }
+        }
+
+        public int GetPuncteByUtilizator(int idUtilizator)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetPuncteByUtilizator", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+
+                con.Open();
+                object? result = cmd.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value) return 0;
+                return (int)result;
             }
         }
     }

@@ -25,6 +25,7 @@ namespace RestaurantCarol.Layers
             public decimal CostTransport { get; set; }
             public decimal Discount { get; set; }
             public decimal CostTotal => CostMancare + CostTransport - Discount;
+            public int PuncteCastigate => (int)Math.Floor(CostTotal / 10);
         }
 
         public RezultatPlasareComanda PlaseazaComanda(int idUtilizator,
@@ -69,6 +70,12 @@ namespace RestaurantCarol.Layers
                     costTransport,
                     discount,
                     iteme);
+
+                if (UserSession.CurrentUser != null)
+                {
+                    var utilizatorBLL = new AutentificareBLL();
+                    UserSession.CurrentUser.Puncte = utilizatorBLL.GetPuncteByUtilizator(idUtilizator);
+                }
 
                 return new RezultatPlasareComanda
                 {
