@@ -446,7 +446,7 @@ namespace RestaurantCarol.Views
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            LoginView login = new LoginView(RolUtilizator.Client);
+            LoginView login = new LoginView();
             login.Show();
             this.Close();
         }

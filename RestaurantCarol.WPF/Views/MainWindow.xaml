@@ -103,10 +103,6 @@
                             Style="{StaticResource MenuButton}"
                             Click="Inregistreaza_Click"/>
 
-                    <Button Content="Intra ca angajat" 
-                            Style="{StaticResource MenuButton}"
-                            Click="IntraCaAngajat_Click"/>
-
                     <TextBlock Text="Vrei sa faci parte din echipa noastra?"
                                FontSize="16"
                                Foreground="#D2AF6D"

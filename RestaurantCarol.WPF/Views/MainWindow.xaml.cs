@@ -24,7 +24,7 @@ namespace RestaurantCarol
 
         private void IntraInCont_Click(object sender, RoutedEventArgs e)
         {
-            LoginView login = new LoginView(RolUtilizator.Client);
+            LoginView login = new LoginView();
             login.Show();
             this.Close();
         }
@@ -33,13 +33,6 @@ namespace RestaurantCarol
         {
             RegisterView register = new RegisterView();
             register.Show();
-            this.Close();
-        }
-
-        private void IntraCaAngajat_Click(object sender, RoutedEventArgs e)
-        {
-            LoginView login = new LoginView(RolUtilizator.Angajat);
-            login.Show();
             this.Close();
         }
 

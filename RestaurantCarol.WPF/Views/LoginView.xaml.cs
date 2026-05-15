@@ -9,22 +9,15 @@ namespace RestaurantCarol.Views
     {
         private LoginViewModel viewModel;
 
-        public LoginView(RolUtilizator rolAsteptat = RolUtilizator.Client)
+        public LoginView()
         {
             InitializeComponent();
 
             viewModel = new LoginViewModel
             {
-                RolAsteptat = rolAsteptat,
                 OnLoginSuccess = HandleLoginSuccess
             };
             DataContext = viewModel;
-
-            if (rolAsteptat == RolUtilizator.Angajat)
-            {
-                titluText.Text = "Intra ca angajat";
-                Title = "Restaurant Carol - Autentificare Angajat";
-            }
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
@@ -47,7 +40,8 @@ namespace RestaurantCarol.Views
             }
             else if (UserSession.IsAngajat)
             {
-                MessageBox.Show("Aici se va deschide dashboard angajat", "TODO");
+                AngajatHubView hub = new AngajatHubView();
+                hub.Show();
             }
 
             this.Close();

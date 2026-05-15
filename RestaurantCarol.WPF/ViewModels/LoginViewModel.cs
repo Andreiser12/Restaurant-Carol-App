@@ -8,8 +8,6 @@ namespace RestaurantCarol.ViewModels
     {
         private AutentificareBLL autentificareBLL = new AutentificareBLL();
 
-        public RolUtilizator RolAsteptat { get; set; } = RolUtilizator.Client;
-
         public Action? OnLoginSuccess { get; set; }
 
         private string email = string.Empty;
@@ -38,7 +36,7 @@ namespace RestaurantCarol.ViewModels
 
         private void ExecuteLogin()
         {
-            Utilizator utilizator = autentificareBLL.Autentificare(Email, Parola, RolAsteptat);
+            Utilizator utilizator = autentificareBLL.Autentificare(Email, Parola);
             UserSession.Login(utilizator);
             OnLoginSuccess?.Invoke();
         }

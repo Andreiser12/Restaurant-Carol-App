@@ -9,7 +9,9 @@ namespace RestaurantCarol.Layers
     public enum RolUtilizator
     {
         Client,
-        Angajat
+        Bucatar,
+        Manager,
+        Livrator
     }
 }
 
