@@ -6,7 +6,7 @@ namespace RestaurantCarol.Layers
     {
         private UtilizatorDAL utilizatorDAL = new UtilizatorDAL();
 
-        public Utilizator Autentificare(string email, string parola, RolUtilizator rolAsteptat)
+        public Utilizator Autentificare(string email, string parola)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -28,18 +28,6 @@ namespace RestaurantCarol.Layers
             if (!parolaCorecta)
             {
                 throw new RestaurantException("Email sau parola incorecta.");
-            }
-
-            if (utilizator.Rol != rolAsteptat)
-            {
-                if (rolAsteptat == RolUtilizator.Angajat)
-                {
-                    throw new RestaurantException("Acest cont nu are drepturi de angajat.");
-                }
-                else
-                {
-                    throw new RestaurantException("Acest cont nu este de tip client.");
-                }
             }
 
             return utilizator;
