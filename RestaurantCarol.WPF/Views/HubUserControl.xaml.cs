@@ -1,4 +1,4 @@
-﻿using RestaurantCarol.Layers;
+using RestaurantCarol.Layers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -206,6 +206,10 @@ namespace RestaurantCarol.Views
 
         private void Bauturi_Click(object sender, RoutedEventArgs e)
         {
+            parentView?.NavigateToListaCategorii(
+                TipCategorie.Bauturi,
+                "Bauturi",
+                "/Images/categorie_bauturi.png");
         }
     }
 }

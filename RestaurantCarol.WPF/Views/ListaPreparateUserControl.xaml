@@ -122,7 +122,7 @@
                                         CornerRadius="140"
                                         ClipToBounds="True">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding PrimaCalePoza, FallbackValue='/Images/carol_logo.png', TargetNullValue='/Images/carol_logo.png'}" 
+                                        <ImageBrush ImageSource="{Binding PrimaCalePoza,  Converter={StaticResource CalePozaConverter}}" 
                                                     Stretch="UniformToFill"/>
                                     </Border.Background>
                                 </Border>

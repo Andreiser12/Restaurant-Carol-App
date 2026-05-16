@@ -23,15 +23,25 @@ namespace RestaurantCarol.Layers
         public void AddCategorie(Categorie categorie)
         {
             if (categorie == null)
-            {
                 throw new RestaurantException("Trebuie sa precizati o categorie.");
-            }
+
             if (string.IsNullOrWhiteSpace(categorie.Denumire))
-            {
                 throw new RestaurantException("Denumirea categoriei trebuie precizata.");
+
+            if (categorie.Denumire.Length > 100)
+                throw new RestaurantException("Denumirea categoriei poate avea maxim 100 caractere.");
+
+            categorie.Denumire = categorie.Denumire.Trim();
+
+            try
+            {
+                categorieDAL.AddCategorie(categorie);
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
+            {
+                throw new RestaurantException("Exista deja o categorie cu acest nume.");
             }
 
-            categorieDAL.AddCategorie(categorie);
             CategoriiList?.Add(categorie);
         }
 

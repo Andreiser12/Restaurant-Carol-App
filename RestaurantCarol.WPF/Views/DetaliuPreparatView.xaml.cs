@@ -37,12 +37,18 @@ namespace RestaurantCarol.Views
 
             try
             {
-                string cale = !string.IsNullOrEmpty(preparat.PrimaCalePoza)
+                string calePoza = !string.IsNullOrEmpty(preparat.PrimaCalePoza)
                     ? preparat.PrimaCalePoza
                     : "/Images/carol_logo.png";
 
-                BitmapImage bitmap = new BitmapImage(
-                    new Uri($"pack://application:,,,{cale}", UriKind.Absolute));
+                string pathFinal = Helpers.ImageUploadHelper.ConstruiestePathPentruImage(calePoza);
+
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(pathFinal, UriKind.Absolute);
+                bitmap.EndInit();
+
                 pozaPreparat.ImageSource = bitmap;
             }
             catch {}

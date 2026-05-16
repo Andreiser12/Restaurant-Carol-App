@@ -24,6 +24,13 @@ namespace RestaurantCarol.Views
 
         private void AdaugaProdus_Click(object sender, RoutedEventArgs e)
         {
+            AdaugaPreparatView popup = new AdaugaPreparatView();
+
+            var parentWindow = Window.GetWindow(this);
+            if (parentWindow != null)
+                popup.Owner = parentWindow;
+
+            popup.ShowDialog();
         }
 
         private void ModificaProdus_Click(object sender, RoutedEventArgs e)

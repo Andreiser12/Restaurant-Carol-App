@@ -6,5 +6,6 @@
     <Application.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <converters:BoolToInvisibilityConverter x:Key="BoolToInvisibility"/>
+        <converters:CalePozaConverter x:Key="CalePozaConverter"/>
     </Application.Resources>
 </Application>

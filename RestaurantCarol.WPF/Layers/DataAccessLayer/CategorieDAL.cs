@@ -64,11 +64,11 @@ namespace RestaurantCarol.Layers
                 SqlCommand command = new("AddCategorie", connection);
                 command.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter paramDenumire = new("@denumire", categorie.Denumire);
+                command.Parameters.Add(new SqlParameter("@denumire", categorie.Denumire));
+                command.Parameters.Add(new SqlParameter("@tip", categorie.Tip.ToString()));
+
                 SqlParameter paramId = new("@idCategorie", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
-
-                command.Parameters.Add(paramDenumire);
                 command.Parameters.Add(paramId);
 
                 connection.Open();
