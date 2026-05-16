@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using RestaurantCarol.Exceptions;
 
 namespace RestaurantCarol.Layers
@@ -113,6 +113,19 @@ namespace RestaurantCarol.Layers
         private bool EsteClientFidel()
         {
             return false;
+        }
+
+        public ObservableCollection<Comanda> GetComenziManager(bool doarActive)
+        {
+            return comandaDAL.GetComenziManager(doarActive);
+        }
+
+        public void UpdateStareComanda(int idComanda, StareComanda nouaStare)
+        {
+            if (idComanda <= 0)
+                throw new RestaurantException("Comanda invalida.");
+
+            comandaDAL.UpdateStareComanda(idComanda, nouaStare);
         }
     }
 }

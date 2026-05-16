@@ -53,5 +53,86 @@ namespace RestaurantCarol.Layers
                 return (int)idParam.Value;
             }
         }
+
+        public ObservableCollection<Comanda> GetComenziManager(bool doarActive)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetComenziManager", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@doarActive", doarActive));
+
+                ObservableCollection<Comanda> comenzi = new ObservableCollection<Comanda>();
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var comanda = new Comanda
+                        {
+                            IdComanda = Convert.ToInt32(reader["IdComanda"]),
+                            CodComanda = reader["CodComanda"].ToString() ?? string.Empty,
+                            IdUtilizator = Convert.ToInt32(reader["IdUtilizator"]),
+                            DataComanda = Convert.ToDateTime(reader["DataComanda"]),
+                            OraEstimataLivrare = reader["OraEstimataLivrare"] != DBNull.Value ? Convert.ToDateTime(reader["OraEstimataLivrare"]) : null,
+                            CostMancare = Convert.ToDecimal(reader["CostMancare"]),
+                            CostTransport = Convert.ToDecimal(reader["CostTransport"]),
+                            Discount = Convert.ToDecimal(reader["Discount"]),
+                            StareComanda = (StareComanda)Enum.Parse(typeof(StareComanda), reader["Stare"].ToString() ?? "Inregistrata", true),
+                            AdresaLivrareCompleta = reader["AdresaLivrareCompleta"].ToString() ?? string.Empty,
+                            Utilizator = new Utilizator
+                            {
+                                Nume = reader["NumeClient"].ToString() ?? string.Empty,
+                                Prenume = reader["PrenumeClient"].ToString() ?? string.Empty,
+                                Telefon = reader["TelefonClient"] != DBNull.Value ? reader["TelefonClient"].ToString() : null
+                            }
+                        };
+                        comenzi.Add(comanda);
+                    }
+
+                    // Move to second result set for items
+                    if (reader.NextResult())
+                    {
+                        while (reader.Read())
+                        {
+                            int idComanda = Convert.ToInt32(reader["IdComanda"]);
+                            var comanda = comenzi.FirstOrDefault(c => c.IdComanda == idComanda);
+                            if (comanda != null)
+                            {
+                                comanda.Items.Add(new ItemComanda
+                                {
+                                    IdItemComanda = Convert.ToInt32(reader["IdItemComanda"]),
+                                    IdComanda = idComanda,
+                                    IdPreparat = reader["IdPreparat"] != DBNull.Value ? Convert.ToInt32(reader["IdPreparat"]) : null,
+                                    Cantitate = Convert.ToInt32(reader["Cantitate"]),
+                                    Preparat = new Preparat
+                                    {
+                                        IdPreparat = reader["IdPreparat"] != DBNull.Value ? Convert.ToInt32(reader["IdPreparat"]) : 0,
+                                        Denumire = reader["DenumirePreparat"].ToString() ?? string.Empty
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return comenzi;
+            }
+        }
+
+        public void UpdateStareComanda(int idComanda, StareComanda nouaStare)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("UpdateStareComanda", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@idComanda", idComanda));
+                cmd.Parameters.Add(new SqlParameter("@nouaStare", nouaStare.ToString()));
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

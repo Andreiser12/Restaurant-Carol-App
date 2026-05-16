@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -30,10 +30,10 @@ namespace RestaurantCarol.Views
             contentArea.Content = new BucatarUserControl(this);
         }
 
-        //public void NavigateToManager()
-        //{
-        //    contentArea.Content = new ManagerUserControl(this);
-        //}
+        public void NavigateToManager()
+        {
+            contentArea.Content = new ManagerUserControl(this);
+        }
 
         //public void NavigateToLivrator()
         //{
@@ -135,6 +135,30 @@ namespace RestaurantCarol.Views
             this.Close();
         }
 
+        public void NavigateBucatarLaListaCategorii(TipCategorie tip)
+        {
+            string titlu = tip == TipCategorie.Mancare ? "Mancare" : "Bauturi";
+            string caleImagine = tip == TipCategorie.Mancare
+                ? "/Images/categorie_mancare.jpg"
+                : "/Images/categorie_bauturi.jpg";
+
+            contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu, caleImagine);
+        }
+
+        public void NavigateBucatarLaListaPreparate(Categorie categorie, TipCategorie tipParinte)
+        {
+            contentArea.Content = new ListaPreparateUserControl(this, categorie, tipParinte);
+        }
+
+        public void NavigateManagerLaComenzi(bool doarActive)
+        {
+            contentArea.Content = new ManagerComenziUserControl(this, doarActive);
+        }
+
+        public void NavigateManagerLaStocRedus()
+        {
+            contentArea.Content = new ManagerStocRedusUserControl(this);
+        }
 
         private void Bucatar_Click(object sender, RoutedEventArgs e)
         {

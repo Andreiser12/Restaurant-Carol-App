@@ -213,6 +213,165 @@ namespace RestaurantCarol.Layers
             }
         }
 
+        public Preparat? GetById(int idPreparat)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetPreparatById", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Preparat
+                        {
+                            IdPreparat = reader.GetInt32(reader.GetOrdinal("IdPreparat")),
+                            Denumire = reader.GetString(reader.GetOrdinal("Denumire")),
+                            Pret = reader.GetDecimal(reader.GetOrdinal("Pret")),
+                            CantitatePortie = (int)reader.GetDecimal(reader.GetOrdinal("CantitatePortie")),
+                            CantitateTotala = (int)reader.GetDecimal(reader.GetOrdinal("CantitateTotala")),
+                            Descriere = ReadNullableString(reader, "Descriere"),
+                            Calorii = ReadNullableInt(reader, "Calorii"),
+                            Grasimi = ReadNullableDecimal(reader, "Grasimi"),
+                            Carbohidrati = ReadNullableDecimal(reader, "Carbohidrati"),
+                            Proteine = ReadNullableDecimal(reader, "Proteine"),
+                            Sare = ReadNullableDecimal(reader, "Sare"),
+                            IdCategorie = reader.GetInt32(reader.GetOrdinal("IdCategorie")),
+                            PrimaCalePoza = ReadNullableString(reader, "PrimaCalePoza")
+                        };
+                    }
+                    return null;
+                }
+            }
+        }
+
+        public bool CheckDenumireDuplicate(string denumire, int idExclude)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("CheckDenumirePreparatDuplicate", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@denumire", denumire));
+                cmd.Parameters.Add(new SqlParameter("@idExclude", idExclude));
+
+                con.Open();
+                object? result = cmd.ExecuteScalar();
+
+                if (result == null) return false;
+                return (int)result == 1;
+            }
+        }
+
+        public void UpdatePreparat(Preparat preparat, List<int> idsAlergeni,
+                                    string actiunePoza, string? caleFotografieNoua)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("UpdatePreparat", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@idPreparat", preparat.IdPreparat));
+                cmd.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
+                cmd.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
+                cmd.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
+                cmd.Parameters.Add(new SqlParameter("@descriere",
+                    (object?)preparat.Descriere ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@calorii",
+                    (object?)preparat.Calorii ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@grasimi",
+                    (object?)preparat.Grasimi ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@carbohidrati",
+                    (object?)preparat.Carbohidrati ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@proteine",
+                    (object?)preparat.Proteine ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@sare",
+                    (object?)preparat.Sare ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
+                cmd.Parameters.Add(new SqlParameter("@caleFotografie",
+                    (object?)caleFotografieNoua ?? DBNull.Value));
+                cmd.Parameters.Add(new SqlParameter("@actiunePoza", actiunePoza));
+
+                DataTable alergeniTable = new DataTable();
+                alergeniTable.Columns.Add("IdAlergen", typeof(int));
+                foreach (int id in idsAlergeni)
+                {
+                    alergeniTable.Rows.Add(id);
+                }
+
+                SqlParameter paramAlergeni = new("@alergeni", alergeniTable);
+                paramAlergeni.SqlDbType = SqlDbType.Structured;
+                paramAlergeni.TypeName = "IdAlergenType";
+                cmd.Parameters.Add(paramAlergeni);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void UpdateStoc(int idPreparat, int cantitateNoua)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("UpdateStocPreparat", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+                cmd.Parameters.Add(new SqlParameter("@cantitateTotala", cantitateNoua));
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public ObservableCollection<Preparat> GetPreparateStocRedus(int prag)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("GetPreparateStocRedus", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@prag", prag));
+
+                ObservableCollection<Preparat> result = new();
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Preparat
+                        {
+                            IdPreparat = reader.GetInt32(reader.GetOrdinal("IdPreparat")),
+                            Denumire = reader.GetString(reader.GetOrdinal("Denumire")),
+                            CantitateTotala = Convert.ToInt32(reader["CantitateTotala"])
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+
+        public string? DeletePreparat(int idPreparat)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new("DeletePreparat", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+
+                SqlParameter paramCalePoza = new("@calePozaDeStersOutput", SqlDbType.NVarChar, 500);
+                paramCalePoza.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(paramCalePoza);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                if (paramCalePoza.Value == DBNull.Value) return null;
+                return paramCalePoza.Value as string;
+            }
+        }
+
         private string? ReadNullableString(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);

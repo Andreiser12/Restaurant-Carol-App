@@ -24,6 +24,7 @@ namespace RestaurantCarol.Layers
         public decimal CostTotal => CostMancare + CostTransport - Discount;
 
         public Utilizator? Utilizator { get; set; }
+        public string AdresaLivrareCompleta { get; set; } = string.Empty;
 
         public List<ItemComanda> Items { get; set; } = new();
     }

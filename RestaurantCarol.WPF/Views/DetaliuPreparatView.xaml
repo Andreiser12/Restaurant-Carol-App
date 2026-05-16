@@ -1,4 +1,4 @@
-﻿<Window x:Class="RestaurantCarol.Views.DetaliuPreparatView"
+<Window x:Class="RestaurantCarol.Views.DetaliuPreparatView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Detalii Preparat" 
@@ -60,6 +60,7 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#D2AF6D"/>
+                    <Setter Property="Foreground" Value="#373334"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

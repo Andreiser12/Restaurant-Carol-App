@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -66,7 +66,7 @@ namespace RestaurantCarol.Views
 
         private void Manager_Click(object sender, RoutedEventArgs e)
         {
-            //parentView?.NavigateToManager();
+            parentView?.NavigateToManager();
         }
 
         private void Livrator_Click(object sender, RoutedEventArgs e)

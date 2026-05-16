@@ -7,11 +7,19 @@ using RestaurantCarol.Layers;
 
 namespace RestaurantCarol.Views
 {
+    public enum ModListaCategorii
+    {
+        Browse,
+        Edit
+    }
+
     public partial class ListaCategoriiUserControl : UserControl
     {
-        private MeniuRestaurantView? parentView;
+        private MeniuRestaurantView? parentViewClient;
+        private AngajatHubView? parentViewBucatar;
         private CategorieBLL categorieBLL = new CategorieBLL();
         private TipCategorie tipParinte;
+        private ModListaCategorii mod;
 
         public ListaCategoriiUserControl()
         {
@@ -21,19 +29,32 @@ namespace RestaurantCarol.Views
         public ListaCategoriiUserControl(MeniuRestaurantView parent, TipCategorie tip,
                                           string titlu, string caleImagine) : this()
         {
-            parentView = parent;
+            parentViewClient = parent;
             tipParinte = tip;
+            mod = ModListaCategorii.Browse;
+            ConfigureazaUI(tip, titlu, caleImagine);
+        }
+
+        public ListaCategoriiUserControl(AngajatHubView parent, TipCategorie tip,
+                                          string titlu, string caleImagine) : this()
+        {
+            parentViewBucatar = parent;
+            tipParinte = tip;
+            mod = ModListaCategorii.Edit;
+            ConfigureazaUI(tip, titlu, caleImagine);
+        }
+
+        private void ConfigureazaUI(TipCategorie tip, string titlu, string caleImagine)
+        {
             titluText.Text = titlu;
 
             try
             {
-                BitmapImage bitmap = new BitmapImage(new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
+                BitmapImage bitmap = new BitmapImage(
+                    new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
                 logoImage.ImageSource = bitmap;
             }
-            catch
-            {
-                
-            }
+            catch { }
 
             ObservableCollection<Categorie> categorii = categorieBLL.GetCategoriiByTip(tip);
             DataContext = categorii;
@@ -41,14 +62,20 @@ namespace RestaurantCarol.Views
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            parentView?.NavigateToHub();
+            if (mod == ModListaCategorii.Browse)
+                parentViewClient?.NavigateToHub();
+            else if (mod == ModListaCategorii.Edit)
+                parentViewBucatar?.NavigateToBucatar();
         }
 
         private void Categorie_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Categorie categorie)
             {
-                parentView?.NavigateToListaPreparate(categorie, tipParinte);
+                if (mod == ModListaCategorii.Browse)
+                    parentViewClient?.NavigateToListaPreparate(categorie, tipParinte);
+                else if (mod == ModListaCategorii.Edit)
+                    parentViewBucatar?.NavigateBucatarLaListaPreparate(categorie, tipParinte);
             }
         }
     }

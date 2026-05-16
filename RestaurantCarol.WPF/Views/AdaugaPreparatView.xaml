@@ -7,7 +7,8 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style x:Key="CloseButton" TargetType="Button">
@@ -266,6 +267,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBox Grid.Column="0"
@@ -287,6 +289,21 @@
                                     Cursor="Hand"
                                     BorderThickness="0"
                                     Click="AlegePoza_Click"/>
+                            <Button Grid.Column="2"
+                                    x:Name="btnStergePoza"
+                                    Content="✕"
+                                    Background="#D85A4A"
+                                    Foreground="White"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Width="35"
+                                    Height="35"
+                                    Margin="6,0,0,0"
+                                    Cursor="Hand"
+                                    BorderThickness="0"
+                                    ToolTip="Sterge poza"
+                                    Visibility="Collapsed"
+                                    Click="StergePoza_Click"/>
                         </Grid>
 
                         <Border x:Name="previewBorder"
@@ -337,12 +354,47 @@
                 </Grid>
             </ScrollViewer>
 
-            <Button Grid.Row="3"
-                    x:Name="btnSubmit"
-                    Style="{StaticResource SubmitButton}"
-                    Content="Adauga preparat"
-                    Margin="0,15,0,0"
-                    Click="Submit_Click"/>
+            <StackPanel Grid.Row="3" Margin="0,15,0,0">
+                <Button x:Name="btnSubmit"
+            Style="{StaticResource SubmitButton}"
+            Content="Adauga preparat"
+            Click="Submit_Click"/>
+
+                <Button x:Name="btnSterge"
+            Background="Transparent"
+            Foreground="#D85A4A"
+            BorderBrush="#D85A4A"
+            BorderThickness="1"
+            FontSize="14"
+            FontWeight="SemiBold"
+            Height="42"
+            Cursor="Hand"
+            Margin="0,10,0,0"
+            Content="Sterge preparat"
+            Visibility="Collapsed"
+            Click="Sterge_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="21">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FFE5E0"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
 
         </Grid>
     </Border>

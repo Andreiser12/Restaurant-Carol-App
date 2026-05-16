@@ -6,11 +6,20 @@ using RestaurantCarol.Layers;
 
 namespace RestaurantCarol.Views
 {
+    public enum ModListaPreparate
+    {
+        Browse,
+        Edit
+    }
+
     public partial class ListaPreparateUserControl : UserControl
     {
-        private MeniuRestaurantView? parentView;
+        private MeniuRestaurantView? parentViewClient;
+        private AngajatHubView? parentViewBucatar;
         private PreparatBLL preparatBLL = new PreparatBLL();
         private TipCategorie? tipCategorieParinte;
+        private Categorie? categorieCurenta;
+        private ModListaPreparate mod;
 
         public ListaPreparateUserControl()
         {
@@ -20,14 +29,13 @@ namespace RestaurantCarol.Views
         public ListaPreparateUserControl(MeniuRestaurantView parent, Categorie categorie,
                                           TipCategorie tipParinte) : this()
         {
-            parentView = parent;
+            parentViewClient = parent;
+            categorieCurenta = categorie;
             tipCategorieParinte = tipParinte;
-            titluText.Text = categorie.Denumire;
+            mod = ModListaPreparate.Browse;
 
-            SetLogo("/Images/carol_logo.png");
-
-            ObservableCollection<Preparat> preparate = preparatBLL.GetByCategorie(categorie.IdCategorie);
-            DataContext = preparate;
+            ConfigureazaUI(categorie.Denumire, "/Images/carol_logo.png");
+            IncarcaPreparate();
         }
 
         public ListaPreparateUserControl(MeniuRestaurantView parent,
@@ -35,12 +43,45 @@ namespace RestaurantCarol.Views
                                           string titlu,
                                           string caleLogoCentral) : this()
         {
-            parentView = parent;
+            parentViewClient = parent;
+            mod = ModListaPreparate.Browse;
             tipCategorieParinte = null;
 
-            titluText.Text = titlu;
-            SetLogo(caleLogoCentral);
+            ConfigureazaUI(titlu, caleLogoCentral);
+            DataContext = preparate;
+        }
 
+        public ListaPreparateUserControl(AngajatHubView parent, Categorie categorie,
+                                          TipCategorie tipParinte) : this()
+        {
+            parentViewBucatar = parent;
+            categorieCurenta = categorie;
+            tipCategorieParinte = tipParinte;
+            mod = ModListaPreparate.Edit;
+
+            ConfigureazaUI(categorie.Denumire, "/Images/carol_logo.png");
+            IncarcaPreparate();
+        }
+
+        private void ConfigureazaUI(string titlu, string caleLogo)
+        {
+            titluText.Text = titlu;
+
+            try
+            {
+                BitmapImage bitmap = new BitmapImage(
+                    new Uri($"pack://application:,,,{caleLogo}", UriKind.Absolute));
+                logoImage.ImageSource = bitmap;
+            }
+            catch { }
+        }
+
+        public void IncarcaPreparate()
+        {
+            if (categorieCurenta == null) return;
+
+            ObservableCollection<Preparat> preparate =
+                preparatBLL.GetByCategorie(categorieCurenta.IdCategorie);
             DataContext = preparate;
         }
 
@@ -52,23 +93,32 @@ namespace RestaurantCarol.Views
                     new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
                 logoImage.ImageSource = bitmap;
             }
-            catch {}
+            catch { }
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            if (tipCategorieParinte.HasValue)
+            if (mod == ModListaPreparate.Browse)
             {
-                string titlu = tipCategorieParinte.Value == TipCategorie.Mancare
-                    ? "Mancare" : "Bauturi";
-                string caleImagine = tipCategorieParinte.Value == TipCategorie.Mancare
-                    ? "/Images/categorie_mancare.jpg" : "/Images/categorie_bauturi.jpg";
+                if (tipCategorieParinte.HasValue)
+                {
+                    string titlu = tipCategorieParinte.Value == TipCategorie.Mancare
+                        ? "Mancare" : "Bauturi";
+                    string caleImagine = tipCategorieParinte.Value == TipCategorie.Mancare
+                        ? "/Images/categorie_mancare.jpg" : "/Images/categorie_bauturi.jpg";
 
-                parentView?.NavigateToListaCategorii(tipCategorieParinte.Value, titlu, caleImagine);
+                    parentViewClient?.NavigateToListaCategorii(tipCategorieParinte.Value,
+                        titlu, caleImagine);
+                }
+                else
+                {
+                    parentViewClient?.NavigateToHub();
+                }
             }
-            else
+            else if (mod == ModListaPreparate.Edit)
             {
-                parentView?.NavigateToHub();
+                parentViewBucatar?.NavigateBucatarLaListaCategorii(
+                    tipCategorieParinte ?? TipCategorie.Mancare);
             }
         }
 
@@ -76,10 +126,28 @@ namespace RestaurantCarol.Views
         {
             if (sender is Button btn && btn.Tag is Preparat preparat)
             {
-                DetaliuPreparatView popup = new DetaliuPreparatView(preparat);
-                popup.Owner = parentView;
-                popup.ShowDialog();
+                if (mod == ModListaPreparate.Browse)
+                {
+                    DetaliuPreparatView popup = new DetaliuPreparatView(preparat);
+                    popup.Owner = parentViewClient;
+                    popup.ShowDialog();
+                }
+                else if (mod == ModListaPreparate.Edit)
+                {
+                    AdaugaPreparatView popup = new AdaugaPreparatView(preparat.IdPreparat);
+                    if (parentViewBucatar != null)
+                        popup.Owner = parentViewBucatar;
+
+                    popup.PreparatModificat += OnPreparatModificat;
+                    popup.ShowDialog();
+                    popup.PreparatModificat -= OnPreparatModificat;
+                }
             }
+        }
+
+        private void OnPreparatModificat()
+        {
+            IncarcaPreparate();
         }
     }
 }

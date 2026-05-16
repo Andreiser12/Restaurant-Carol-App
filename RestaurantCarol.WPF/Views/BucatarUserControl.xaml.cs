@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using RestaurantCarol.Layers;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RestaurantCarol.Views
@@ -35,10 +36,30 @@ namespace RestaurantCarol.Views
 
         private void ModificaProdus_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+        "Click YES pentru categorii Mancare\nClick NO pentru categorii Bauturi\nClick CANCEL pentru a anula",
+        "Selecteaza tipul",
+        MessageBoxButton.YesNoCancel,
+        MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                parentView?.NavigateBucatarLaListaCategorii(TipCategorie.Mancare);
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                parentView?.NavigateBucatarLaListaCategorii(TipCategorie.Bauturi);
+            }
         }
 
         private void Stoc_Click(object sender, RoutedEventArgs e)
         {
+            StocView popup = new StocView();
+            var parentWindow = Window.GetWindow(this);
+            if (parentWindow != null)
+                popup.Owner = parentWindow;
+
+            popup.ShowDialog();
         }
     }
 }
