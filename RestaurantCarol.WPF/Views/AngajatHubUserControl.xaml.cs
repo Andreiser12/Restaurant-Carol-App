@@ -71,7 +71,7 @@ namespace RestaurantCarol.Views
 
         private void Livrator_Click(object sender, RoutedEventArgs e)
         {
-            //parentView?.NavigateToLivrator();
+            parentView?.NavigateToLivrator();
         }
     }
 }

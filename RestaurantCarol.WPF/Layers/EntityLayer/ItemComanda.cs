@@ -18,6 +18,9 @@ namespace RestaurantCarol.Layers
 
         public Preparat? Preparat { get; set; }
         public Meniu? Meniu { get; set; }
+
+        public string DenumireAfisata =>
+            Meniu?.Denumire ?? Preparat?.Denumire ?? "Produs";
     }
 }
 

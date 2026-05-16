@@ -137,6 +137,17 @@ VALUES
     (N'Ionescu', N'Maria', N'maria.ionescu@carol.ro', N'0731234567', NULL, N'PLAINTEXT_admin123', N'Angajat');
 GO
 
+-- Livratori test: email *@livrator.com, parola: livrator
+IF NOT EXISTS (SELECT 1 FROM Utilizator WHERE Email = N'george@livrator.com')
+INSERT INTO Utilizator (Nume, Prenume, Email, Telefon, ParolaHash, Rol)
+VALUES (N'Vasilescu', N'George', N'george@livrator.com', N'0740111111',
+    N'$2a$11$uNa0CRD1zF/Zi3PdBMOcK.WXieBdWtg247Ts.i2xdUYkdj4QuX8vO', N'Livrator');
+IF NOT EXISTS (SELECT 1 FROM Utilizator WHERE Email = N'dan@livrator.com')
+INSERT INTO Utilizator (Nume, Prenume, Email, Telefon, ParolaHash, Rol)
+VALUES (N'Popa', N'Dan', N'dan@livrator.com', N'0740222222',
+    N'$2a$11$uNa0CRD1zF/Zi3PdBMOcK.WXieBdWtg247Ts.i2xdUYkdj4QuX8vO', N'Livrator');
+GO
+
 -- ===== VERIFICARE =====
 SELECT 'Categorii' AS Tabela, COUNT(*) AS NumarRanduri FROM Categorie
 UNION ALL SELECT 'Alergeni', COUNT(*) FROM Alergen

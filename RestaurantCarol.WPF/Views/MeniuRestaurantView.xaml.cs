@@ -1,4 +1,5 @@
 using RestaurantCarol.Layers;
+using RestaurantCarol.Views.Navigation;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -7,7 +8,7 @@ using System.Windows.Media;
 
 namespace RestaurantCarol.Views
 {
-    public partial class MeniuRestaurantView : Window
+    public partial class MeniuRestaurantView : Window, IMeniuRestaurantNavigator
     {
         private TextBlock? cosCountText;
         private TextBlock? cosTotalText;
@@ -17,10 +18,11 @@ namespace RestaurantCarol.Views
         private TextBlock? stareCmdCodText;
         private TextBlock? stareCmdStareText;
         private TextBlock? stareCmdOraText;
+        private Border? borderStareComanda;
         private Border? prenumeBorder;
         private Popup? prenumeMenuPopup;
 
-        private ComandaBLL.RezultatPlasareComanda? ultimaComandaPlasata;
+        private ComandaBLL comandaBLL = new ComandaBLL();
 
         public MeniuRestaurantView()
         {
@@ -28,6 +30,8 @@ namespace RestaurantCarol.Views
             ConfigureazaUI();
             NavigateToHub();
         }
+
+        public Window? GetHostWindow() => this;
 
         public void NavigateToHub()
         {
@@ -136,10 +140,13 @@ namespace RestaurantCarol.Views
 
             ActualizeazaAdresaImplicita();
 
-            Border borderStare = new Border
+            borderStareComanda = new Border
             {
-                Style = (Style)FindResource("HeaderPanel")
+                Style = (Style)FindResource("HeaderPanel"),
+                Cursor = Cursors.Hand
             };
+            borderStareComanda.MouseLeftButtonDown += StareComanda_Click;
+
             StackPanel sp3 = new StackPanel();
             sp3.Children.Add(new TextBlock
             {
@@ -182,8 +189,8 @@ namespace RestaurantCarol.Views
             };
             sp3.Children.Add(stareCmdOraText);
 
-            borderStare.Child = sp3;
-            panouDreapta.Children.Add(borderStare);
+            borderStareComanda.Child = sp3;
+            panouDreapta.Children.Add(borderStareComanda);
 
             prenumeBorder = new Border
             {
@@ -208,6 +215,7 @@ namespace RestaurantCarol.Views
             CartSession.CartChanged += ActualizeazaPanouCos;
             ActualizeazaPanouCos();
             ActualizeazaAdresaImplicita();
+            IncarcaStareComandaDinDb();
         }
 
         private void ActualizeazaPanouCos()
@@ -229,18 +237,70 @@ namespace RestaurantCarol.Views
 
         public void ActualizeazaStareComanda(ComandaBLL.RezultatPlasareComanda rezultat)
         {
-            ultimaComandaPlasata = rezultat;
-
             if (stareCmdCodText != null)
                 stareCmdCodText.Text = $"Cod: {rezultat.CodComanda}";
 
             if (stareCmdStareText != null)
-                stareCmdStareText.Text = "Inregistrata";
+                stareCmdStareText.Text = StareComandaHelper.GetDenumireAfisata(StareComanda.Inregistrata);
 
             if (stareCmdOraText != null)
                 stareCmdOraText.Text = $"Livrare ~ {rezultat.OraEstimataLivrare:HH:mm}";
 
             ActualizeazaPuncte();
+            IncarcaStareComandaDinDb();
+        }
+
+        private void IncarcaStareComandaDinDb()
+        {
+            if (!UserSession.IsClient || UserSession.CurrentUser == null)
+                return;
+
+            if (stareCmdCodText == null)
+                return;
+
+            try
+            {
+                Comanda? comanda = comandaBLL.GetUltimaComandaActivaClient(UserSession.CurrentUser.IdUtilizator);
+
+                if (comanda == null)
+                {
+                    stareCmdCodText.Text = "Nicio comanda activa";
+                    if (stareCmdStareText != null) stareCmdStareText.Text = "";
+                    if (stareCmdOraText != null) stareCmdOraText.Text = "";
+                    return;
+                }
+
+                ActualizeazaPanouStare(comanda);
+            }
+            catch
+            {
+                // Panoul ramane in starea curenta daca DB nu e disponibil
+            }
+        }
+
+        private void ActualizeazaPanouStare(Comanda comanda)
+        {
+            if (stareCmdCodText != null)
+                stareCmdCodText.Text = $"Cod: {comanda.CodComanda}";
+
+            if (stareCmdStareText != null)
+                stareCmdStareText.Text = comanda.StareAfisata;
+
+            if (stareCmdOraText != null)
+                stareCmdOraText.Text = comanda.OraEstimataLivrare.HasValue
+                    ? $"Livrare ~ {comanda.OraEstimataLivrare:HH:mm}"
+                    : "";
+        }
+
+        private void StareComanda_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (!UserSession.IsClient) return;
+
+            StareComandaListView popup = new StareComandaListView();
+            popup.Owner = this;
+            popup.ComenziActualizate += IncarcaStareComandaDinDb;
+            popup.ShowDialog();
+            popup.ComenziActualizate -= IncarcaStareComandaDinDb;
         }
 
         public void ActualizeazaPuncte()
@@ -260,7 +320,7 @@ namespace RestaurantCarol.Views
                 return;
             }
 
-            CosView cos = new CosView();
+            CosView cos = new CosView(this);
             cos.Owner = this;
             cos.ShowDialog();
         }

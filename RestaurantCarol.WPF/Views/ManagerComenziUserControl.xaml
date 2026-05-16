@@ -100,7 +100,7 @@
                                                         <TextBlock FontSize="13" Foreground="#555555" Margin="0,2,0,2">
                                                             <Run Text="{Binding Cantitate}"/>
                                                             <Run Text="x "/>
-                                                            <Run Text="{Binding Preparat.Denumire}"/>
+                                                            <Run Text="{Binding DenumireAfisata}"/>
                                                         </TextBlock>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>

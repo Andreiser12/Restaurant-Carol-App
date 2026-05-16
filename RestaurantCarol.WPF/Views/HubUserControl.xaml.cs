@@ -1,4 +1,5 @@
 using RestaurantCarol.Layers;
+using RestaurantCarol.Views.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,7 +8,7 @@ namespace RestaurantCarol.Views
 {
     public partial class HubUserControl : UserControl
     {
-        private MeniuRestaurantView? parentView;
+        private IMeniuRestaurantNavigator? parentView;
         private PreparatBLL preparatBLL = new PreparatBLL();
         private AlergenBLL alergenBLL = new AlergenBLL();
         private ObservableCollection<Preparat> totalPreparate = [];
@@ -19,7 +20,7 @@ namespace RestaurantCarol.Views
             InitializeComponent();
         }
 
-        public HubUserControl(MeniuRestaurantView parent) : this()
+        public HubUserControl(IMeniuRestaurantNavigator parent) : this()
         {
             parentView = parent;
             IncarcaDate();
@@ -185,8 +186,7 @@ namespace RestaurantCarol.Views
         {
             if (sender is Button btn && btn.Tag is Preparat preparat)
             {
-                DetaliuPreparatView popup = new DetaliuPreparatView(preparat);
-                popup.Owner = parentView;
+                var popup = new DetaliuPreparatView(preparat) { Owner = parentView?.GetHostWindow() };
                 popup.ShowDialog();
             }
         }

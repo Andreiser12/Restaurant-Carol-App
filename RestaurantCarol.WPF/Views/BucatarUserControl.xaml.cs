@@ -61,5 +61,14 @@ namespace RestaurantCarol.Views
 
             popup.ShowDialog();
         }
+
+        private void AdaugaMeniu_Click(object sender, RoutedEventArgs e)
+        {
+            AdaugaMeniuView popup = new AdaugaMeniuView();
+            var parentWindow = Window.GetWindow(this);
+            if (parentWindow != null)
+                popup.Owner = parentWindow;
+            popup.ShowDialog();
+        }
     }
 }

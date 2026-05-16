@@ -4,8 +4,8 @@
     {
         public static string GenereazaCod()
         {
-            string guid = Guid.NewGuid().ToString("N").ToUpper();
-            return guid.Substring(0, 8);
+            int numar = new ComandaDAL().GetUrmatorulNumarComanda();
+            return numar.ToString();
         }
     }
 }

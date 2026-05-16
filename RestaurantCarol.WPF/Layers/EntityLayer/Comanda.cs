@@ -27,6 +27,8 @@ namespace RestaurantCarol.Layers
         public string AdresaLivrareCompleta { get; set; } = string.Empty;
 
         public List<ItemComanda> Items { get; set; } = new();
+
+        public string StareAfisata => StareComandaHelper.GetDenumireAfisata(StareComanda);
     }
 }
 

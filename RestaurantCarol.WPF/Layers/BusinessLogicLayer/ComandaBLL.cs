@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using RestaurantCarol.Exceptions;
 
 namespace RestaurantCarol.Layers
@@ -6,19 +7,13 @@ namespace RestaurantCarol.Layers
     public class ComandaBLL
     {
         private ComandaDAL comandaDAL = new ComandaDAL();
+        private MeniuDAL meniuDAL = new MeniuDAL();
 
-        private const decimal X_PROCENT_FIDEL = 10;
-        private const decimal Y_VAL_MIN_FIDEL = 50;
-        private const decimal Z_PROCENT_MARE = 15;
-        private const decimal T_PRAG_COMANDA_MARE = 200;
-        private const int W_MIN_COMENZI_FIDEL = 5;
-        private const int A_PERIOADA_ZILE = 90;
-        private const decimal B_PRAG_TRANSPORT_GRATUIT = 100;
-        private const decimal C_COST_TRANSPORT = 15;
         private const int MINUTE_LIVRARE = 60;
 
         public class RezultatPlasareComanda
         {
+            public int IdComanda { get; set; }
             public string CodComanda { get; set; } = string.Empty;
             public DateTime OraEstimataLivrare { get; set; }
             public decimal CostMancare { get; set; }
@@ -51,9 +46,9 @@ namespace RestaurantCarol.Layers
             decimal discount = CalculeazaDiscount(costMancare);
 
             decimal costMancareDupaDiscount = costMancare - discount;
-            decimal costTransport = costMancareDupaDiscount >= B_PRAG_TRANSPORT_GRATUIT
+            decimal costTransport = costMancareDupaDiscount >= AppSettingsHelper.PragTransportGratuit
                 ? 0
-                : C_COST_TRANSPORT;
+                : AppSettingsHelper.CostTransport;
 
             string codComanda = CodComandaGenerator.GenereazaCod();
 
@@ -79,6 +74,7 @@ namespace RestaurantCarol.Layers
 
                 return new RezultatPlasareComanda
                 {
+                    IdComanda = idComanda,
                     CodComanda = codComanda,
                     OraEstimataLivrare = oraEstimataLivrare,
                     CostMancare = costMancare,
@@ -97,14 +93,14 @@ namespace RestaurantCarol.Layers
             decimal discountFidel = 0;
             decimal discountMare = 0;
 
-            if (EsteClientFidel() && costMancare >= Y_VAL_MIN_FIDEL)
+            if (EsteClientFidel())
             {
-                discountFidel = costMancare * X_PROCENT_FIDEL / 100;
+                discountFidel = costMancare * AppSettingsHelper.ProcentDiscount / 100;
             }
 
-            if (costMancare >= T_PRAG_COMANDA_MARE)
+            if (costMancare >= AppSettingsHelper.PragDiscountSuma)
             {
-                discountMare = costMancare * Z_PROCENT_MARE / 100;
+                discountMare = costMancare * AppSettingsHelper.ProcentDiscount / 100;
             }
 
             return Math.Max(discountFidel, discountMare);
@@ -112,12 +108,26 @@ namespace RestaurantCarol.Layers
 
         private bool EsteClientFidel()
         {
-            return false;
+            if (UserSession.CurrentUser == null) return false;
+
+            int nr = meniuDAL.GetNrComenziClientInInterval(
+                UserSession.CurrentUser.IdUtilizator,
+                AppSettingsHelper.IntervalZileDiscount);
+
+            return nr >= AppSettingsHelper.NrComenziDiscount;
         }
 
         public ObservableCollection<Comanda> GetComenziManager(bool doarActive)
         {
-            return comandaDAL.GetComenziManager(doarActive);
+            var comenzi = comandaDAL.GetComenziManager(doarActive);
+
+            if (!doarActive)
+                return comenzi;
+
+            return new ObservableCollection<Comanda>(
+                comenzi.Where(c =>
+                    c.StareComanda != StareComanda.Livrata &&
+                    c.StareComanda != StareComanda.Anulata));
         }
 
         public void UpdateStareComanda(int idComanda, StareComanda nouaStare)
@@ -126,6 +136,59 @@ namespace RestaurantCarol.Layers
                 throw new RestaurantException("Comanda invalida.");
 
             comandaDAL.UpdateStareComanda(idComanda, nouaStare);
+        }
+
+        public ObservableCollection<Comanda> GetComenziLivrator()
+        {
+            return comandaDAL.GetComenziLivrator();
+        }
+
+        public void ConfirmaLivrare(int idComanda)
+        {
+            if (idComanda <= 0)
+                throw new RestaurantException("Comanda invalida.");
+
+            var comenzi = comandaDAL.GetComenziLivrator();
+            var comanda = comenzi.FirstOrDefault(c => c.IdComanda == idComanda);
+
+            if (comanda == null)
+                throw new RestaurantException("Comanda nu este disponibila pentru livrare.");
+
+            if (comanda.StareComanda != StareComanda.APlecatLaClient)
+                throw new RestaurantException("Comanda nu este in starea „a plecat la client”.");
+
+            comandaDAL.UpdateStareComanda(idComanda, StareComanda.Livrata);
+        }
+
+        public ObservableCollection<Comanda> GetComenziClient(int idUtilizator, bool doarActive = false)
+        {
+            if (idUtilizator <= 0)
+                throw new RestaurantException("Utilizator invalid.");
+
+            return comandaDAL.GetComenziClient(idUtilizator, doarActive);
+        }
+
+        public Comanda? GetUltimaComandaActivaClient(int idUtilizator)
+        {
+            var comenzi = GetComenziClient(idUtilizator, doarActive: true);
+            return comenzi.FirstOrDefault();
+        }
+
+        public void AnuleazaComanda(int idComanda, int idUtilizator)
+        {
+            if (idComanda <= 0)
+                throw new RestaurantException("Comanda invalida.");
+
+            var comenzi = comandaDAL.GetComenziClient(idUtilizator, doarActive: true);
+            var comanda = comenzi.FirstOrDefault(c => c.IdComanda == idComanda);
+
+            if (comanda == null)
+                throw new RestaurantException("Comanda nu poate fi anulata.");
+
+            if (StareComandaHelper.EsteStareFinala(comanda.StareComanda))
+                throw new RestaurantException("Comanda este deja intr-o stare finala.");
+
+            comandaDAL.UpdateStareComanda(idComanda, StareComanda.Anulata);
         }
     }
 }

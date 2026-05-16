@@ -1,0 +1,35 @@
+<Window x:Class="RestaurantCarol.Views.AdaugaMeniuView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Adauga meniu" Height="550" Width="520"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        WindowStyle="None" Background="Transparent" AllowsTransparency="True">
+
+    <Border Background="White" CornerRadius="12" Padding="24" Margin="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Adauga meniu compus" FontSize="20" FontWeight="Bold" Foreground="#1B7A6B"/>
+
+            <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                <TextBlock Text="Denumire" FontWeight="SemiBold"/>
+                <TextBox x:Name="txtDenumire" Margin="0,4,0,12"/>
+                <TextBlock Text="Categorie" FontWeight="SemiBold"/>
+                <ComboBox x:Name="comboCategorie" DisplayMemberPath="Denumire" Margin="0,4,0,12"/>
+                <TextBlock Text="Selecteaza preparate (bifeaza + gramaj portie in meniu)" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                <ScrollViewer MaxHeight="260" Margin="0,8,0,0">
+                    <ItemsControl x:Name="preparateList"/>
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button Content="Anuleaza" Click="Anuleaza_Click" Margin="0,0,8,0" Padding="16,8"/>
+                <Button Content="Salveaza" Click="Salveaza_Click" Background="#1B7A6B" Foreground="White" Padding="16,8" BorderThickness="0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

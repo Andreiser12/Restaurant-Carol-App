@@ -3,151 +3,99 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using RestaurantCarol.Layers;
+using RestaurantCarol.ViewModels;
+using RestaurantCarol.Views.Navigation;
 
 namespace RestaurantCarol.Views
 {
-    public enum ModListaPreparate
-    {
-        Browse,
-        Edit
-    }
-
     public partial class ListaPreparateUserControl : UserControl
     {
-        private MeniuRestaurantView? parentViewClient;
+        private ListaPreparateViewModel? viewModel;
+        private IMeniuRestaurantNavigator? navigator;
         private AngajatHubView? parentViewBucatar;
-        private PreparatBLL preparatBLL = new PreparatBLL();
-        private TipCategorie? tipCategorieParinte;
-        private Categorie? categorieCurenta;
-        private ModListaPreparate mod;
 
         public ListaPreparateUserControl()
         {
             InitializeComponent();
         }
 
-        public ListaPreparateUserControl(MeniuRestaurantView parent, Categorie categorie,
-                                          TipCategorie tipParinte) : this()
+        public ListaPreparateUserControl(IMeniuRestaurantNavigator parent, Categorie categorie,
+            TipCategorie tipParinte) : this()
         {
-            parentViewClient = parent;
-            categorieCurenta = categorie;
-            tipCategorieParinte = tipParinte;
-            mod = ModListaPreparate.Browse;
-
-            ConfigureazaUI(categorie.Denumire, "/Images/carol_logo.png");
-            IncarcaPreparate();
+            navigator = parent;
+            viewModel = new ListaPreparateViewModel(parent, categorie, tipParinte, ModListaPreparate.Browse);
+            DataContext = viewModel;
+            ConfigureazaVmEvents();
+            ConfigureazaUI(viewModel.Titlu, viewModel.CaleLogo);
         }
 
-        public ListaPreparateUserControl(MeniuRestaurantView parent,
-                                          ObservableCollection<Preparat> preparate,
-                                          string titlu,
-                                          string caleLogoCentral) : this()
+        public ListaPreparateUserControl(IMeniuRestaurantNavigator parent,
+            ObservableCollection<Preparat> preparate, string titlu, string caleLogo) : this()
         {
-            parentViewClient = parent;
-            mod = ModListaPreparate.Browse;
-            tipCategorieParinte = null;
-
-            ConfigureazaUI(titlu, caleLogoCentral);
-            DataContext = preparate;
+            navigator = parent;
+            viewModel = new ListaPreparateViewModel(parent, preparate, titlu, caleLogo);
+            DataContext = viewModel;
+            ConfigureazaUI(titlu, caleLogo);
         }
 
         public ListaPreparateUserControl(AngajatHubView parent, Categorie categorie,
-                                          TipCategorie tipParinte) : this()
+            TipCategorie tipParinte) : this()
         {
             parentViewBucatar = parent;
-            categorieCurenta = categorie;
-            tipCategorieParinte = tipParinte;
-            mod = ModListaPreparate.Edit;
-
+            viewModel = new ListaPreparateViewModel(null, categorie, tipParinte, ModListaPreparate.Edit);
+            viewModel.InapoiEditRequested += () =>
+                parent.NavigateBucatarLaListaCategorii(tipParinte);
+            viewModel.DeschideEdit += item =>
+            {
+                if (item.EsteMeniu || item.Preparat == null) return;
+                AdaugaPreparatView popup = new AdaugaPreparatView(item.Preparat.IdPreparat);
+                popup.Owner = parent;
+                popup.PreparatModificat += () => viewModel.IncarcaProduse();
+                popup.ShowDialog();
+            };
+            DataContext = viewModel;
             ConfigureazaUI(categorie.Denumire, "/Images/carol_logo.png");
-            IncarcaPreparate();
+        }
+
+        private void ConfigureazaVmEvents()
+        {
+            if (viewModel == null) return;
+            viewModel.DeschideDetaliiBrowse += item =>
+            {
+                if (item.EsteMeniu && item.Meniu != null)
+                {
+                    var popup = new DetaliuMeniuView(item.Meniu) { Owner = navigator?.GetHostWindow() };
+                    popup.ShowDialog();
+                }
+                else if (item.Preparat != null)
+                {
+                    var popup = new DetaliuPreparatView(item.Preparat) { Owner = navigator?.GetHostWindow() };
+                    popup.ShowDialog();
+                }
+            };
         }
 
         private void ConfigureazaUI(string titlu, string caleLogo)
         {
             titluText.Text = titlu;
-
             try
             {
-                BitmapImage bitmap = new BitmapImage(
+                logoImage.ImageSource = new BitmapImage(
                     new Uri($"pack://application:,,,{caleLogo}", UriKind.Absolute));
-                logoImage.ImageSource = bitmap;
-            }
-            catch { }
-        }
-
-        public void IncarcaPreparate()
-        {
-            if (categorieCurenta == null) return;
-
-            ObservableCollection<Preparat> preparate =
-                preparatBLL.GetByCategorie(categorieCurenta.IdCategorie);
-            DataContext = preparate;
-        }
-
-        private void SetLogo(string caleImagine)
-        {
-            try
-            {
-                BitmapImage bitmap = new BitmapImage(
-                    new Uri($"pack://application:,,,{caleImagine}", UriKind.Absolute));
-                logoImage.ImageSource = bitmap;
             }
             catch { }
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            if (mod == ModListaPreparate.Browse)
-            {
-                if (tipCategorieParinte.HasValue)
-                {
-                    string titlu = tipCategorieParinte.Value == TipCategorie.Mancare
-                        ? "Mancare" : "Bauturi";
-                    string caleImagine = tipCategorieParinte.Value == TipCategorie.Mancare
-                        ? "/Images/categorie_mancare.jpg" : "/Images/categorie_bauturi.jpg";
-
-                    parentViewClient?.NavigateToListaCategorii(tipCategorieParinte.Value,
-                        titlu, caleImagine);
-                }
-                else
-                {
-                    parentViewClient?.NavigateToHub();
-                }
-            }
-            else if (mod == ModListaPreparate.Edit)
-            {
-                parentViewBucatar?.NavigateBucatarLaListaCategorii(
-                    tipCategorieParinte ?? TipCategorie.Mancare);
-            }
+            if (viewModel?.InapoiCommand.CanExecute(null) == true)
+                viewModel.InapoiCommand.Execute(null);
         }
 
-        private void Preparat_Click(object sender, RoutedEventArgs e)
+        private void Produs_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is Preparat preparat)
-            {
-                if (mod == ModListaPreparate.Browse)
-                {
-                    DetaliuPreparatView popup = new DetaliuPreparatView(preparat);
-                    popup.Owner = parentViewClient;
-                    popup.ShowDialog();
-                }
-                else if (mod == ModListaPreparate.Edit)
-                {
-                    AdaugaPreparatView popup = new AdaugaPreparatView(preparat.IdPreparat);
-                    if (parentViewBucatar != null)
-                        popup.Owner = parentViewBucatar;
-
-                    popup.PreparatModificat += OnPreparatModificat;
-                    popup.ShowDialog();
-                    popup.PreparatModificat -= OnPreparatModificat;
-                }
-            }
-        }
-
-        private void OnPreparatModificat()
-        {
-            IncarcaPreparate();
+            if (sender is Button btn && btn.Tag is CatalogItem item)
+                viewModel?.SelecteazaProdusCommand.Execute(item);
         }
     }
 }

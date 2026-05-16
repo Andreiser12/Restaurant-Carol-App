@@ -35,6 +35,7 @@ namespace RestaurantCarol.Layers
         public static void AdaugaPreparat(Preparat preparat, int cantitate)
         {
             if (preparat == null || cantitate <= 0) return;
+            if (!preparat.EsteDisponibil) return;
 
             CartItem? existing = null;
             foreach (var item in Items)
@@ -47,17 +48,32 @@ namespace RestaurantCarol.Layers
             }
 
             if (existing != null)
-            {
                 existing.Cantitate += cantitate;
-            }
             else
+                Items.Add(new CartItem { Preparat = preparat, Cantitate = cantitate });
+
+            CartChanged?.Invoke();
+        }
+
+        public static void AdaugaMeniu(Meniu meniu, int cantitate)
+        {
+            if (meniu == null || cantitate <= 0) return;
+            if (!meniu.EsteDisponibil) return;
+
+            CartItem? existing = null;
+            foreach (var item in Items)
             {
-                Items.Add(new CartItem
+                if (item.Meniu?.IdMeniu == meniu.IdMeniu)
                 {
-                    Preparat = preparat,
-                    Cantitate = cantitate
-                });
+                    existing = item;
+                    break;
+                }
             }
+
+            if (existing != null)
+                existing.Cantitate += cantitate;
+            else
+                Items.Add(new CartItem { Meniu = meniu, Cantitate = cantitate });
 
             CartChanged?.Invoke();
         }

@@ -100,6 +100,6 @@ namespace RestaurantCarol.Layers
             set { idsAlergeni = value; NotifyPropertyChanged(); }
         }
 
-
+        public bool EsteDisponibil => CantitateTotala >= CantitatePortie && CantitatePortie > 0;
     }
 }

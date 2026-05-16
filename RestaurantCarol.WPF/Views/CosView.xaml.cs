@@ -1,218 +1,79 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
-using RestaurantCarol.Exceptions;
 using RestaurantCarol.Layers;
+using RestaurantCarol.ViewModels;
+using RestaurantCarol.Views.Navigation;
 
 namespace RestaurantCarol.Views
 {
     public partial class CosView : Window
     {
-        private AdresaBLL adresaBLL = new AdresaBLL();
+        private CosViewModel viewModel;
 
-        public CosView()
+        public CosView(IMeniuRestaurantNavigator? navigator = null)
         {
             InitializeComponent();
+            viewModel = new CosViewModel(navigator);
+            DataContext = viewModel;
+            viewModel.InchideRequested += Close;
+            viewModel.ComandaPlasata += Close;
 
-            this.MouseLeftButtonDown += (s, e) =>
+            itemsList.SetBinding(ItemsControl.ItemsSourceProperty,
+                new Binding(nameof(CosViewModel.Items)));
+            adreseComboBox.SetBinding(ComboBox.ItemsSourceProperty,
+                new Binding(nameof(CosViewModel.Adrese)));
+            adreseComboBox.SetBinding(ComboBox.SelectedItemProperty,
+                new Binding(nameof(CosViewModel.AdresaSelectata)) { Mode = BindingMode.TwoWay });
+            totalText.SetBinding(TextBlock.TextProperty,
+                new Binding(nameof(CosViewModel.Total)) { StringFormat = "{0:F2} RON" });
+
+            CartSession.CartChanged += ActualizeazaVizibilitate;
+            ActualizeazaVizibilitate();
+
+            MouseLeftButtonDown += (_, e) =>
             {
-                if (e.ButtonState == MouseButtonState.Pressed)
-                    this.DragMove();
+                if (e.ButtonState == MouseButtonState.Pressed) DragMove();
             };
-
-            itemsList.DataContext = CartSession.Items;
-
-            IncarcaAdrese();
-
-            CartSession.CartChanged += ActualizeazaUI;
-            ActualizeazaUI();
         }
 
-        private void IncarcaAdrese()
+        private void ActualizeazaVizibilitate()
         {
-            if (UserSession.CurrentUser == null) return;
-
-            try
-            {
-                var adrese = adresaBLL.GetByUtilizator(UserSession.CurrentUser.IdUtilizator);
-
-                if (adrese.Count == 0)
-                {
-                    adreseComboBox.Visibility = Visibility.Collapsed;
-                    fariAdresaText.Visibility = Visibility.Visible;
-                    plaseazaButton.IsEnabled = false;
-                    plaseazaButton.Opacity = 0.5;
-                }
-                else
-                {
-                    adreseComboBox.Visibility = Visibility.Visible;
-                    fariAdresaText.Visibility = Visibility.Collapsed;
-                    adreseComboBox.ItemsSource = adrese;
-
-                    var implicita = adrese.FirstOrDefault(a => a.EsteImplicita);
-                    if (implicita != null)
-                    {
-                        adreseComboBox.SelectedItem = implicita;
-                    }
-                    else
-                    {
-                        adreseComboBox.SelectedIndex = 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Eroare la incarcare adrese: {ex.Message}",
-                    "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void ActualizeazaUI()
-        {
-            totalText.Text = $"{CartSession.CostTotal:F2} RON";
-
-            if (CartSession.EsteGol)
-            {
-                itemsList.Visibility = Visibility.Collapsed;
-                cosGolText.Visibility = Visibility.Visible;
-                plaseazaButton.IsEnabled = false;
-                plaseazaButton.Opacity = 0.5;
-                adresaSection.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                itemsList.Visibility = Visibility.Visible;
-                cosGolText.Visibility = Visibility.Collapsed;
-                adresaSection.Visibility = Visibility.Visible;
-
-                bool areAdresaSelectata = adreseComboBox.SelectedItem != null;
-                plaseazaButton.IsEnabled = areAdresaSelectata;
-                plaseazaButton.Opacity = areAdresaSelectata ? 1.0 : 0.5;
-            }
+            bool gol = viewModel.EsteGol;
+            itemsList.Visibility = gol ? Visibility.Collapsed : Visibility.Visible;
+            cosGolText.Visibility = gol ? Visibility.Visible : Visibility.Collapsed;
+            adresaSection.Visibility = gol ? Visibility.Collapsed : Visibility.Visible;
+            plaseazaButton.IsEnabled = viewModel.PoatePlasa;
+            plaseazaButton.Opacity = viewModel.PoatePlasa ? 1 : 0.5;
         }
 
         private void Minus_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is CartItem item)
-            {
-                CartSession.ModificaCantitate(item, item.Cantitate - 1);
-            }
+            if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
+                viewModel.MinusCommand.Execute(item);
         }
 
         private void Plus_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is CartItem item)
-            {
-                CartSession.ModificaCantitate(item, item.Cantitate + 1);
-            }
+            if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
+                viewModel.PlusCommand.Execute(item);
         }
 
         private void Sterge_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is CartItem item)
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    $"Sigur vrei sa stergi {item.Denumire} din cos?",
-                    "Confirmare stergere",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    CartSession.Sterge(item);
-                }
-            }
+            if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
+                viewModel.StergeCommand.Execute(item);
         }
 
-        private void Plaseaza_Click(object sender, RoutedEventArgs e)
-        {
-            if (!UserSession.IsLoggedIn || UserSession.CurrentUser == null)
-            {
-                MessageBox.Show("Trebuie sa fii logat pentru a plasa o comanda.",
-                    "Nelogat", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (adreseComboBox.SelectedItem is not Adresa adresaSelectata)
-            {
-                MessageBox.Show("Selecteaza o adresa de livrare.",
-                    "Adresa lipsa", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            decimal totalEstimat = CartSession.CostTotal;
-            MessageBoxResult confirm = MessageBox.Show(
-                $"Sigur vrei sa plasezi comanda?\n\n" +
-                $"Numar produse: {CartSession.NumarTotalProduse}\n" +
-                $"Total mancare: {totalEstimat:F2} RON\n" +
-                $"Adresa: {adresaSelectata.AdresaText}\n\n" +
-                $"(Transportul si discount-urile se calculeaza la plasare)",
-                "Confirmare comanda",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
-
-            if (confirm != MessageBoxResult.Yes) return;
-
-            try
-            {
-                ComandaBLL comandaBLL = new ComandaBLL();
-                var rezultat = comandaBLL.PlaseazaComanda(
-                    UserSession.CurrentUser.IdUtilizator,
-                    adresaSelectata.IdAdresa,
-                    CartSession.Items);
-
-                string mesaj = $"Comanda plasata cu succes!\n\n" +
-                               $"Cod comanda: {rezultat.CodComanda}\n" +
-                               $"Cost mancare: {rezultat.CostMancare:F2} RON\n";
-
-                if (rezultat.Discount > 0)
-                    mesaj += $"Discount: -{rezultat.Discount:F2} RON\n";
-
-                mesaj += $"Cost transport: {rezultat.CostTransport:F2} RON\n";
-
-                if (rezultat.CostTransport == 0)
-                    mesaj += "(Transport gratuit)\n";
-
-                mesaj += $"\nTotal: {rezultat.CostTotal:F2} RON\n" +
-                         $"Adresa: {adresaSelectata.AdresaText}\n" +
-                         $"Ora estimata livrare: {rezultat.OraEstimataLivrare:HH:mm}";
-
-                MessageBox.Show(mesaj, "Comanda plasata",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-
-                if (Owner is MeniuRestaurantView meniuView)
-                {
-                    meniuView.ActualizeazaStareComanda(rezultat);
-                }
-
-                CartSession.Goleste();
-
-                this.Close();
-            }
-            catch (RestaurantException ex)
-            {
-                MessageBox.Show(ex.Message, "Eroare",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"A aparut o eroare neasteptata: {ex.Message}",
-                    "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void Inchide_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        private void Plaseaza_Click(object sender, RoutedEventArgs e) => viewModel.PlaseazaCommand.Execute(null);
+        private void Inchide_Click(object sender, RoutedEventArgs e) => viewModel.InchideCommand.Execute(null);
 
         protected override void OnClosed(EventArgs e)
         {
+            CartSession.CartChanged -= ActualizeazaVizibilitate;
+            viewModel.Detach();
             base.OnClosed(e);
-            CartSession.CartChanged -= ActualizeazaUI;
         }
     }
 }
-

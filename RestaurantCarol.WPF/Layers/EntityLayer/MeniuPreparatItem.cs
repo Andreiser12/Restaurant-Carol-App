@@ -7,5 +7,8 @@ namespace RestaurantCarol.Layers
         public decimal CantitatePortie { get; set; }
 
         public Preparat? Preparat { get; set; }
+
+        public string DenumirePreparat => Preparat?.Denumire ?? string.Empty;
+        public decimal PretPreparat => Preparat?.Pret ?? 0;
     }
 }

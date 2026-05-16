@@ -35,10 +35,15 @@ namespace RestaurantCarol.Views
             contentArea.Content = new ManagerUserControl(this);
         }
 
-        //public void NavigateToLivrator()
-        //{
-        //    contentArea.Content = new LivratorUserControl(this);
-        //}
+        public void NavigateToLivrator()
+        {
+            contentArea.Content = new LivratorUserControl(this);
+        }
+
+        public void NavigateLivratorLaComenzi()
+        {
+            contentArea.Content = new LivratorComenziUserControl(this);
+        }
 
         private void ConfigureazaUI()
         {
