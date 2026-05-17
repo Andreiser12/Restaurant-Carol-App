@@ -11,12 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
 namespace RestaurantCarol.Views
 {
-    /// <summary>
-    /// Interaction logic for AngajatDashboardView.xaml
-    /// </summary>
     public partial class AngajatDashboardView : Window
     {
         public AngajatDashboardView()
@@ -25,4 +21,3 @@ namespace RestaurantCarol.Views
         }
     }
 }
-

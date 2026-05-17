@@ -7,26 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 namespace RestaurantCarol.ViewModels
 {
     public class CategorieViewModel
     {
         private CategorieBLL categorieBLL = new CategorieBLL();
-
         public CategorieViewModel()
         {
             CategoriiList = categorieBLL.GetAllCategorii();
         }
-
         public ObservableCollection<Categorie>? CategoriiList
         {
             get => categorieBLL.CategoriiList;
             set => categorieBLL.CategoriiList = value;
         }
-
         #region Commands
-
         private ICommand? addCommand;
         public ICommand AddCommand
         {
@@ -36,7 +31,6 @@ namespace RestaurantCarol.ViewModels
                 return addCommand;
             }
         }
-
         private ICommand? modifyCommand;
         public ICommand ModifyCommand
         {
@@ -46,7 +40,6 @@ namespace RestaurantCarol.ViewModels
                 return modifyCommand;
             }
         }
-
         private ICommand? deleteCommand;
         public ICommand DeleteCommand
         {
@@ -56,8 +49,6 @@ namespace RestaurantCarol.ViewModels
                 return deleteCommand;
             }
         }
-
         #endregion
     }
 }
-

@@ -1,7 +1,6 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Data;
 using Microsoft.Data.SqlClient;
-
 namespace RestaurantCarol.Layers
 {
     public class AlergenDAL
@@ -13,7 +12,6 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("GetAllAlergeni", con);
                 ObservableCollection<Alergen> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

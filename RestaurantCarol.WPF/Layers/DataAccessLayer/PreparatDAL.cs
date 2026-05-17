@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using Microsoft.Data.SqlClient;
-
 namespace RestaurantCarol.Layers
 {
     public class PreparatDAL
@@ -14,7 +13,6 @@ namespace RestaurantCarol.Layers
                 ObservableCollection<Preparat> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -41,7 +39,6 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-
         public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -50,7 +47,6 @@ namespace RestaurantCarol.Layers
                 ObservableCollection<Alergen> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -66,7 +62,6 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-
         public ObservableCollection<Preparat> GetAllPreparate()
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -74,7 +69,6 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("GetAllPreparate", con);
                 ObservableCollection<Preparat> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -95,14 +89,13 @@ namespace RestaurantCarol.Layers
                             Sare = ReadNullableDecimal(reader, "Sare"),
                             IdCategorie = reader.GetInt32(reader.GetOrdinal("IdCategorie")),
                             PrimaCalePoza = ReadNullableString(reader, "PrimaCalePoza"),
-                            IdsAlergeni = reader.GetString(reader.GetOrdinal("IdsAlergeni"))
+                            IdsAlergeni = ReadNullableString(reader, "IdsAlergeni")
                         });
                     }
                 }
                 return result;
             }
         }
-
         public ObservableCollection<Preparat> GetTopPopulare(int top = 3)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -111,7 +104,6 @@ namespace RestaurantCarol.Layers
                 ObservableCollection<Preparat> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@top", top));
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -138,7 +130,6 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-
         public ObservableCollection<Alergen> GetAllAlergeni()
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -146,7 +137,6 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("GetAllAlergeni", con);
                 ObservableCollection<Alergen> result = [];
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -162,14 +152,12 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-
         public void AddPreparat(Preparat preparat, List<int> idsAlergeni, string? caleFotografie)
         {
             using (SqlConnection con = DALHelper.Connection)
             {
                 SqlCommand cmd = new("AddPreparat", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 cmd.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
                 cmd.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
                 cmd.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
@@ -189,30 +177,24 @@ namespace RestaurantCarol.Layers
                 cmd.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
                 cmd.Parameters.Add(new SqlParameter("@caleFotografie",
                     (object?)caleFotografie ?? DBNull.Value));
-
                 DataTable alergeniTable = new DataTable();
                 alergeniTable.Columns.Add("IdAlergen", typeof(int));
                 foreach (int id in idsAlergeni)
                 {
                     alergeniTable.Rows.Add(id);
                 }
-
                 SqlParameter paramAlergeni = new("@alergeni", alergeniTable);
                 paramAlergeni.SqlDbType = SqlDbType.Structured;
                 paramAlergeni.TypeName = "IdAlergenType";
                 cmd.Parameters.Add(paramAlergeni);
-
                 SqlParameter paramId = new("@idPreparat", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(paramId);
-
                 con.Open();
                 cmd.ExecuteNonQuery();
-
                 preparat.IdPreparat = (int)paramId.Value;
             }
         }
-
         public Preparat? GetById(int idPreparat)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -220,7 +202,6 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("GetPreparatById", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -247,7 +228,6 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
-
         public bool CheckDenumireDuplicate(string denumire, int idExclude)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -256,15 +236,12 @@ namespace RestaurantCarol.Layers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@denumire", denumire));
                 cmd.Parameters.Add(new SqlParameter("@idExclude", idExclude));
-
                 con.Open();
                 object? result = cmd.ExecuteScalar();
-
                 if (result == null) return false;
                 return (int)result == 1;
             }
         }
-
         public void UpdatePreparat(Preparat preparat, List<int> idsAlergeni,
                                     string actiunePoza, string? caleFotografieNoua)
         {
@@ -272,7 +249,6 @@ namespace RestaurantCarol.Layers
             {
                 SqlCommand cmd = new("UpdatePreparat", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 cmd.Parameters.Add(new SqlParameter("@idPreparat", preparat.IdPreparat));
                 cmd.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
                 cmd.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
@@ -293,39 +269,32 @@ namespace RestaurantCarol.Layers
                 cmd.Parameters.Add(new SqlParameter("@caleFotografie",
                     (object?)caleFotografieNoua ?? DBNull.Value));
                 cmd.Parameters.Add(new SqlParameter("@actiunePoza", actiunePoza));
-
                 DataTable alergeniTable = new DataTable();
                 alergeniTable.Columns.Add("IdAlergen", typeof(int));
                 foreach (int id in idsAlergeni)
                 {
                     alergeniTable.Rows.Add(id);
                 }
-
                 SqlParameter paramAlergeni = new("@alergeni", alergeniTable);
                 paramAlergeni.SqlDbType = SqlDbType.Structured;
                 paramAlergeni.TypeName = "IdAlergenType";
                 cmd.Parameters.Add(paramAlergeni);
-
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
-
         public void UpdateStoc(int idPreparat, int cantitateNoua)
         {
             using (SqlConnection con = DALHelper.Connection)
             {
                 SqlCommand cmd = new("UpdateStocPreparat", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
                 cmd.Parameters.Add(new SqlParameter("@cantitateTotala", cantitateNoua));
-
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
-
         public ObservableCollection<Preparat> GetPreparateStocRedus(int prag)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -333,7 +302,6 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("GetPreparateStocRedus", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@prag", prag));
-
                 ObservableCollection<Preparat> result = new();
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -351,7 +319,6 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
-
         public string? DeletePreparat(int idPreparat)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -359,31 +326,25 @@ namespace RestaurantCarol.Layers
                 SqlCommand cmd = new("DeletePreparat", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-
                 SqlParameter paramCalePoza = new("@calePozaDeStersOutput", SqlDbType.NVarChar, 500);
                 paramCalePoza.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(paramCalePoza);
-
                 con.Open();
                 cmd.ExecuteNonQuery();
-
                 if (paramCalePoza.Value == DBNull.Value) return null;
                 return paramCalePoza.Value as string;
             }
         }
-
         private string? ReadNullableString(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);
             return reader.IsDBNull(idx) ? null : reader.GetString(idx);
         }
-
         private int? ReadNullableInt(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);
             return reader.IsDBNull(idx) ? null : reader.GetInt32(idx);
         }
-
         private decimal? ReadNullableDecimal(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);

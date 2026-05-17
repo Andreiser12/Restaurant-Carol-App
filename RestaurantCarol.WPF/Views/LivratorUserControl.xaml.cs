@@ -1,35 +1,29 @@
 using System.Windows;
 using System.Windows.Controls;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views
 {
     public partial class LivratorUserControl : UserControl
     {
         private AngajatHubView? parentView;
         private ComandaBLL comandaBLL = new ComandaBLL();
-
         public LivratorUserControl()
         {
             InitializeComponent();
         }
-
         public LivratorUserControl(AngajatHubView parent) : this()
         {
             parentView = parent;
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             LivratorSession.Reset();
             parentView?.NavigateToHub();
         }
-
         private void VeziComenzi_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateLivratorLaComenzi();
         }
-
         private void AmAjuns_Click(object sender, RoutedEventArgs e)
         {
             if (LivratorSession.ComandaSelectata == null)
@@ -41,9 +35,7 @@ namespace RestaurantCarol.Views
                     MessageBoxImage.Information);
                 return;
             }
-
             var comanda = LivratorSession.ComandaSelectata;
-
             try
             {
                 comandaBLL.ConfirmaLivrare(comanda.IdComanda);
@@ -52,7 +44,6 @@ namespace RestaurantCarol.Views
                     "Succes",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
-
                 LivratorSession.Reset();
             }
             catch (Exception ex)

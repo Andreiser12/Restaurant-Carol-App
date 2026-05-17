@@ -1,5 +1,4 @@
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views.Navigation
 {
     public interface IMeniuRestaurantNavigator

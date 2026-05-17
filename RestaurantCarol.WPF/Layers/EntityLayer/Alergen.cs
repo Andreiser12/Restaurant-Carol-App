@@ -8,7 +8,6 @@ namespace RestaurantCarol.Layers
             get => idAlergen;
             set { idAlergen = value; NotifyPropertyChanged(); }
         }
-
         private string denumire = string.Empty;
         public string Denumire
         {

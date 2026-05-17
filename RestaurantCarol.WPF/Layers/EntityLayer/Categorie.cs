@@ -1,12 +1,10 @@
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Layers
 {
     public class Categorie : BasePropertyChanged
     {
         private int _idCategorie;
         private string _denumire = string.Empty;
-
         public int IdCategorie
         {
             get => _idCategorie;
@@ -19,7 +17,6 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
-
         public string Denumire
         {
             get => _denumire;
@@ -32,7 +29,6 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
-
         private TipCategorie tip;
         public TipCategorie Tip
         {
@@ -41,5 +37,3 @@ namespace RestaurantCarol.Layers
         }
     }
 }
-
-

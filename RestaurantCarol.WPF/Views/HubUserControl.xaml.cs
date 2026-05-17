@@ -3,7 +3,6 @@ using RestaurantCarol.Views.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-
 namespace RestaurantCarol.Views
 {
     public partial class HubUserControl : UserControl
@@ -14,24 +13,20 @@ namespace RestaurantCarol.Views
         private ObservableCollection<Preparat> totalPreparate = [];
         private List<int> alergeniDeEvitat = new List<int>();
         private bool alergeniPanouDeschis = false;
-
         public HubUserControl()
         {
             InitializeComponent();
         }
-
         public HubUserControl(IMeniuRestaurantNavigator parent) : this()
         {
             parentView = parent;
             IncarcaDate();
         }
-
         private void IncarcaDate()
         {
             try
             { 
                 totalPreparate = preparatBLL.GetAllPreparate();
-
                 var alergeni = alergenBLL.GetAllAlergeni();
                 alergeniFiltruList.ItemsSource = alergeni;
             }
@@ -41,25 +36,20 @@ namespace RestaurantCarol.Views
                     "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void AplicaFiltre()
         {
             string textCautare = cautareTextBox.Text.Trim().ToLower();
             bool esteSearchActiv = !string.IsNullOrEmpty(textCautare) || alergeniDeEvitat.Count > 0;
-
             if (esteSearchActiv)
             {
                 opresteCautareaButton.Visibility = Visibility.Visible;
                 cercuriNavigare.Visibility = Visibility.Collapsed;
                 rezultateContainer.Visibility = Visibility.Visible;
-
                 var rezultate = totalPreparate.Where(p =>
                 {
                     bool potriveste = string.IsNullOrEmpty(textCautare)
                         || p.Denumire.ToLower().Contains(textCautare);
-
                     if (!potriveste) return false;
-
                     foreach (int idAlergen in alergeniDeEvitat)
                     {
                         string cautare = $",{idAlergen},";
@@ -68,17 +58,13 @@ namespace RestaurantCarol.Views
                             return false;
                         }
                     }
-
                     return true;
                 }).ToList();
-
                 rezultateList.ItemsSource = rezultate;
-
                 if (rezultate.Count == 0)
                 {
                     mesajGolBorder.Visibility = Visibility.Visible;
                     rezultateList.Visibility = Visibility.Collapsed;
-
                     if (!string.IsNullOrEmpty(textCautare) && alergeniDeEvitat.Count > 0)
                     {
                         mesajGolText.Text = $"Nu am gasit preparate cu '{cautareTextBox.Text}' care sa nu contina alergenii selectati.";
@@ -105,16 +91,13 @@ namespace RestaurantCarol.Views
                 rezultateContainer.Visibility = Visibility.Collapsed;
             }
         }
-
         private void CautareTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             AplicaFiltre();
         }
-
         private void FiltreazaAlergeni_Click(object sender, RoutedEventArgs e)
         {
             alergeniPanouDeschis = !alergeniPanouDeschis;
-
             if (alergeniPanouDeschis)
             {
                 alergeniPanel.Visibility = Visibility.Visible;
@@ -126,7 +109,6 @@ namespace RestaurantCarol.Views
                 filtreazaAlergeniButton.Content = "▼ Filtreaza alergeni";
             }
         }
-
         private void AlergenFiltru_Changed(object sender, RoutedEventArgs e)
         {
             if (sender is CheckBox cb && cb.Tag is Alergen alergen)
@@ -140,16 +122,13 @@ namespace RestaurantCarol.Views
                 {
                     alergeniDeEvitat.Remove(alergen.IdAlergen);
                 }
-
                 AplicaFiltre();
             }
         }
-
         private void OpresteCautarea_Click(object sender, RoutedEventArgs e)
         {
             cautareTextBox.Text = "";
             alergeniDeEvitat.Clear();
-
             foreach (var item in alergeniFiltruList.Items)
             {
                 if (alergeniFiltruList.ItemContainerGenerator.ContainerFromItem(item) is FrameworkElement container)
@@ -158,17 +137,14 @@ namespace RestaurantCarol.Views
                     if (checkBox != null) checkBox.IsChecked = false;
                 }
             }
-
             if (alergeniPanouDeschis)
             {
                 alergeniPanouDeschis = false;
                 alergeniPanel.Visibility = Visibility.Collapsed;
                 filtreazaAlergeniButton.Content = "▼ Filtreaza alergeni";
             }
-
             AplicaFiltre();
         }
-
         private T? FindVisualChild<T>(System.Windows.DependencyObject parent) where T : System.Windows.DependencyObject
         {
             int count = System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent);
@@ -181,7 +157,6 @@ namespace RestaurantCarol.Views
             }
             return null;
         }
-
         private void Preparat_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Preparat preparat)
@@ -190,12 +165,10 @@ namespace RestaurantCarol.Views
                 popup.ShowDialog();
             }
         }
-
         private void Populare_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateToListaPreparatePopulare();
         }
-
         private void Mancare_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateToListaCategorii(
@@ -203,7 +176,6 @@ namespace RestaurantCarol.Views
                 "Mancare",
                 "/Images/categorie_mancare.png");
         }
-
         private void Bauturi_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateToListaCategorii(

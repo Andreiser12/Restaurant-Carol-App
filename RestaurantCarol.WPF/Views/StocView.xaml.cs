@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views
 {
     public partial class StocView : Window
@@ -13,33 +12,26 @@ namespace RestaurantCarol.Views
         private PreparatBLL preparatBLL = new PreparatBLL();
         private ObservableCollection<Preparat> listaPreparate = new();
         private List<Preparat> preparateOriginale = new();
-
         public StocView()
         {
             InitializeComponent();
-
             this.MouseLeftButtonDown += (s, e) =>
             {
                 if (e.ButtonState == MouseButtonState.Pressed)
                     this.DragMove();
             };
-
             IncarcaDate();
         }
-
         private void IncarcaDate()
         {
             try
             {
                 listaPreparate = preparatBLL.GetAllPreparate();
-                
-                // Pastram copiile originale pentru a stii ce s-a modificat
                 preparateOriginale = listaPreparate.Select(p => new Preparat
                 {
                     IdPreparat = p.IdPreparat,
                     CantitateTotala = p.CantitateTotala
                 }).ToList();
-
                 preparateList.ItemsSource = listaPreparate;
             }
             catch (Exception ex)
@@ -48,12 +40,10 @@ namespace RestaurantCarol.Views
                     "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void Inchide_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -62,7 +52,6 @@ namespace RestaurantCarol.Views
                 foreach (var preparat in listaPreparate)
                 {
                     var original = preparateOriginale.FirstOrDefault(p => p.IdPreparat == preparat.IdPreparat);
-                    
                     if (original != null && original.CantitateTotala != preparat.CantitateTotala)
                     {
                         if (preparat.CantitateTotala < 0)
@@ -71,12 +60,10 @@ namespace RestaurantCarol.Views
                                 "Eroare validare", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
                         }
-
                         preparatBLL.UpdateStoc(preparat.IdPreparat, preparat.CantitateTotala);
                         modificate++;
                     }
                 }
-
                 if (modificate > 0)
                 {
                     MessageBox.Show($"Stocul a fost actualizat cu succes pentru {modificate} produse!", 

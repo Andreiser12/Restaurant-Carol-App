@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views
 {
     public enum ModListaCategorii
@@ -12,7 +11,6 @@ namespace RestaurantCarol.Views
         Browse,
         Edit
     }
-
     public partial class ListaCategoriiUserControl : UserControl
     {
         private MeniuRestaurantView? parentViewClient;
@@ -20,12 +18,10 @@ namespace RestaurantCarol.Views
         private CategorieBLL categorieBLL = new CategorieBLL();
         private TipCategorie tipParinte;
         private ModListaCategorii mod;
-
         public ListaCategoriiUserControl()
         {
             InitializeComponent();
         }
-
         public ListaCategoriiUserControl(MeniuRestaurantView parent, TipCategorie tip,
                                           string titlu, string caleImagine) : this()
         {
@@ -34,7 +30,6 @@ namespace RestaurantCarol.Views
             mod = ModListaCategorii.Browse;
             ConfigureazaUI(tip, titlu, caleImagine);
         }
-
         public ListaCategoriiUserControl(AngajatHubView parent, TipCategorie tip,
                                           string titlu, string caleImagine) : this()
         {
@@ -43,11 +38,9 @@ namespace RestaurantCarol.Views
             mod = ModListaCategorii.Edit;
             ConfigureazaUI(tip, titlu, caleImagine);
         }
-
         private void ConfigureazaUI(TipCategorie tip, string titlu, string caleImagine)
         {
             titluText.Text = titlu;
-
             try
             {
                 BitmapImage bitmap = new BitmapImage(
@@ -55,11 +48,16 @@ namespace RestaurantCarol.Views
                 logoImage.ImageSource = bitmap;
             }
             catch { }
-
-            ObservableCollection<Categorie> categorii = categorieBLL.GetCategoriiByTip(tip);
-            DataContext = categorii;
+            try
+            {
+                ObservableCollection<Categorie> categorii = categorieBLL.GetCategoriiByTip(tip);
+                DataContext = categorii;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Eroare la incarcarea categoriilor: {ex.Message}", "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             if (mod == ModListaCategorii.Browse)
@@ -67,7 +65,6 @@ namespace RestaurantCarol.Views
             else if (mod == ModListaCategorii.Edit)
                 parentViewBucatar?.NavigateToBucatar();
         }
-
         private void Categorie_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Categorie categorie)

@@ -1,5 +1,4 @@
 using System.Configuration;
-
 namespace RestaurantCarol.Layers
 {
     public static class AppSettingsHelper
@@ -9,13 +8,11 @@ namespace RestaurantCarol.Layers
             string? raw = ConfigurationManager.AppSettings[key];
             return decimal.TryParse(raw, out decimal value) ? value : defaultValue;
         }
-
         public static int GetInt(string key, int defaultValue)
         {
             string? raw = ConfigurationManager.AppSettings[key];
             return int.TryParse(raw, out int value) ? value : defaultValue;
         }
-
         public static decimal DiscountMeniu => GetDecimal("DiscountMeniu", 10);
         public static decimal PragDiscountSuma => GetDecimal("PragDiscountSuma", 200);
         public static int NrComenziDiscount => GetInt("NrComenziDiscount", 3);

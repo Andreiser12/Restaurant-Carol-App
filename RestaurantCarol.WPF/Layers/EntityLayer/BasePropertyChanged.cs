@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace RestaurantCarol.Layers
 {
     public class BasePropertyChanged : INotifyPropertyChanged
@@ -17,4 +16,3 @@ namespace RestaurantCarol.Layers
         }
     }
 }
-

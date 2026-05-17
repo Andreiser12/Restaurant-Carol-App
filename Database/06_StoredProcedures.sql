@@ -176,5 +176,26 @@ BEGIN
     UPDATE Comanda
     SET Stare = @nouaStare
     WHERE IdComanda = @idComanda;
+
+    -- Daca comanda a fost livrata, se scade stocul automat
+    IF LOWER(@nouaStare) = 'livrata'
+    BEGIN
+        -- Scade stocul pentru preparatele comandate direct
+        UPDATE p
+        SET p.CantitateTotala = p.CantitateTotala - (ic.Cantitate * p.CantitatePortie)
+        FROM Preparat p
+        INNER JOIN ItemComanda ic ON p.IdPreparat = ic.IdPreparat
+        WHERE ic.IdComanda = @idComanda
+          AND ic.IdPreparat IS NOT NULL;
+
+        -- Scade stocul pentru preparatele incluse in meniurile comandate
+        UPDATE p
+        SET p.CantitateTotala = p.CantitateTotala - (ic.Cantitate * mp.CantitatePortie)
+        FROM Preparat p
+        INNER JOIN MeniuPreparat mp ON p.IdPreparat = mp.IdPreparat
+        INNER JOIN ItemComanda ic ON mp.IdMeniu = ic.IdMeniu
+        WHERE ic.IdComanda = @idComanda
+          AND ic.IdMeniu IS NOT NULL;
+    END
 END
 GO

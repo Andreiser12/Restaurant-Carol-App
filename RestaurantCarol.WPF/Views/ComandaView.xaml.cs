@@ -11,12 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
 namespace RestaurantCarol.Views
 {
-    /// <summary>
-    /// Interaction logic for ComandaView.xaml
-    /// </summary>
     public partial class ComandaView : Window
     {
         public ComandaView()
@@ -25,4 +21,3 @@ namespace RestaurantCarol.Views
         }
     }
 }
-

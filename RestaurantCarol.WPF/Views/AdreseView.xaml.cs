@@ -1,43 +1,36 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using RestaurantCarol.Exceptions;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views
 {
     public partial class AdreseView : Window
     {
         private AdresaBLL adresaBLL = new AdresaBLL();
         private int idUtilizator;
-
         public event Action? AdreseModificate;
-
         public AdreseView()
         {
             InitializeComponent();
-
             this.MouseLeftButtonDown += (s, e) =>
             {
                 if (e.ButtonState == MouseButtonState.Pressed)
                     this.DragMove();
             };
         }
-
         public AdreseView(int idUtilizator) : this()
         {
             this.idUtilizator = idUtilizator;
             IncarcaAdrese();
         }
-
         private void IncarcaAdrese()
         {
             try
             {
                 ObservableCollection<Adresa> adrese = adresaBLL.GetByUtilizator(idUtilizator);
                 adreseList.DataContext = adrese;
-
                 if (adrese.Count == 0)
                 {
                     mesajGolText.Visibility = Visibility.Visible;
@@ -55,25 +48,21 @@ namespace RestaurantCarol.Views
                     "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void Adauga_Click(object sender, RoutedEventArgs e)
         {
             AddEditAdresaView popup = new AddEditAdresaView(idUtilizator);
             popup.Owner = this;
             popup.ShowDialog();
-
             if (popup.AdresaRezultat != null)
             {
                 try
                 {
                     Adresa adresaNoua = popup.AdresaRezultat;
-
                     var adreseExistente = adresaBLL.GetByUtilizator(idUtilizator);
                     if (adreseExistente.Count == 0)
                     {
                         adresaNoua.EsteImplicita = true;
                     }
-
                     adresaBLL.AddAdresa(adresaNoua);
                     IncarcaAdrese();
                     AdreseModificate?.Invoke();
@@ -90,7 +79,6 @@ namespace RestaurantCarol.Views
                 }
             }
         }
-
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Adresa adresa)
@@ -102,11 +90,9 @@ namespace RestaurantCarol.Views
                     AdresaText = adresa.AdresaText,
                     EsteImplicita = adresa.EsteImplicita
                 };
-
                 AddEditAdresaView popup = new AddEditAdresaView(copie);
                 popup.Owner = this;
                 popup.ShowDialog();
-
                 if (popup.AdresaRezultat != null)
                 {
                     try
@@ -128,7 +114,6 @@ namespace RestaurantCarol.Views
                 }
             }
         }
-
         private void SetImplicita_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Adresa adresa)
@@ -146,7 +131,6 @@ namespace RestaurantCarol.Views
                 }
             }
         }
-
         private void Sterge_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Adresa adresa)
@@ -156,9 +140,7 @@ namespace RestaurantCarol.Views
                     "Confirmare stergere",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
-
                 if (result != MessageBoxResult.Yes) return;
-
                 try
                 {
                     adresaBLL.DeleteAdresa(adresa.IdAdresa);
@@ -172,7 +154,6 @@ namespace RestaurantCarol.Views
                 }
             }
         }
-
         private void Inchide_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

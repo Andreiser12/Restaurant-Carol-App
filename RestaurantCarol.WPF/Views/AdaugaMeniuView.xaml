@@ -20,7 +20,7 @@
                 <TextBox x:Name="txtDenumire" Margin="0,4,0,12"/>
                 <TextBlock Text="Categorie" FontWeight="SemiBold"/>
                 <ComboBox x:Name="comboCategorie" DisplayMemberPath="Denumire" Margin="0,4,0,12"/>
-                <TextBlock Text="Selecteaza preparate (bifeaza + gramaj portie in meniu)" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                <TextBlock Text="Selecteaza preparate pentru meniu" FontWeight="SemiBold" TextWrapping="Wrap"/>
                 <ScrollViewer MaxHeight="260" Margin="0,8,0,0">
                     <ItemsControl x:Name="preparateList"/>
                 </ScrollViewer>

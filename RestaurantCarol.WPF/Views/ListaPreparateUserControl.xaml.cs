@@ -1,11 +1,10 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using RestaurantCarol.Layers;
 using RestaurantCarol.ViewModels;
 using RestaurantCarol.Views.Navigation;
-
 namespace RestaurantCarol.Views
 {
     public partial class ListaPreparateUserControl : UserControl
@@ -13,12 +12,10 @@ namespace RestaurantCarol.Views
         private ListaPreparateViewModel? viewModel;
         private IMeniuRestaurantNavigator? navigator;
         private AngajatHubView? parentViewBucatar;
-
         public ListaPreparateUserControl()
         {
             InitializeComponent();
         }
-
         public ListaPreparateUserControl(IMeniuRestaurantNavigator parent, Categorie categorie,
             TipCategorie tipParinte) : this()
         {
@@ -28,16 +25,15 @@ namespace RestaurantCarol.Views
             ConfigureazaVmEvents();
             ConfigureazaUI(viewModel.Titlu, viewModel.CaleLogo);
         }
-
         public ListaPreparateUserControl(IMeniuRestaurantNavigator parent,
             ObservableCollection<Preparat> preparate, string titlu, string caleLogo) : this()
         {
             navigator = parent;
             viewModel = new ListaPreparateViewModel(parent, preparate, titlu, caleLogo);
             DataContext = viewModel;
+            ConfigureazaVmEvents();
             ConfigureazaUI(titlu, caleLogo);
         }
-
         public ListaPreparateUserControl(AngajatHubView parent, Categorie categorie,
             TipCategorie tipParinte) : this()
         {
@@ -56,7 +52,6 @@ namespace RestaurantCarol.Views
             DataContext = viewModel;
             ConfigureazaUI(categorie.Denumire, "/Images/carol_logo.png");
         }
-
         private void ConfigureazaVmEvents()
         {
             if (viewModel == null) return;
@@ -74,7 +69,6 @@ namespace RestaurantCarol.Views
                 }
             };
         }
-
         private void ConfigureazaUI(string titlu, string caleLogo)
         {
             titluText.Text = titlu;
@@ -85,13 +79,11 @@ namespace RestaurantCarol.Views
             }
             catch { }
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             if (viewModel?.InapoiCommand.CanExecute(null) == true)
                 viewModel.InapoiCommand.Execute(null);
         }
-
         private void Produs_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is CatalogItem item)

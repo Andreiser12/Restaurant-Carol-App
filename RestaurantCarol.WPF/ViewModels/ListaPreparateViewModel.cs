@@ -3,23 +3,18 @@ using System.Windows.Input;
 using RestaurantCarol.Commands;
 using RestaurantCarol.Layers;
 using RestaurantCarol.Views.Navigation;
-
 namespace RestaurantCarol.ViewModels
 {
     public class ListaPreparateViewModel : ViewModelBase
     {
         private CatalogBLL catalogBLL = new CatalogBLL();
-
         public ObservableCollection<CatalogItem> Produse { get; } = new();
-
         public string Titlu { get; }
         public string CaleLogo { get; }
-
         private readonly IMeniuRestaurantNavigator? navigator;
         private readonly Categorie? categorie;
         private readonly TipCategorie? tipParinte;
         public ModListaPreparate Mod { get; }
-
         public ListaPreparateViewModel(
             IMeniuRestaurantNavigator? navigator,
             Categorie categorie,
@@ -34,7 +29,6 @@ namespace RestaurantCarol.ViewModels
             CaleLogo = "/Images/carol_logo.png";
             IncarcaProduse();
         }
-
         public ListaPreparateViewModel(
             IMeniuRestaurantNavigator? navigator,
             ObservableCollection<Preparat> preparatePopulare,
@@ -48,7 +42,6 @@ namespace RestaurantCarol.ViewModels
             foreach (var p in preparatePopulare)
                 Produse.Add(CatalogItem.DinPreparat(p));
         }
-
         public void IncarcaProduse()
         {
             if (categorie == null) return;
@@ -56,7 +49,6 @@ namespace RestaurantCarol.ViewModels
             foreach (var item in catalogBLL.GetByCategorie(categorie.IdCategorie))
                 Produse.Add(item);
         }
-
         public ICommand InapoiCommand => new RelayCommand<object>(_ =>
         {
             if (Mod == ModListaPreparate.Browse)
@@ -74,7 +66,6 @@ namespace RestaurantCarol.ViewModels
             else
                 InapoiEditRequested?.Invoke();
         });
-
         public ICommand SelecteazaProdusCommand => new RelayCommand<CatalogItem>(item =>
         {
             if (item == null) return;
@@ -83,7 +74,6 @@ namespace RestaurantCarol.ViewModels
             else
                 DeschideEdit?.Invoke(item);
         });
-
         public event Action? InapoiEditRequested;
         public event Action<CatalogItem>? DeschideDetaliiBrowse;
         public event Action<CatalogItem>? DeschideEdit;

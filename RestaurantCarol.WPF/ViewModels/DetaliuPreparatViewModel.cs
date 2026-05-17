@@ -2,14 +2,12 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using RestaurantCarol.Commands;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.ViewModels
 {
     public class DetaliuPreparatViewModel : ViewModelBase
     {
         private Preparat preparat;
         private PreparatBLL preparatBLL = new PreparatBLL();
-
         public string Denumire => preparat.Denumire;
         public string PretText => $"{preparat.Pret:F2} RON";
         public string CantitatePortieText => $"{preparat.CantitatePortie}g";
@@ -18,9 +16,13 @@ namespace RestaurantCarol.ViewModels
         public string CalePoza => string.IsNullOrEmpty(preparat.PrimaCalePoza) ? "/Images/carol_logo.png" : preparat.PrimaCalePoza;
         public bool EsteDisponibil => preparat.EsteDisponibil;
         public bool PoateAdaugaInCos => UserSession.IsLoggedIn && UserSession.IsClient && EsteDisponibil;
-
+        public int? Calorii => preparat.Calorii;
+        public decimal? Grasimi => preparat.Grasimi;
+        public decimal? Carbohidrati => preparat.Carbohidrati;
+        public decimal? Proteine => preparat.Proteine;
+        public decimal? Sare => preparat.Sare;
+        public bool AreValoriNutritionale => Calorii.HasValue || Grasimi.HasValue || Carbohidrati.HasValue || Proteine.HasValue || Sare.HasValue;
         public ObservableCollection<Alergen> Alergeni { get; } = new();
-
         private int cantitate = 1;
         public int Cantitate
         {
@@ -32,16 +34,13 @@ namespace RestaurantCarol.ViewModels
                 NotifyPropertyChanged(nameof(AdaugaText));
             }
         }
-
         public string AdaugaText => $"Adauga in cos - {preparat.Pret * cantitate:F2} RON";
-
         public DetaliuPreparatViewModel(Preparat preparat)
         {
             this.preparat = preparat;
             foreach (var a in preparatBLL.GetAlergeniByPreparat(preparat.IdPreparat))
                 Alergeni.Add(a);
         }
-
         public ICommand PlusCommand => new RelayCommand<object>(_ => Cantitate++);
         public ICommand MinusCommand => new RelayCommand<object>(_ => { if (Cantitate > 1) Cantitate--; });
         public ICommand AdaugaCommand => new RelayCommand<object>(_ =>
@@ -50,7 +49,6 @@ namespace RestaurantCarol.ViewModels
             InchideRequested?.Invoke();
         });
         public ICommand InchideCommand => new RelayCommand<object>(_ => InchideRequested?.Invoke());
-
         public event Action? InchideRequested;
     }
 }

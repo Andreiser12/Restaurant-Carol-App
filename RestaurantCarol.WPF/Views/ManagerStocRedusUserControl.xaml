@@ -10,7 +10,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
+        
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Content="←" Background="#F4B860" Foreground="#3A3A3A" BorderThickness="0" FontSize="22" FontWeight="Bold" Width="50" Height="50" Cursor="Hand" Click="Inapoi_Click" VerticalAlignment="Center">
                 <Button.Template>
@@ -35,7 +35,7 @@
             </TextBlock.Effect>
         </TextBlock>
 
-        <!-- List -->
+        
         <Border Grid.Row="2" Background="White" CornerRadius="10" Padding="15">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>

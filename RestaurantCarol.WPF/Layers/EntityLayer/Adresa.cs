@@ -1,4 +1,4 @@
-﻿namespace RestaurantCarol.Layers
+namespace RestaurantCarol.Layers
 {
     public class Adresa : BasePropertyChanged
     {
@@ -8,21 +8,18 @@
             get => idAdresa;
             set { idAdresa = value; NotifyPropertyChanged(); }
         }
-
         private int idUtilizator;
         public int IdUtilizator
         {
             get => idUtilizator;
             set { idUtilizator = value; NotifyPropertyChanged(); }
         }
-
         private string adresaText = string.Empty;
         public string AdresaText
         {
             get => adresaText;
             set { adresaText = value; NotifyPropertyChanged(); }
         }
-
         private bool esteImplicita;
         public bool EsteImplicita
         {

@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-
 namespace RestaurantCarol.Views
 {
     public partial class MeniuRestaurantView : Window, IMeniuRestaurantNavigator
@@ -21,33 +20,26 @@ namespace RestaurantCarol.Views
         private Border? borderStareComanda;
         private Border? prenumeBorder;
         private Popup? prenumeMenuPopup;
-
         private ComandaBLL comandaBLL = new ComandaBLL();
-
         public MeniuRestaurantView()
         {
             InitializeComponent();
             ConfigureazaUI();
             NavigateToHub();
         }
-
         public Window? GetHostWindow() => this;
-
         public void NavigateToHub()
         {
             contentArea.Content = new HubUserControl(this);
         }
-
         public void NavigateToListaCategorii(TipCategorie tip, string titlu, string caleImagine)
         {
             contentArea.Content = new ListaCategoriiUserControl(this, tip, titlu, caleImagine);
         }
-
         public void NavigateToListaPreparate(Categorie categorie, TipCategorie tipParinte)
         {
             contentArea.Content = new ListaPreparateUserControl(this, categorie, tipParinte);
         }
-
         private void ConfigureazaUI()
         {
             if (UserSession.IsLoggedIn && UserSession.IsClient)
@@ -62,7 +54,6 @@ namespace RestaurantCarol.Views
                 AfiseazaPanouOaspete();
             }
         }
-
         private void AfiseazaPanouClient()
         {
             cosBorder = new Border
@@ -70,9 +61,7 @@ namespace RestaurantCarol.Views
                 Style = (Style)FindResource("HeaderPanel"),
                 Cursor = Cursors.Hand
             };
-
             cosBorder.MouseLeftButtonDown += Cos_Click;
-
             StackPanel sp1 = new StackPanel();
             sp1.Children.Add(new TextBlock
             {
@@ -82,7 +71,6 @@ namespace RestaurantCarol.Views
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-
             cosCountText = new TextBlock
             {
                 FontSize = 11,
@@ -91,7 +79,6 @@ namespace RestaurantCarol.Views
                 Margin = new Thickness(0, 5, 0, 0)
             };
             sp1.Children.Add(cosCountText);
-
             cosTotalText = new TextBlock
             {
                 FontSize = 12,
@@ -101,18 +88,14 @@ namespace RestaurantCarol.Views
                 Margin = new Thickness(0, 2, 0, 0)
             };
             sp1.Children.Add(cosTotalText);
-
             cosBorder.Child = sp1;
             panouDreapta.Children.Add(cosBorder);
-
             adresaBorder = new Border
             {
                 Style = (Style)FindResource("HeaderPanel"),
                 Cursor = System.Windows.Input.Cursors.Hand
             };
-
             adresaBorder.MouseLeftButtonDown += Adresa_Click;
-
             StackPanel sp2 = new StackPanel();
             sp2.Children.Add(new TextBlock
             {
@@ -122,7 +105,6 @@ namespace RestaurantCarol.Views
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-
             adresaText = new TextBlock
             {
                 FontSize = 11,
@@ -134,19 +116,15 @@ namespace RestaurantCarol.Views
                 MaxWidth = 150
             };
             sp2.Children.Add(adresaText);
-
             adresaBorder.Child = sp2;
             panouDreapta.Children.Add(adresaBorder);
-
             ActualizeazaAdresaImplicita();
-
             borderStareComanda = new Border
             {
                 Style = (Style)FindResource("HeaderPanel"),
                 Cursor = Cursors.Hand
             };
             borderStareComanda.MouseLeftButtonDown += StareComanda_Click;
-
             StackPanel sp3 = new StackPanel();
             sp3.Children.Add(new TextBlock
             {
@@ -156,7 +134,6 @@ namespace RestaurantCarol.Views
                 Foreground = new BrushConverter().ConvertFromString("#D2AF6D") as Brush,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
-
             stareCmdCodText = new TextBlock
             {
                 Text = "Nicio comanda activa",
@@ -166,7 +143,6 @@ namespace RestaurantCarol.Views
                 Margin = new Thickness(0, 5, 0, 0)
             };
             sp3.Children.Add(stareCmdCodText);
-
             stareCmdStareText = new TextBlock
             {
                 Text = "",
@@ -177,7 +153,6 @@ namespace RestaurantCarol.Views
                 Margin = new Thickness(0, 2, 0, 0),
             };
             sp3.Children.Add(stareCmdStareText);
-
             stareCmdOraText = new TextBlock
             {
                 Text = "",
@@ -188,10 +163,8 @@ namespace RestaurantCarol.Views
                 Margin = new Thickness(0, 2, 0, 0)
             };
             sp3.Children.Add(stareCmdOraText);
-
             borderStareComanda.Child = sp3;
             panouDreapta.Children.Add(borderStareComanda);
-
             prenumeBorder = new Border
             {
                 Background = (Brush)new BrushConverter().ConvertFrom("#EB7A6B14")!,
@@ -201,7 +174,6 @@ namespace RestaurantCarol.Views
                 Cursor = Cursors.Hand
             };
             prenumeBorder.MouseLeftButtonDown += Prenume_Click;
-
             TextBlock prenumeTxt = new TextBlock
             {
                 Text = UserSession.CurrentUser?.Prenume ?? "Client",
@@ -210,18 +182,15 @@ namespace RestaurantCarol.Views
             };
             prenumeBorder.Child = prenumeTxt;
             panouDreapta.Children.Add(prenumeBorder);
-
             ConstruiestePopupPrenume();
             CartSession.CartChanged += ActualizeazaPanouCos;
             ActualizeazaPanouCos();
             ActualizeazaAdresaImplicita();
             IncarcaStareComandaDinDb();
         }
-
         private void ActualizeazaPanouCos()
         {
             if (cosCountText == null || cosTotalText == null) return;
-
             if (CartSession.EsteGol)
             {
                 cosCountText.Text = "Cosul este gol";
@@ -234,34 +203,26 @@ namespace RestaurantCarol.Views
                 cosTotalText.Text = $"{CartSession.CostTotal:F2} RON";
             }
         }
-
         public void ActualizeazaStareComanda(ComandaBLL.RezultatPlasareComanda rezultat)
         {
             if (stareCmdCodText != null)
                 stareCmdCodText.Text = $"Cod: {rezultat.CodComanda}";
-
             if (stareCmdStareText != null)
                 stareCmdStareText.Text = StareComandaHelper.GetDenumireAfisata(StareComanda.Inregistrata);
-
             if (stareCmdOraText != null)
                 stareCmdOraText.Text = $"Livrare ~ {rezultat.OraEstimataLivrare:HH:mm}";
-
             ActualizeazaPuncte();
             IncarcaStareComandaDinDb();
         }
-
         private void IncarcaStareComandaDinDb()
         {
             if (!UserSession.IsClient || UserSession.CurrentUser == null)
                 return;
-
             if (stareCmdCodText == null)
                 return;
-
             try
             {
                 Comanda? comanda = comandaBLL.GetUltimaComandaActivaClient(UserSession.CurrentUser.IdUtilizator);
-
                 if (comanda == null)
                 {
                     stareCmdCodText.Text = "Nicio comanda activa";
@@ -269,40 +230,32 @@ namespace RestaurantCarol.Views
                     if (stareCmdOraText != null) stareCmdOraText.Text = "";
                     return;
                 }
-
                 ActualizeazaPanouStare(comanda);
             }
             catch
             {
-                // Panoul ramane in starea curenta daca DB nu e disponibil
             }
         }
-
         private void ActualizeazaPanouStare(Comanda comanda)
         {
             if (stareCmdCodText != null)
                 stareCmdCodText.Text = $"Cod: {comanda.CodComanda}";
-
             if (stareCmdStareText != null)
                 stareCmdStareText.Text = comanda.StareAfisata;
-
             if (stareCmdOraText != null)
                 stareCmdOraText.Text = comanda.OraEstimataLivrare.HasValue
                     ? $"Livrare ~ {comanda.OraEstimataLivrare:HH:mm}"
                     : "";
         }
-
         private void StareComanda_Click(object sender, MouseButtonEventArgs e)
         {
             if (!UserSession.IsClient) return;
-
             StareComandaListView popup = new StareComandaListView();
             popup.Owner = this;
             popup.ComenziActualizate += IncarcaStareComandaDinDb;
             popup.ShowDialog();
             popup.ComenziActualizate -= IncarcaStareComandaDinDb;
         }
-
         public void ActualizeazaPuncte()
         {
             if (puncteText != null && UserSession.CurrentUser != null)
@@ -310,7 +263,6 @@ namespace RestaurantCarol.Views
                 puncteText.Text = $"Puncte Carol: {UserSession.CurrentUser.Puncte}";
             }
         }
-
         private void Cos_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (CartSession.EsteGol)
@@ -319,22 +271,18 @@ namespace RestaurantCarol.Views
                     "Cos gol", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-
             CosView cos = new CosView(this);
             cos.Owner = this;
             cos.ShowDialog();
         }
-
         private void AfiseazaPanouOaspete()
         {
             Button btnLogin = CreeazaButonHeader("Logheaza-te");
             btnLogin.Click += Login_Click;
             panouDreapta.Children.Add(btnLogin);
-
             Button btnRegister = CreeazaButonHeader("Inregistreaza-te");
             btnRegister.Click += Register_Click;
             panouDreapta.Children.Add(btnRegister);
-
             Border prenume = new Border
             {
                 Background = (Brush)new BrushConverter().ConvertFrom("#EB7A6B14")!,
@@ -350,7 +298,6 @@ namespace RestaurantCarol.Views
             };
             panouDreapta.Children.Add(prenume);
         }
-
         private Button CreeazaButonHeader(string text)
         {
             Button btn = new Button
@@ -366,7 +313,6 @@ namespace RestaurantCarol.Views
                 Cursor = Cursors.Hand,
                 BorderThickness = new Thickness(0)
             };
-
             ControlTemplate template = new ControlTemplate(typeof(Button));
             FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
             border.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Button.BackgroundProperty));
@@ -377,10 +323,8 @@ namespace RestaurantCarol.Views
             border.AppendChild(cp);
             template.VisualTree = border;
             btn.Template = template;
-
             return btn;
         }
-
         private void ConstruiestePopupPrenume()
         {
             prenumeMenuPopup = new Popup
@@ -391,7 +335,6 @@ namespace RestaurantCarol.Views
                 AllowsTransparency = true,
                 PopupAnimation = PopupAnimation.Fade
             };
-
             Border container = new Border
             {
                 Background = Brushes.White,
@@ -407,9 +350,7 @@ namespace RestaurantCarol.Views
                 ShadowDepth = 0,
                 Opacity = 0.3
             };
-
             StackPanel menu = new StackPanel();
-
             Button btnLogout = new Button
             {
                 Content = "Iesire din cont",
@@ -424,17 +365,14 @@ namespace RestaurantCarol.Views
             };
             btnLogout.Click += Logout_Click;
             menu.Children.Add(btnLogout);
-
             container.Child = menu;
             prenumeMenuPopup.Child = container;
         }
-
         private void Prenume_Click(object sender, MouseButtonEventArgs e)
         {
             if (prenumeMenuPopup != null)
                 prenumeMenuPopup.IsOpen = !prenumeMenuPopup.IsOpen;
         }
-
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show(
@@ -442,28 +380,20 @@ namespace RestaurantCarol.Views
                 "Confirmare iesire",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
-
             if (result != MessageBoxResult.Yes) return;
-
             if (prenumeMenuPopup != null) prenumeMenuPopup.IsOpen = false;
-
             UserSession.Logout();
             CartSession.Goleste();
-
             MainWindow mw = new MainWindow();
             mw.Show();
             this.Close();
         }
-
-
-
         public void NavigateToListaPreparatePopulare()
         {
             try
             {
                 PreparatBLL bll = new PreparatBLL();
                 var preparatePopulare = bll.GetTopPopulare(3);
-
                 if (preparatePopulare.Count == 0)
                 {
                     MessageBox.Show(
@@ -474,7 +404,6 @@ namespace RestaurantCarol.Views
                         MessageBoxImage.Information);
                     return;
                 }
-
                 contentArea.Content = new ListaPreparateUserControl(
                     this,
                     preparatePopulare,
@@ -487,58 +416,44 @@ namespace RestaurantCarol.Views
                     "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void Populare_Click(object sender, RoutedEventArgs e)
         {
-            
         }
-
         private void Mancare_Click(object sender, RoutedEventArgs e)
         {
-            
         }
-
         private void Bauturi_Click(object sender, RoutedEventArgs e)
         {
-
         }
-
-
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             LoginView login = new LoginView();
             login.Show();
             this.Close();
         }
-
         private void Register_Click(object sender, RoutedEventArgs e)
         {
             RegisterView register = new RegisterView();
             register.Show();
             this.Close();
         }
-
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
             CartSession.CartChanged -= ActualizeazaPanouCos;
         }
-
         private void ActualizeazaAdresaImplicita()
         {
             if (adresaText == null) return;
-
             if (UserSession.CurrentUser == null)
             {
                 adresaText.Text = "Nicio adresa setata";
                 return;
             }
-
             try
             {
                 AdresaBLL adresaBLL = new AdresaBLL();
                 Adresa? adresaImplicita = adresaBLL.GetAdresaImplicita(UserSession.CurrentUser.IdUtilizator);
-
                 if (adresaImplicita != null)
                 {
                     adresaText.Text = adresaImplicita.AdresaText;
@@ -553,18 +468,13 @@ namespace RestaurantCarol.Views
                 adresaText.Text = "Nicio adresa setata";
             }
         }
-
         private void Adresa_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (UserSession.CurrentUser == null) return;
-
             AdreseView adreseView = new AdreseView(UserSession.CurrentUser.IdUtilizator);
             adreseView.Owner = this;
-
             adreseView.AdreseModificate += ActualizeazaAdresaImplicita;
-
             adreseView.ShowDialog();
-
             adreseView.AdreseModificate -= ActualizeazaAdresaImplicita;
         }
     }

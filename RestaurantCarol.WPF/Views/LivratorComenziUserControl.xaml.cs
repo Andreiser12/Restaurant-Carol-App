@@ -1,21 +1,18 @@
 using System.Windows;
 using System.Windows.Controls;
 using RestaurantCarol.Layers;
-
 namespace RestaurantCarol.Views
 {
     public partial class LivratorComenziUserControl : UserControl
     {
         private AngajatHubView? parentView;
         private ComandaBLL comandaBLL = new ComandaBLL();
-
         public LivratorComenziUserControl(AngajatHubView parent)
         {
             InitializeComponent();
             parentView = parent;
             IncarcaComenzi();
         }
-
         private void IncarcaComenzi()
         {
             try
@@ -23,7 +20,6 @@ namespace RestaurantCarol.Views
                 var comenzi = comandaBLL.GetComenziLivrator();
                 comenziList.ItemsSource = comenzi;
                 emptyText.Visibility = comenzi.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
                 if (LivratorSession.ComandaSelectata != null)
                 {
                     foreach (Comanda comanda in comenziList.Items)
@@ -42,12 +38,10 @@ namespace RestaurantCarol.Views
                     "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void ComenziList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LivratorSession.ComandaSelectata = comenziList.SelectedItem as Comanda;
         }
-
         private void Inapoi_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateToLivrator();

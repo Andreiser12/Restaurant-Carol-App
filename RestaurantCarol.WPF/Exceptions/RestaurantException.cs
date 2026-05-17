@@ -1,4 +1,3 @@
-
 namespace RestaurantCarol.Exceptions
 {
     public class RestaurantException : ApplicationException

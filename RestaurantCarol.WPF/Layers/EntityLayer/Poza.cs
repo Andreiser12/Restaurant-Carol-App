@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace RestaurantCarol.Layers
 {
     public class Poza
@@ -13,4 +12,3 @@ namespace RestaurantCarol.Layers
         public string CaleFisier { get; set; } = string.Empty;
     }
 }
-

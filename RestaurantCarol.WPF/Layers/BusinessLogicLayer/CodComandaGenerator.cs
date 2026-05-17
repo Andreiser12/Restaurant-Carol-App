@@ -1,4 +1,4 @@
-﻿namespace RestaurantCarol.Layers
+namespace RestaurantCarol.Layers
 {
     public static class CodComandaGenerator
     {
