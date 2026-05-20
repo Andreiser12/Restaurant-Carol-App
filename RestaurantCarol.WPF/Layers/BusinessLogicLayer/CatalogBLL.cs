@@ -5,6 +5,7 @@ namespace RestaurantCarol.Layers
     {
         private PreparatBLL preparatBLL = new PreparatBLL();
         private MeniuBLL meniuBLL = new MeniuBLL();
+
         public ObservableCollection<CatalogItem> GetByCategorie(int idCategorie)
         {
             ObservableCollection<CatalogItem> items = new();

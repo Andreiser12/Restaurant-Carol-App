@@ -6,6 +6,7 @@ namespace RestaurantCarol.Layers
     {
         private static readonly string connectionString =
             ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString;
+
         public static SqlConnection Connection
         {
             get => new SqlConnection(connectionString);

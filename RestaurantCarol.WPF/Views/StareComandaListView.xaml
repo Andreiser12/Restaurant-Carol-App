@@ -26,22 +26,27 @@
                 <TextBlock Text="Comenzile tale" FontSize="22" FontWeight="Bold" Foreground="#1B7A6B"/>
                 <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
                         Width="36" Height="36" Background="#F4B860" Foreground="#3A3A3A"
-                        FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="Inchide_Click"/>
+                        FontWeight="Bold" BorderThickness="0" Cursor="Hand" 
+                        Command="{Binding InchideCommand}"/>
             </Grid>
 
             <TextBlock Grid.Row="1" Margin="0,12,0,16" FontSize="13" Foreground="#666666"
                        Text="Apasa pe o comanda pentru a vedea starea si a o anula (daca e activa)."/>
 
-            <TextBlock x:Name="emptyText" Grid.Row="2"
+            <TextBlock Grid.Row="2"
                        Text="Nu ai comenzi plasate."
                        FontSize="15" Foreground="#888888"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Visibility="Collapsed"/>
+                       Visibility="{Binding VizibilitateEmpty}"/>
 
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                <ListBox x:Name="comenziList" BorderThickness="0" Background="Transparent"
-                         MouseDoubleClick="ComenziList_MouseDoubleClick"
-                         SelectionChanged="ComenziList_SelectionChanged">
+                <ListBox ItemsSource="{Binding Comenzi}"
+                         SelectedItem="{Binding Selectata, Mode=TwoWay}"
+                         BorderThickness="0" Background="Transparent">
+                    <ListBox.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick" 
+                                      Command="{Binding DeschideSelectataCommand}"/>
+                    </ListBox.InputBindings>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Padding" Value="0"/>
@@ -90,7 +95,8 @@
 
             <Button Grid.Row="3" Content="Deschide comanda selectata" Margin="0,16,0,0"
                     Height="40" Background="#1B7A6B" Foreground="White" FontWeight="SemiBold"
-                    BorderThickness="0" Cursor="Hand" Click="DeschideSelectata_Click"/>
+                    BorderThickness="0" Cursor="Hand" 
+                    Command="{Binding DeschideSelectataCommand}"/>
         </Grid>
     </Border>
 </Window>

@@ -7,14 +7,14 @@ namespace RestaurantCarol.Layers
     {
         public ObservableCollection<Adresa> GetByUtilizator(int idUtilizator)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAdreseByUtilizator", con);
+                SqlCommand command = new("GetAdreseByUtilizator", connection);
                 ObservableCollection<Adresa> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -32,13 +32,13 @@ namespace RestaurantCarol.Layers
         }
         public Adresa? GetAdresaImplicita(int idUtilizator)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAdresaImplicita", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand command = new("GetAdresaImplicita", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -56,53 +56,53 @@ namespace RestaurantCarol.Layers
         }
         public void AddAdresa(Adresa adresa)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("AddAdresa", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", adresa.IdUtilizator));
-                cmd.Parameters.Add(new SqlParameter("@adresa", adresa.AdresaText));
-                cmd.Parameters.Add(new SqlParameter("@esteImplicita", adresa.EsteImplicita));
+                SqlCommand command = new("AddAdresa", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", adresa.IdUtilizator));
+                command.Parameters.Add(new SqlParameter("@adresa", adresa.AdresaText));
+                command.Parameters.Add(new SqlParameter("@esteImplicita", adresa.EsteImplicita));
                 SqlParameter paramId = new("@idAdresa", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(paramId);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(paramId);
+                connection.Open();
+                command.ExecuteNonQuery();
                 adresa.IdAdresa = (int)paramId.Value;
             }
         }
         public void ModifyAdresa(Adresa adresa)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("ModifyAdresa", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idAdresa", adresa.IdAdresa));
-                cmd.Parameters.Add(new SqlParameter("@adresa", adresa.AdresaText));
-                con.Open();
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new("ModifyAdresa", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idAdresa", adresa.IdAdresa));
+                command.Parameters.Add(new SqlParameter("@adresa", adresa.AdresaText));
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
         public void SetImplicita(int idAdresa)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("SetAdresaImplicita", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idAdresa", idAdresa));
-                con.Open();
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new("SetAdresaImplicita", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idAdresa", idAdresa));
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
         public void DeleteAdresa(int idAdresa)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("DeleteAdresa", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idAdresa", idAdresa));
-                con.Open();
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new("DeleteAdresa", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idAdresa", idAdresa));
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
     }

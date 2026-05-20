@@ -16,6 +16,7 @@ namespace RestaurantCarol.Layers
                 NotifyPropertyChanged(nameof(CalePoza));
             }
         }
+
         private Meniu? meniu;
         public Meniu? Meniu
         {

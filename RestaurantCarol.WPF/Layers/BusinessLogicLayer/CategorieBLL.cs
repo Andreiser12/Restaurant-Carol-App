@@ -11,10 +11,12 @@ namespace RestaurantCarol.Layers
             CategoriiList = categorieDAL.GetAllCategorii();
             return CategoriiList;
         }
+
         public ObservableCollection<Categorie> GetCategoriiByTip(TipCategorie tip)
         {
             return categorieDAL.GetCategoriiByTip(tip);
         }
+
         public void AddCategorie(Categorie categorie)
         {
             if (categorie == null)
@@ -34,6 +36,7 @@ namespace RestaurantCarol.Layers
             }
             CategoriiList?.Add(categorie);
         }
+
         public void ModifyCategorie(Categorie categorie)
         {
             if (categorie == null)
@@ -46,6 +49,7 @@ namespace RestaurantCarol.Layers
             }
             categorieDAL.ModifyCategorie(categorie);
         }
+
         public void DeleteCategorie(Categorie categorie)
         {
             if (categorie == null)

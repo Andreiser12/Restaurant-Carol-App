@@ -103,7 +103,7 @@
                 <Button Style="{StaticResource CloseButton}"
                         Content="✕"
                         HorizontalAlignment="Right"
-                        Click="Inchide_Click"/>
+                        Command="{Binding InchideCommand}"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" 
@@ -111,18 +111,17 @@
                           HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
 
-                    <TextBlock x:Name="mesajGolText"
-                               Text="Nu ai nicio adresa salvata. Adauga prima ta adresa folosind butonul de mai jos."
+                    <TextBlock Text="Nu ai nicio adresa salvata. Adauga prima ta adresa folosind butonul de mai jos."
                                FontSize="14"
                                FontStyle="Italic"
                                Foreground="#888888"
                                TextAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,40,0,0"
-                               Visibility="Collapsed"/>
+                               Visibility="{Binding VizibilitateMesajGol}"/>
 
-                    <ItemsControl x:Name="adreseList"
-                                  ItemsSource="{Binding}">
+                    <ItemsControl ItemsSource="{Binding Adrese}"
+                                  Visibility="{Binding VizibilitateLista}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="#FDF1DC"
@@ -164,19 +163,19 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Button Content="Seteaza ca implicita"
                                                     Style="{StaticResource ActionButton}"
-                                                    Tag="{Binding}"
-                                                    Click="SetImplicita_Click"
+                                                    Command="{Binding DataContext.SetImplicitaCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
                                                     Visibility="{Binding EsteImplicita, Converter={StaticResource BoolToInvisibility}}"/>
 
                                             <Button Content="Editeaza"
                                                     Style="{StaticResource ActionButton}"
-                                                    Tag="{Binding}"
-                                                    Click="Edit_Click"/>
+                                                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"/>
 
                                             <Button Content="Sterge"
                                                     Style="{StaticResource DeleteButton}"
-                                                    Tag="{Binding}"
-                                                    Click="Sterge_Click"/>
+                                                    Command="{Binding DataContext.StergeCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"/>
                                         </StackPanel>
 
                                     </StackPanel>
@@ -197,7 +196,7 @@
                     Cursor="Hand"
                     BorderThickness="0"
                     Margin="0,15,0,0"
-                    Click="Adauga_Click">
+                    Command="{Binding AdaugaCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 

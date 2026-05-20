@@ -4,6 +4,7 @@ namespace RestaurantCarol.Layers
     public class AutentificareBLL
     {
         private UtilizatorDAL utilizatorDAL = new UtilizatorDAL();
+
         public Utilizator Autentificare(string email, string parola)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -26,6 +27,7 @@ namespace RestaurantCarol.Layers
             }
             return utilizator;
         }
+
         public void DirectLogin(Utilizator utilizator)
         {
             if(utilizator==null)
@@ -34,6 +36,7 @@ namespace RestaurantCarol.Layers
             }
             UserSession.Login(utilizator);
         }
+
         public int GetPuncteByUtilizator(int idUtilizator)
         {
             return utilizatorDAL.GetPuncteByUtilizator(idUtilizator);

@@ -3,7 +3,8 @@ namespace RestaurantCarol.Layers
 {
     public static class CartSession
     {
-        public static ObservableCollection<CartItem> Items { get; private set; } = [];
+        public static ObservableCollection<CartItem> Items { get; private set; } = new ObservableCollection<CartItem>();
+
         public static event Action? CartChanged;
         public static int NumarTotalProduse
         {
@@ -15,6 +16,7 @@ namespace RestaurantCarol.Layers
                 return total;
             }
         }
+
         public static decimal CostTotal
         {
             get
@@ -25,6 +27,7 @@ namespace RestaurantCarol.Layers
                 return total;
             }
         }
+
         public static bool EsteGol => Items.Count == 0;
         public static void AdaugaPreparat(Preparat preparat, int cantitate)
         {
@@ -45,6 +48,7 @@ namespace RestaurantCarol.Layers
                 Items.Add(new CartItem { Preparat = preparat, Cantitate = cantitate });
             CartChanged?.Invoke();
         }
+
         public static void AdaugaMeniu(Meniu meniu, int cantitate)
         {
             if (meniu == null || cantitate <= 0) return;
@@ -64,6 +68,7 @@ namespace RestaurantCarol.Layers
                 Items.Add(new CartItem { Meniu = meniu, Cantitate = cantitate });
             CartChanged?.Invoke();
         }
+
         public static void ModificaCantitate(CartItem item, int cantitateNoua)
         {
             if (item == null) return;
@@ -75,12 +80,14 @@ namespace RestaurantCarol.Layers
             item.Cantitate = cantitateNoua;
             CartChanged?.Invoke();
         }
+
         public static void Sterge(CartItem item)
         {
             if (item == null) return;
             Items.Remove(item);
             CartChanged?.Invoke();
         }
+
         public static void Goleste()
         {
             Items.Clear();

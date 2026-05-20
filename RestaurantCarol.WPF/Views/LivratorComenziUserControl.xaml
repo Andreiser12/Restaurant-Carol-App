@@ -11,7 +11,10 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Content="←" Background="#F4B860" Foreground="#3A3A3A" BorderThickness="0" FontSize="22" FontWeight="Bold" Width="50" Height="50" Cursor="Hand" Click="Inapoi_Click" VerticalAlignment="Center">
+            <Button Content="←" Background="#F4B860" Foreground="#3A3A3A" BorderThickness="0" 
+                    FontSize="22" FontWeight="Bold" Width="50" Height="50" Cursor="Hand"
+                    VerticalAlignment="Center"
+                    Command="{Binding InapoiCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Grid>
@@ -46,17 +49,16 @@
             </Border.Effect>
 
             <Grid>
-                <TextBlock x:Name="emptyText"
-                           Text="Nu exista comenzi in curs de livrare."
+                <TextBlock Text="Nu exista comenzi in curs de livrare."
                            FontSize="16"
                            Foreground="#888888"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Visibility="Collapsed"/>
+                           Visibility="{Binding VizibilitateEmpty}"/>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListBox x:Name="comenziList"
-                             SelectionChanged="ComenziList_SelectionChanged"
+                    <ListBox ItemsSource="{Binding Comenzi}"
+                             SelectedItem="{Binding Selectata, Mode=TwoWay}"
                              BorderThickness="0"
                              Background="Transparent">
                         <ListBox.ItemContainerStyle>

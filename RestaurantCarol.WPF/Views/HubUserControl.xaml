@@ -117,13 +117,12 @@
                             VerticalAlignment="Center"
                             Margin="30,0,30,0">
 
-                    <Button x:Name="opresteCautareaButton"
-                            Style="{StaticResource ActionButton}"
+                    <Button Style="{StaticResource ActionButton}"
                             Content="✕ Opreste cautarea"
                             Width="450"
                             Margin="0,0,0,10"
-                            Visibility="Collapsed"
-                            Click="OpresteCautarea_Click"/>
+                            Visibility="{Binding VizibilitateOpresteCautare}"
+                            Command="{Binding OpresteCautareaCommand}"/>
 
                     <Border Background="White"
                             CornerRadius="20"
@@ -143,13 +142,12 @@
                                        Margin="0,0,10,0"/>
 
                             <TextBox Grid.Column="1"
-                                     x:Name="cautareTextBox"
                                      FontSize="15"
                                      BorderThickness="0"
                                      Background="Transparent"
                                      VerticalAlignment="Center"
                                      Padding="0"
-                                     TextChanged="CautareTextBox_TextChanged">
+                                     Text="{Binding TextCautare, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Resources>
@@ -175,12 +173,11 @@
                         </Grid>
                     </Border>
 
-                    <Button x:Name="filtreazaAlergeniButton"
-                            Style="{StaticResource ActionButton}"
-                            Content="▼ Filtreaza alergeni"
+                    <Button Style="{StaticResource ActionButton}"
+                            Content="{Binding TextButonAlergeni}"
                             Width="450"
                             Margin="0,10,0,0"
-                            Click="FiltreazaAlergeni_Click"/>
+                            Command="{Binding ToggleAlergeniCommand}"/>
 
                 </StackPanel>
 
@@ -197,12 +194,11 @@
             </Grid>
 
             <Border Grid.Row="1"
-                    x:Name="alergeniPanel"
                     Background="#373334"
                     CornerRadius="12"
                     Padding="20,15,20,15"
                     Margin="50,0,50,20"
-                    Visibility="Collapsed">
+                    Visibility="{Binding VizibilitateAlergeniPanel}">
                 <StackPanel>
                     <TextBlock Text="Bifeaza alergenii pe care vrei sa-i EVITI:"
                                FontSize="13"
@@ -210,7 +206,7 @@
                                Foreground="#D2AF6D"
                                Margin="0,0,0,10"/>
 
-                    <ItemsControl x:Name="alergeniFiltruList">
+                    <ItemsControl ItemsSource="{Binding AlergeniFiltru}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel/>
@@ -225,12 +221,10 @@
                                         BorderBrush="#D2AF6D"
                                         BorderThickness="1">
                                     <CheckBox Content="{Binding Denumire}"
-                                              Tag="{Binding}"
+                                              IsChecked="{Binding IsBifat, Mode=TwoWay}"
                                               FontSize="13"
                                               FontWeight="SemiBold"
-                                              Foreground="#D2AF6D"
-                                              Checked="AlergenFiltru_Changed"
-                                              Unchecked="AlergenFiltru_Changed"/>
+                                              Foreground="#D2AF6D"/>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -240,14 +234,14 @@
 
             <Grid Grid.Row="2">
 
-                <UniformGrid x:Name="cercuriNavigare"
-                             Rows="1" Columns="3"
+                <UniformGrid Rows="1" Columns="3"
                              HorizontalAlignment="Stretch"
-                             Margin="50,0,50,40">
+                             Margin="50,0,50,40"
+                             Visibility="{Binding VizibilitateCercuriNavigare}">
 
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
                         <Button Style="{StaticResource CircleButton}"
-                                Click="Populare_Click">
+                                Command="{Binding PopulareCommand}">
                             <Border Width="280" Height="280" 
                                     CornerRadius="140"
                                     ClipToBounds="True">
@@ -273,7 +267,7 @@
 
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
                         <Button Style="{StaticResource CircleButton}"
-                                Click="Mancare_Click">
+                                Command="{Binding MancareCommand}">
                             <Border Width="280" Height="280" 
                                     CornerRadius="140"
                                     ClipToBounds="True">
@@ -299,7 +293,7 @@
 
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
                         <Button Style="{StaticResource CircleButton}"
-                                Click="Bauturi_Click">
+                                Command="{Binding BauturiCommand}">
                             <Border Width="280" Height="280" 
                                     CornerRadius="140"
                                     ClipToBounds="True">
@@ -325,17 +319,16 @@
 
                 </UniformGrid>
 
-                <Grid x:Name="rezultateContainer" Visibility="Collapsed">
+                <Grid Visibility="{Binding VizibilitateRezultate}">
 
-                    <Border x:Name="mesajGolBorder"
-                            Background="#EB7A6B14"
+                    <Border Background="#EB7A6B14"
                             CornerRadius="12"
                             Padding="30"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Center"
                             Margin="0,40,0,0"
-                            Visibility="Collapsed">
-                        <TextBlock x:Name="mesajGolText"
+                            Visibility="{Binding VizibilitateMesajGol}">
+                        <TextBlock Text="{Binding MesajGolText}"
                                    FontSize="16"
                                    FontStyle="Italic"
                                    Foreground="White"
@@ -344,7 +337,8 @@
                                    MaxWidth="500"/>
                     </Border>
 
-                    <ItemsControl x:Name="rezultateList"
+                    <ItemsControl ItemsSource="{Binding Rezultate}"
+                                  Visibility="{Binding VizibilitateListaRezultate}"
                                   Margin="50,0,50,40">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -357,8 +351,8 @@
                                             VerticalAlignment="Bottom"
                                             Margin="20,20,20,40">
                                     <Button Style="{StaticResource PreparatCircle}"
-                                            Tag="{Binding}"
-                                            Click="Preparat_Click">
+                                            Command="{Binding DataContext.PreparatCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}">
                                         <Border Width="280" Height="280" 
                                                 CornerRadius="140"
                                                 ClipToBounds="True">

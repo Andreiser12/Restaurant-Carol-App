@@ -33,29 +33,60 @@
                             CornerRadius="6"
                             Padding="30,12,30,12"
                             VerticalAlignment="Center">
-                        <TextBlock x:Name="welcomeText"
-                                   Text="Restaurant Carol - Personal"
+                        <TextBlock Text="{Binding WelcomeText}"
                                    FontSize="22"
                                    FontWeight="SemiBold"
                                    Foreground="White"
                                    VerticalAlignment="Center"/>
                     </Border>
 
-                    <Border Grid.Column="2"
-                            x:Name="prenumeBorder"
-                            Background="#EB7A6B14"
-                            CornerRadius="6"
-                            Padding="20,12,20,12"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Cursor="Hand"
-                            MouseLeftButtonDown="Prenume_Click">
-                        <TextBlock x:Name="prenumeText"
-                                   Text="Angajat"
-                                   FontSize="18"
-                                   Foreground="White"
-                                   VerticalAlignment="Center"/>
-                    </Border>
+                    <Grid Grid.Column="2"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center">
+                        <Border x:Name="prenumeBorder"
+                                Background="#EB7A6B14"
+                                CornerRadius="6"
+                                Padding="20,12,20,12"
+                                Cursor="Hand">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" 
+                                              Command="{Binding PrenumeCommand}"/>
+                            </Border.InputBindings>
+                            <TextBlock Text="{Binding PrenumeText}"
+                                       FontSize="18"
+                                       Foreground="White"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <Popup IsOpen="{Binding PopupPrenumeDeschis, Mode=TwoWay}"
+                               PlacementTarget="{Binding ElementName=prenumeBorder}"
+                               Placement="Bottom"
+                               StaysOpen="False"
+                               AllowsTransparency="True"
+                               PopupAnimation="Fade">
+                            <Border Background="White"
+                                    CornerRadius="8"
+                                    Margin="5,8,5,8"
+                                    MinWidth="160">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" BlurRadius="15"
+                                                      ShadowDepth="0" Opacity="0.3"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <Button Content="Iesire din cont"
+                                            Background="Transparent"
+                                            Foreground="#D85A4A"
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            BorderThickness="0"
+                                            Padding="20,12,20,12"
+                                            HorizontalContentAlignment="Left"
+                                            Cursor="Hand"
+                                            Command="{Binding LogoutCommand}"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
                 </Grid>
             </Border>
 

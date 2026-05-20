@@ -17,18 +17,38 @@
 
             <StackPanel Grid.Row="1" Margin="0,16,0,0">
                 <TextBlock Text="Denumire" FontWeight="SemiBold"/>
-                <TextBox x:Name="txtDenumire" Margin="0,4,0,12"/>
+                <TextBox Margin="0,4,0,12"
+                         Text="{Binding Denumire, UpdateSourceTrigger=PropertyChanged}"/>
+
                 <TextBlock Text="Categorie" FontWeight="SemiBold"/>
-                <ComboBox x:Name="comboCategorie" DisplayMemberPath="Denumire" Margin="0,4,0,12"/>
+                <ComboBox DisplayMemberPath="Denumire" 
+                          Margin="0,4,0,12"
+                          ItemsSource="{Binding Categorii}"
+                          SelectedItem="{Binding CategorieSelectata, Mode=TwoWay}"/>
+
                 <TextBlock Text="Selecteaza preparate pentru meniu" FontWeight="SemiBold" TextWrapping="Wrap"/>
                 <ScrollViewer MaxHeight="260" Margin="0,8,0,0">
-                    <ItemsControl x:Name="preparateList"/>
+                    <ItemsControl ItemsSource="{Binding Preparate}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                                    <CheckBox Content="{Binding Denumire}"
+                                              IsChecked="{Binding IsBifat, Mode=TwoWay}"
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </StackPanel>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-                <Button Content="Anuleaza" Click="Anuleaza_Click" Margin="0,0,8,0" Padding="16,8"/>
-                <Button Content="Salveaza" Click="Salveaza_Click" Background="#1B7A6B" Foreground="White" Padding="16,8" BorderThickness="0"/>
+                <Button Content="Anuleaza" 
+                        Command="{Binding AnuleazaCommand}"
+                        Margin="0,0,8,0" Padding="16,8"/>
+                <Button Content="Salveaza" 
+                        Command="{Binding SalveazaCommand}"
+                        Background="#1B7A6B" Foreground="White" Padding="16,8" BorderThickness="0"/>
             </StackPanel>
         </Grid>
     </Border>

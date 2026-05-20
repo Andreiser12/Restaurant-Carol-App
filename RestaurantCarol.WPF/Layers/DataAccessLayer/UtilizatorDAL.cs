@@ -6,13 +6,13 @@ namespace RestaurantCarol.Layers
     {
         public Utilizator? GetByEmail(string email)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetUtilizatorByEmail", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@email", email));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand command = new("GetUtilizatorByEmail", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@email", email));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -35,47 +35,47 @@ namespace RestaurantCarol.Layers
         }
         public bool CheckEmailExists(string email)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("CheckEmailExists", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@email", email));
-                con.Open();
-                object? result = cmd.ExecuteScalar();
+                SqlCommand command = new("CheckEmailExists", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@email", email));
+                connection.Open();
+                object? result = command.ExecuteScalar();
                 if (result == null) return false;
                 return (int)result == 1;
             }
         }
         public void AddUtilizator(Utilizator utilizator)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("AddUtilizator", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@nume", utilizator.Nume));
-                cmd.Parameters.Add(new SqlParameter("@prenume", utilizator.Prenume));
-                cmd.Parameters.Add(new SqlParameter("@email", utilizator.Email));
-                cmd.Parameters.Add(new SqlParameter("@telefon",
+                SqlCommand command = new("AddUtilizator", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@nume", utilizator.Nume));
+                command.Parameters.Add(new SqlParameter("@prenume", utilizator.Prenume));
+                command.Parameters.Add(new SqlParameter("@email", utilizator.Email));
+                command.Parameters.Add(new SqlParameter("@telefon",
                     (object?)utilizator.Telefon ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@parolaHash", utilizator.ParolaHash));
-                cmd.Parameters.Add(new SqlParameter("@rol", utilizator.Rol.ToString()));
+                command.Parameters.Add(new SqlParameter("@parolaHash", utilizator.ParolaHash));
+                command.Parameters.Add(new SqlParameter("@rol", utilizator.Rol.ToString()));
                 SqlParameter paramId = new("@idUtilizator", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(paramId);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(paramId);
+                connection.Open();
+                command.ExecuteNonQuery();
                 utilizator.IdUtilizator = (int)paramId.Value;
             }
         }
         public int GetPuncteByUtilizator(int idUtilizator)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetPuncteByUtilizator", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-                con.Open();
-                object? result = cmd.ExecuteScalar();
+                SqlCommand command = new("GetPuncteByUtilizator", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+                connection.Open();
+                object? result = command.ExecuteScalar();
                 if (result == null || result == DBNull.Value) return 0;
                 return (int)result;
             }

@@ -7,13 +7,13 @@ namespace RestaurantCarol.Layers
     {
         public ObservableCollection<Alergen> GetAllAlergeni()
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAllAlergeni", con);
-                ObservableCollection<Alergen> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand command = new("GetAllAlergeni", connection);
+                ObservableCollection<Alergen> result = new ObservableCollection<Alergen>();
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {

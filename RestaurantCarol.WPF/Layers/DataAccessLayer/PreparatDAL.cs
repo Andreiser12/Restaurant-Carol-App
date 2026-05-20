@@ -7,14 +7,14 @@ namespace RestaurantCarol.Layers
     {
         public ObservableCollection<Preparat> GetByCategorie(int idCategorie)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetPreparateByCategorie", con);
+                SqlCommand command = new("GetPreparateByCategorie", connection);
                 ObservableCollection<Preparat> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -41,14 +41,14 @@ namespace RestaurantCarol.Layers
         }
         public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAlergeniByPreparat", con);
+                SqlCommand command = new("GetAlergeniByPreparat", connection);
                 ObservableCollection<Alergen> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -64,13 +64,13 @@ namespace RestaurantCarol.Layers
         }
         public ObservableCollection<Preparat> GetAllPreparate()
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAllPreparate", con);
-                ObservableCollection<Preparat> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand command = new("GetAllPreparate", connection);
+                ObservableCollection<Preparat> result = new ObservableCollection<Preparat>();
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -98,14 +98,14 @@ namespace RestaurantCarol.Layers
         }
         public ObservableCollection<Preparat> GetTopPopulare(int top = 3)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetTopPreparatePopulare", con);
+                SqlCommand command = new("GetTopPreparatePopulare", connection);
                 ObservableCollection<Preparat> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@top", top));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@top", top));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -132,13 +132,13 @@ namespace RestaurantCarol.Layers
         }
         public ObservableCollection<Alergen> GetAllAlergeni()
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetAllAlergeni", con);
+                SqlCommand command = new("GetAllAlergeni", connection);
                 ObservableCollection<Alergen> result = [];
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -154,28 +154,28 @@ namespace RestaurantCarol.Layers
         }
         public void AddPreparat(Preparat preparat, List<int> idsAlergeni, string? caleFotografie)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("AddPreparat", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
-                cmd.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
-                cmd.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
-                cmd.Parameters.Add(new SqlParameter("@cantitateTotala", preparat.CantitateTotala));
-                cmd.Parameters.Add(new SqlParameter("@descriere",
+                SqlCommand command = new("AddPreparat", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
+                command.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
+                command.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
+                command.Parameters.Add(new SqlParameter("@cantitateTotala", preparat.CantitateTotala));
+                command.Parameters.Add(new SqlParameter("@descriere",
                     (object?)preparat.Descriere ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@calorii",
+                command.Parameters.Add(new SqlParameter("@calorii",
                     (object?)preparat.Calorii ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@grasimi",
+                command.Parameters.Add(new SqlParameter("@grasimi",
                     (object?)preparat.Grasimi ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@carbohidrati",
+                command.Parameters.Add(new SqlParameter("@carbohidrati",
                     (object?)preparat.Carbohidrati ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@proteine",
+                command.Parameters.Add(new SqlParameter("@proteine",
                     (object?)preparat.Proteine ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@sare",
+                command.Parameters.Add(new SqlParameter("@sare",
                     (object?)preparat.Sare ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
-                cmd.Parameters.Add(new SqlParameter("@caleFotografie",
+                command.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
+                command.Parameters.Add(new SqlParameter("@caleFotografie",
                     (object?)caleFotografie ?? DBNull.Value));
                 DataTable alergeniTable = new DataTable();
                 alergeniTable.Columns.Add("IdAlergen", typeof(int));
@@ -186,24 +186,24 @@ namespace RestaurantCarol.Layers
                 SqlParameter paramAlergeni = new("@alergeni", alergeniTable);
                 paramAlergeni.SqlDbType = SqlDbType.Structured;
                 paramAlergeni.TypeName = "IdAlergenType";
-                cmd.Parameters.Add(paramAlergeni);
+                command.Parameters.Add(paramAlergeni);
                 SqlParameter paramId = new("@idPreparat", SqlDbType.Int);
                 paramId.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(paramId);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(paramId);
+                connection.Open();
+                command.ExecuteNonQuery();
                 preparat.IdPreparat = (int)paramId.Value;
             }
         }
         public Preparat? GetById(int idPreparat)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetPreparatById", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand command = new("GetPreparatById", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -230,14 +230,14 @@ namespace RestaurantCarol.Layers
         }
         public bool CheckDenumireDuplicate(string denumire, int idExclude)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("CheckDenumirePreparatDuplicate", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@denumire", denumire));
-                cmd.Parameters.Add(new SqlParameter("@idExclude", idExclude));
-                con.Open();
-                object? result = cmd.ExecuteScalar();
+                SqlCommand command = new("CheckDenumirePreparatDuplicate", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@denumire", denumire));
+                command.Parameters.Add(new SqlParameter("@idExclude", idExclude));
+                connection.Open();
+                object? result = command.ExecuteScalar();
                 if (result == null) return false;
                 return (int)result == 1;
             }
@@ -245,30 +245,30 @@ namespace RestaurantCarol.Layers
         public void UpdatePreparat(Preparat preparat, List<int> idsAlergeni,
                                     string actiunePoza, string? caleFotografieNoua)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("UpdatePreparat", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idPreparat", preparat.IdPreparat));
-                cmd.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
-                cmd.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
-                cmd.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
-                cmd.Parameters.Add(new SqlParameter("@descriere",
+                SqlCommand command = new("UpdatePreparat", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idPreparat", preparat.IdPreparat));
+                command.Parameters.Add(new SqlParameter("@denumire", preparat.Denumire));
+                command.Parameters.Add(new SqlParameter("@pret", preparat.Pret));
+                command.Parameters.Add(new SqlParameter("@cantitatePortie", preparat.CantitatePortie));
+                command.Parameters.Add(new SqlParameter("@descriere",
                     (object?)preparat.Descriere ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@calorii",
+                command.Parameters.Add(new SqlParameter("@calorii",
                     (object?)preparat.Calorii ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@grasimi",
+                command.Parameters.Add(new SqlParameter("@grasimi",
                     (object?)preparat.Grasimi ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@carbohidrati",
+                command.Parameters.Add(new SqlParameter("@carbohidrati",
                     (object?)preparat.Carbohidrati ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@proteine",
+                command.Parameters.Add(new SqlParameter("@proteine",
                     (object?)preparat.Proteine ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@sare",
+                command.Parameters.Add(new SqlParameter("@sare",
                     (object?)preparat.Sare ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
-                cmd.Parameters.Add(new SqlParameter("@caleFotografie",
+                command.Parameters.Add(new SqlParameter("@idCategorie", preparat.IdCategorie));
+                command.Parameters.Add(new SqlParameter("@caleFotografie",
                     (object?)caleFotografieNoua ?? DBNull.Value));
-                cmd.Parameters.Add(new SqlParameter("@actiunePoza", actiunePoza));
+                command.Parameters.Add(new SqlParameter("@actiunePoza", actiunePoza));
                 DataTable alergeniTable = new DataTable();
                 alergeniTable.Columns.Add("IdAlergen", typeof(int));
                 foreach (int id in idsAlergeni)
@@ -278,33 +278,33 @@ namespace RestaurantCarol.Layers
                 SqlParameter paramAlergeni = new("@alergeni", alergeniTable);
                 paramAlergeni.SqlDbType = SqlDbType.Structured;
                 paramAlergeni.TypeName = "IdAlergenType";
-                cmd.Parameters.Add(paramAlergeni);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(paramAlergeni);
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
         public void UpdateStoc(int idPreparat, int cantitateNoua)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("UpdateStocPreparat", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
-                cmd.Parameters.Add(new SqlParameter("@cantitateTotala", cantitateNoua));
-                con.Open();
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new("UpdateStocPreparat", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+                command.Parameters.Add(new SqlParameter("@cantitateTotala", cantitateNoua));
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
         public ObservableCollection<Preparat> GetPreparateStocRedus(int prag)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetPreparateStocRedus", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@prag", prag));
+                SqlCommand command = new("GetPreparateStocRedus", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@prag", prag));
                 ObservableCollection<Preparat> result = new();
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -321,16 +321,16 @@ namespace RestaurantCarol.Layers
         }
         public string? DeletePreparat(int idPreparat)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("DeletePreparat", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
+                SqlCommand command = new("DeletePreparat", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idPreparat", idPreparat));
                 SqlParameter paramCalePoza = new("@calePozaDeStersOutput", SqlDbType.NVarChar, 500);
                 paramCalePoza.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(paramCalePoza);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(paramCalePoza);
+                connection.Open();
+                command.ExecuteNonQuery();
                 if (paramCalePoza.Value == DBNull.Value) return null;
                 return paramCalePoza.Value as string;
             }

@@ -13,17 +13,17 @@ namespace RestaurantCarol.Layers
                             decimal discount,
                             ObservableCollection<CartItem> iteme)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("PlaseazaComanda", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-                cmd.Parameters.Add(new SqlParameter("@idAdresaLivrare", idAdresaLivrare));
-                cmd.Parameters.Add(new SqlParameter("@codComanda", codComanda));
-                cmd.Parameters.Add(new SqlParameter("@oraEstimataLivrare", oraEstimataLivrare));
-                cmd.Parameters.Add(new SqlParameter("@costMancare", costMancare));
-                cmd.Parameters.Add(new SqlParameter("@costTransport", costTransport));
-                cmd.Parameters.Add(new SqlParameter("@discount", discount));
+                SqlCommand command = new("PlaseazaComanda", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+                command.Parameters.Add(new SqlParameter("@idAdresaLivrare", idAdresaLivrare));
+                command.Parameters.Add(new SqlParameter("@codComanda", codComanda));
+                command.Parameters.Add(new SqlParameter("@oraEstimataLivrare", oraEstimataLivrare));
+                command.Parameters.Add(new SqlParameter("@costMancare", costMancare));
+                command.Parameters.Add(new SqlParameter("@costTransport", costTransport));
+                command.Parameters.Add(new SqlParameter("@discount", discount));
                 DataTable itemeTable = new DataTable();
                 itemeTable.Columns.Add("IdPreparat", typeof(int));
                 itemeTable.Columns.Add("IdMeniu", typeof(int));
@@ -38,51 +38,54 @@ namespace RestaurantCarol.Layers
                 SqlParameter itemeParam = new SqlParameter("@itemeComanda", itemeTable);
                 itemeParam.SqlDbType = SqlDbType.Structured;
                 itemeParam.TypeName = "dbo.ItemComandaType";
-                cmd.Parameters.Add(itemeParam);
+                command.Parameters.Add(itemeParam);
                 SqlParameter idParam = new("@idComanda", SqlDbType.Int);
                 idParam.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(idParam);
-                con.Open();
-                cmd.ExecuteNonQuery();
+                command.Parameters.Add(idParam);
+                connection.Open();
+                command.ExecuteNonQuery();
                 return (int)idParam.Value;
             }
         }
         public ObservableCollection<Comanda> GetComenziManager(bool doarActive)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetComenziManager", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@doarActive", SqlDbType.Bit) { Value = doarActive });
-                con.Open();
-                using SqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand command = new("GetComenziManager", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@doarActive", SqlDbType.Bit) { Value = doarActive });
+                connection.Open();
+                using SqlDataReader reader = command.ExecuteReader();
                 return LoadComenziFromReader(reader);
             }
         }
+
         public ObservableCollection<Comanda> GetComenziLivrator()
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetComenziLivrator", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                con.Open();
-                using SqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand command = new("GetComenziLivrator", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                using SqlDataReader reader = command.ExecuteReader();
                 return LoadComenziFromReader(reader);
             }
         }
+
         public ObservableCollection<Comanda> GetComenziClient(int idUtilizator, bool doarActive)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("GetComenziClient", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-                cmd.Parameters.Add(new SqlParameter("@doarActive", SqlDbType.Bit) { Value = doarActive });
-                con.Open();
-                using SqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand command = new("GetComenziClient", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+                command.Parameters.Add(new SqlParameter("@doarActive", SqlDbType.Bit) { Value = doarActive });
+                connection.Open();
+                using SqlDataReader reader = command.ExecuteReader();
                 return LoadComenziFromReader(reader);
             }
         }
+
         private static ObservableCollection<Comanda> LoadComenziFromReader(SqlDataReader reader)
         {
             ObservableCollection<Comanda> comenzi = new ObservableCollection<Comanda>();
@@ -117,28 +120,28 @@ namespace RestaurantCarol.Layers
                     var comanda = comenzi.FirstOrDefault(c => c.IdComanda == idComanda);
                     if (comanda != null)
                     {
-                                int? idPrep = reader["IdPreparat"] != DBNull.Value ? Convert.ToInt32(reader["IdPreparat"]) : null;
-                                int? idMen = reader["IdMeniu"] != DBNull.Value ? Convert.ToInt32(reader["IdMeniu"]) : null;
-                                string denumire = idMen.HasValue
-                                    ? (reader["DenumireMeniu"].ToString() ?? "Meniu")
-                                    : (reader["DenumirePreparat"].ToString() ?? string.Empty);
-                                var itemComanda = new ItemComanda
-                                {
-                                    IdItemComanda = Convert.ToInt32(reader["IdItemComanda"]),
-                                    IdComanda = idComanda,
-                                    IdPreparat = idPrep,
-                                    IdMeniu = idMen,
-                                    Cantitate = Convert.ToInt32(reader["Cantitate"])
-                                };
-                                if (idMen.HasValue)
-                                    itemComanda.Meniu = new Meniu { IdMeniu = idMen.Value, Denumire = denumire };
-                                else
-                                    itemComanda.Preparat = new Preparat
-                                    {
-                                        IdPreparat = idPrep ?? 0,
-                                        Denumire = denumire
-                                    };
-                                comanda.Items.Add(itemComanda);
+                        int? idPrep = reader["IdPreparat"] != DBNull.Value ? Convert.ToInt32(reader["IdPreparat"]) : null;
+                        int? idMen = reader["IdMeniu"] != DBNull.Value ? Convert.ToInt32(reader["IdMeniu"]) : null;
+                        string denumire = idMen.HasValue
+                            ? (reader["DenumireMeniu"].ToString() ?? "Meniu")
+                            : (reader["DenumirePreparat"].ToString() ?? string.Empty);
+                        var itemComanda = new ItemComanda
+                        {
+                            IdItemComanda = Convert.ToInt32(reader["IdItemComanda"]),
+                            IdComanda = idComanda,
+                            IdPreparat = idPrep,
+                            IdMeniu = idMen,
+                            Cantitate = Convert.ToInt32(reader["Cantitate"])
+                        };
+                        if (idMen.HasValue)
+                            itemComanda.Meniu = new Meniu { IdMeniu = idMen.Value, Denumire = denumire };
+                        else
+                            itemComanda.Preparat = new Preparat
+                            {
+                                IdPreparat = idPrep ?? 0,
+                                Denumire = denumire
+                            };
+                        comanda.Items.Add(itemComanda);
                     }
                 }
             }
@@ -146,14 +149,14 @@ namespace RestaurantCarol.Layers
         }
         public void UpdateStareComanda(int idComanda, StareComanda nouaStare)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            using (SqlConnection connection = DALHelper.Connection)
             {
-                SqlCommand cmd = new("UpdateStareComanda", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@idComanda", idComanda));
-                cmd.Parameters.Add(new SqlParameter("@nouaStare", GetStareDbString(nouaStare)));
-                con.Open();
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new("UpdateStareComanda", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@idComanda", idComanda));
+                command.Parameters.Add(new SqlParameter("@nouaStare", GetStareDbString(nouaStare)));
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
         private static string GetStareDbString(StareComanda stare)
@@ -170,11 +173,11 @@ namespace RestaurantCarol.Layers
         }
         public int GetUrmatorulNumarComanda()
         {
-            using SqlConnection con = DALHelper.Connection;
-            SqlCommand cmd = new(
-                "SELECT ISNULL(MAX(IdComanda), 0) + 1 FROM Comanda", con);
-            con.Open();
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            using SqlConnection connection = DALHelper.Connection;
+            SqlCommand command = new(
+                "SELECT ISNULL(MAX(IdComanda), 0) + 1 FROM Comanda", connection);
+            connection.Open();
+            return Convert.ToInt32(command.ExecuteScalar());
         }
         private static StareComanda GetStareFromDbString(string stareDb)
         {

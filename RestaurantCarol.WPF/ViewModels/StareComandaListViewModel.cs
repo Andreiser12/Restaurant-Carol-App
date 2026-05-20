@@ -1,7 +1,8 @@
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 using RestaurantCarol.Commands;
 using RestaurantCarol.Layers;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 namespace RestaurantCarol.ViewModels
 {
     public class StareComandaListViewModel : ViewModelBase
@@ -9,6 +10,7 @@ namespace RestaurantCarol.ViewModels
         private ComandaBLL comandaBLL = new ComandaBLL();
         public ObservableCollection<Comanda> Comenzi { get; } = new();
         public bool EsteGol { get; private set; }
+        public Visibility VizibilitateEmpty => EsteGol ? Visibility.Visible : Visibility.Collapsed;
         private Comanda? selectata;
         public Comanda? Selectata
         {
@@ -27,6 +29,7 @@ namespace RestaurantCarol.ViewModels
                 Comenzi.Add(c);
             EsteGol = Comenzi.Count == 0;
             NotifyPropertyChanged(nameof(EsteGol));
+            NotifyPropertyChanged(nameof(VizibilitateEmpty));
         }
         public ICommand DeschideSelectataCommand => new RelayCommand<object>(_ =>
         {

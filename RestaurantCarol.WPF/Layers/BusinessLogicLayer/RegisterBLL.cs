@@ -12,6 +12,7 @@ namespace RestaurantCarol.Layers
         private static readonly Regex TelefonRegex = new(
             @"^\+?[0-9]{7,15}$",
             RegexOptions.Compiled);
+
         public Utilizator Register(string nume, string prenume, string email,
                             string telefon, string adresaLivrare,
                             string parola, string confirmaParola)
@@ -61,6 +62,7 @@ namespace RestaurantCarol.Layers
             }
             return utilizator;
         }
+
         private void ValidateInput(string nume, string prenume, string email,
                                    string telefon, string adresaLivrare,
                                    string parola, string confirmaParola)

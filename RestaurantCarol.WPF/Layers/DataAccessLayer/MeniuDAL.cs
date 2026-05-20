@@ -8,13 +8,13 @@ namespace RestaurantCarol.Layers
     {
         public ObservableCollection<Meniu> GetByCategorie(int idCategorie)
         {
-            using SqlConnection con = DALHelper.Connection;
-            SqlCommand cmd = new("GetMeniuriByCategorie", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
+            using SqlConnection connection = DALHelper.Connection;
+            SqlCommand command = new("GetMeniuriByCategorie", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
             ObservableCollection<Meniu> meniuri = new();
-            con.Open();
-            using SqlDataReader reader = cmd.ExecuteReader();
+            connection.Open();
+            using SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
                 meniuri.Add(new Meniu
@@ -52,11 +52,11 @@ namespace RestaurantCarol.Layers
         }
         public int AddMeniu(string denumire, int idCategorie, List<MeniuPreparatItem> componente)
         {
-            using SqlConnection con = DALHelper.Connection;
-            SqlCommand cmd = new("AddMeniu", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@denumire", denumire));
-            cmd.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
+            using SqlConnection connection = DALHelper.Connection;
+            SqlCommand command = new("AddMeniu", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@denumire", denumire));
+            command.Parameters.Add(new SqlParameter("@idCategorie", idCategorie));
             DataTable table = new();
             table.Columns.Add("IdPreparat", typeof(int));
             table.Columns.Add("CantitatePortie", typeof(decimal));
@@ -65,22 +65,22 @@ namespace RestaurantCarol.Layers
             SqlParameter param = new("@componente", table);
             param.SqlDbType = SqlDbType.Structured;
             param.TypeName = "dbo.MeniuPreparatType";
-            cmd.Parameters.Add(param);
+            command.Parameters.Add(param);
             SqlParameter idOut = new("@idMeniu", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            cmd.Parameters.Add(idOut);
-            con.Open();
-            cmd.ExecuteNonQuery();
+            command.Parameters.Add(idOut);
+            connection.Open();
+            command.ExecuteNonQuery();
             return (int)idOut.Value;
         }
         public int GetNrComenziClientInInterval(int idUtilizator, int zile)
         {
-            using SqlConnection con = DALHelper.Connection;
-            SqlCommand cmd = new("GetNrComenziClientInInterval", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
-            cmd.Parameters.Add(new SqlParameter("@zile", zile));
-            con.Open();
-            object? result = cmd.ExecuteScalar();
+            using SqlConnection connection = DALHelper.Connection;
+            SqlCommand command = new("GetNrComenziClientInInterval", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@idUtilizator", idUtilizator));
+            command.Parameters.Add(new SqlParameter("@zile", zile));
+            connection.Open();
+            object? result = command.ExecuteScalar();
             return result == null ? 0 : Convert.ToInt32(result);
         }
     }

@@ -9,22 +9,27 @@ namespace RestaurantCarol.Layers
         {
             return preparatDAL.GetByCategorie(idCategorie);
         }
+
         public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
         {
             return preparatDAL.GetAlergeniByPreparat(idPreparat);
         }
+
         public ObservableCollection<Preparat> GetAllPreparate()
         {
             return preparatDAL.GetAllPreparate();
         }
+
         public ObservableCollection<Preparat> GetTopPopulare(int top =3)
         {
             return preparatDAL.GetTopPopulare(top);
         }
+
         public ObservableCollection<Alergen> GetAllAlergeni()
         {
             return preparatDAL.GetAllAlergeni();
         }
+
         public void AddPreparat(Preparat preparat, List<int> idsAlergeni, string? caleFotografie)
         {
             if (preparat == null)
@@ -63,15 +68,18 @@ namespace RestaurantCarol.Layers
                 throw new RestaurantException("Exista deja un preparat cu acest nume.");
             }
         }
+
         public Preparat? GetById(int idPreparat)
         {
             return preparatDAL.GetById(idPreparat);
         }
+
         public bool CheckDenumireDuplicate(string denumire, int idExclude)
         {
             if (string.IsNullOrWhiteSpace(denumire)) return false;
             return preparatDAL.CheckDenumireDuplicate(denumire.Trim(), idExclude);
         }
+
         public void UpdatePreparat(Preparat preparat, List<int> idsAlergeni,
                                     string actiunePoza, string? caleFotografieNoua)
         {
@@ -108,6 +116,7 @@ namespace RestaurantCarol.Layers
                 throw new RestaurantException("Actiune poza invalida.");
             preparatDAL.UpdatePreparat(preparat, idsAlergeni, actiunePoza, caleFotografieNoua);
         }
+
         public void UpdateStoc(int idPreparat, int cantitateNoua)
         {
             if (idPreparat <= 0)
@@ -116,11 +125,13 @@ namespace RestaurantCarol.Layers
                 throw new RestaurantException("Cantitatea nu poate fi negativa.");
             preparatDAL.UpdateStoc(idPreparat, cantitateNoua);
         }
+
         public ObservableCollection<Preparat> GetPreparateStocRedus(int prag)
         {
             if (prag < 0) return new ObservableCollection<Preparat>();
             return preparatDAL.GetPreparateStocRedus(prag);
         }
+
         public void DeletePreparat(int idPreparat)
         {
             if (idPreparat <= 0)
@@ -148,6 +159,7 @@ namespace RestaurantCarol.Layers
                     "Acest preparat face parte din meniuri compuse si nu poate fi sters.");
             }
         }
+
         public void StergePozaDeOnDisk(string calePoza)
         {
             try

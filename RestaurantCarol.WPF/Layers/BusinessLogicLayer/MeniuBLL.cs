@@ -12,6 +12,7 @@ namespace RestaurantCarol.Layers
                 CalculeazaProprietati(meniu);
             return meniuri;
         }
+
         public void CalculeazaProprietati(Meniu meniu)
         {
             decimal suma = 0;
@@ -26,6 +27,7 @@ namespace RestaurantCarol.Layers
             meniu.Pret = Math.Round(suma * (100 - reducere) / 100, 2);
             meniu.EsteDisponibil = disponibil;
         }
+
         public int AddMeniu(string denumire, int idCategorie, List<MeniuPreparatItem> componente)
         {
             if (string.IsNullOrWhiteSpace(denumire))
