@@ -1,5 +1,9 @@
 # Restaurant Carol App
 
+<div align="center">
+  <img src="RestaurantCarol.WPF/Images/clientGIF.gif" alt="App Demo" width="800" />
+</div>
+
 A desktop restaurant management app built with **WPF** and **C#**. 
 
 ## Roles
