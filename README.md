@@ -1,8 +1,6 @@
 # Restaurant Carol App
 
-<div align="center">
-  <img src="RestaurantCarol.WPF/Images/clientGIF.gif" alt="App Demo" width="800" />
-</div>
+
 
 A desktop restaurant management app built with **WPF** and **C#**. 
 
@@ -10,6 +8,10 @@ A desktop restaurant management app built with **WPF** and **C#**.
 The app has 4 user roles: Customer, Chef, Delivery Driver, and Manager. 
 
 **Customers** can browse the menu by category, add items to their cart and place orders with a delivery address. Discounts are applied automatically and loyalty points are earned on each completed order. Order status can be tracked in real time.
+
+<div align="center">
+  <video src="RestaurantCarol.WPF/Images/clientVideo.mp4" width="800" controls="controls"></video>
+</div>
 
 **Chefs** manage incoming orders, can pick them up and update their status to "Preparing". They can also add, edit or delete dishes and categories, including uploading photos.
 
