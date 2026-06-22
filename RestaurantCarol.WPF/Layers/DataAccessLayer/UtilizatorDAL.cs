@@ -33,6 +33,7 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
+
         public bool CheckEmailExists(string email)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -46,6 +47,7 @@ namespace RestaurantCarol.Layers
                 return (int)result == 1;
             }
         }
+
         public void AddUtilizator(Utilizator utilizator)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -67,6 +69,7 @@ namespace RestaurantCarol.Layers
                 utilizator.IdUtilizator = (int)paramId.Value;
             }
         }
+
         public int GetPuncteByUtilizator(int idUtilizator)
         {
             using (SqlConnection connection = DALHelper.Connection)

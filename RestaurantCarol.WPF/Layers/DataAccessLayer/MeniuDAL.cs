@@ -50,6 +50,7 @@ namespace RestaurantCarol.Layers
             }
             return meniuri;
         }
+
         public int AddMeniu(string denumire, int idCategorie, List<MeniuPreparatItem> componente)
         {
             using SqlConnection connection = DALHelper.Connection;
@@ -72,6 +73,7 @@ namespace RestaurantCarol.Layers
             command.ExecuteNonQuery();
             return (int)idOut.Value;
         }
+
         public int GetNrComenziClientInInterval(int idUtilizator, int zile)
         {
             using SqlConnection connection = DALHelper.Connection;

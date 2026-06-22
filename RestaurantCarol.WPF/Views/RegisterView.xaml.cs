@@ -15,6 +15,7 @@ namespace RestaurantCarol.Views
             };
             DataContext = viewModel;
         }
+
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb && viewModel != null)
@@ -22,6 +23,7 @@ namespace RestaurantCarol.Views
                 viewModel.Parola = pb.Password;
             }
         }
+
         private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb && viewModel != null)
@@ -29,6 +31,7 @@ namespace RestaurantCarol.Views
                 viewModel.ConfirmaParola = pb.Password;
             }
         }
+
         private void HandleRegisterSuccess()
         {
             MessageBox.Show(
@@ -38,6 +41,7 @@ namespace RestaurantCarol.Views
             meniu.Show();
             this.Close();
         }
+
         private void Inapoi_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mw = new MainWindow();

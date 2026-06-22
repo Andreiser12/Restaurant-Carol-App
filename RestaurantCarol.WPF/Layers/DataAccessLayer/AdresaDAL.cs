@@ -30,6 +30,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public Adresa? GetAdresaImplicita(int idUtilizator)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -54,6 +55,7 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
+
         public void AddAdresa(Adresa adresa)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -71,6 +73,7 @@ namespace RestaurantCarol.Layers
                 adresa.IdAdresa = (int)paramId.Value;
             }
         }
+
         public void ModifyAdresa(Adresa adresa)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -83,6 +86,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         public void SetImplicita(int idAdresa)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -94,6 +98,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         public void DeleteAdresa(int idAdresa)
         {
             using (SqlConnection connection = DALHelper.Connection)

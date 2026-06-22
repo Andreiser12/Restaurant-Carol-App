@@ -21,6 +21,7 @@ namespace RestaurantCarol.Helpers
             }
             return null;
         }
+
         public static string CopiazaPozaInRuntime(string caleSursa, string prefixNume)
         {
             if (!File.Exists(caleSursa))
@@ -42,6 +43,7 @@ namespace RestaurantCarol.Helpers
             File.Copy(caleSursa, caleDestinatie, overwrite: false);
             return $"{RUNTIME_FOLDER}/{numeUnic}";
         }
+
         public static string ConstruiestePathPentruImage(string calePoza)
         {
             if (calePoza.Contains("runtime/", StringComparison.OrdinalIgnoreCase) ||

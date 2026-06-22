@@ -15,11 +15,9 @@ namespace RestaurantCarol.ViewModels
         private readonly Categorie? categorie;
         private readonly TipCategorie? tipParinte;
         public ModListaPreparate Mod { get; }
-        public ListaPreparateViewModel(
-            IMeniuRestaurantNavigator? navigator,
-            Categorie categorie,
-            TipCategorie tipParinte,
-            ModListaPreparate mod)
+
+        public ListaPreparateViewModel(IMeniuRestaurantNavigator? navigator, Categorie categorie,
+            TipCategorie tipParinte, ModListaPreparate mod)
         {
             this.navigator = navigator;
             this.categorie = categorie;
@@ -29,11 +27,9 @@ namespace RestaurantCarol.ViewModels
             CaleLogo = "/Images/carol_logo.png";
             IncarcaProduse();
         }
-        public ListaPreparateViewModel(
-            IMeniuRestaurantNavigator? navigator,
-            ObservableCollection<Preparat> preparatePopulare,
-            string titlu,
-            string caleLogo)
+
+        public ListaPreparateViewModel(IMeniuRestaurantNavigator? navigator,
+            ObservableCollection<Preparat> preparatePopulare, string titlu, string caleLogo)
         {
             this.navigator = navigator;
             Mod = ModListaPreparate.Browse;
@@ -42,6 +38,7 @@ namespace RestaurantCarol.ViewModels
             foreach (var p in preparatePopulare)
                 Produse.Add(CatalogItem.DinPreparat(p));
         }
+
         public void IncarcaProduse()
         {
             if (categorie == null) return;
@@ -49,6 +46,7 @@ namespace RestaurantCarol.ViewModels
             foreach (var item in catalogBLL.GetByCategorie(categorie.IdCategorie))
                 Produse.Add(item);
         }
+
         public ICommand InapoiCommand => new RelayCommand<object>(_ =>
         {
             if (Mod == ModListaPreparate.Browse)
@@ -66,6 +64,7 @@ namespace RestaurantCarol.ViewModels
             else
                 InapoiEditRequested?.Invoke();
         });
+
         public ICommand SelecteazaProdusCommand => new RelayCommand<CatalogItem>(item =>
         {
             if (item == null) return;
@@ -74,6 +73,7 @@ namespace RestaurantCarol.ViewModels
             else
                 DeschideEdit?.Invoke(item);
         });
+
         public event Action? InapoiEditRequested;
         public event Action<CatalogItem>? DeschideDetaliiBrowse;
         public event Action<CatalogItem>? DeschideEdit;

@@ -5,11 +5,13 @@ using System.Windows.Input;
 using RestaurantCarol.Layers;
 using RestaurantCarol.ViewModels;
 using RestaurantCarol.Views.Navigation;
+
 namespace RestaurantCarol.Views
 {
     public partial class CosView : Window
     {
         private CosViewModel viewModel;
+
         public CosView(IMeniuRestaurantNavigator? navigator = null)
         {
             InitializeComponent();
@@ -32,6 +34,7 @@ namespace RestaurantCarol.Views
                 if (e.ButtonState == MouseButtonState.Pressed) DragMove();
             };
         }
+
         private void ActualizeazaVizibilitate()
         {
             bool gol = viewModel.EsteGol;
@@ -41,23 +44,28 @@ namespace RestaurantCarol.Views
             plaseazaButton.IsEnabled = viewModel.PoatePlasa;
             plaseazaButton.Opacity = viewModel.PoatePlasa ? 1 : 0.5;
         }
+
         private void Minus_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
                 viewModel.MinusCommand.Execute(item);
         }
+
         private void Plus_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
                 viewModel.PlusCommand.Execute(item);
         }
+
         private void Sterge_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as System.Windows.Controls.Button)?.Tag is Layers.CartItem item)
                 viewModel.StergeCommand.Execute(item);
         }
+
         private void Plaseaza_Click(object sender, RoutedEventArgs e) => viewModel.PlaseazaCommand.Execute(null);
         private void Inchide_Click(object sender, RoutedEventArgs e) => viewModel.InchideCommand.Execute(null);
+
         protected override void OnClosed(EventArgs e)
         {
             CartSession.CartChanged -= ActualizeazaVizibilitate;

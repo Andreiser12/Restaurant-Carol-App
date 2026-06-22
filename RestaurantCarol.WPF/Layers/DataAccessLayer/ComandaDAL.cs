@@ -47,6 +47,7 @@ namespace RestaurantCarol.Layers
                 return (int)idParam.Value;
             }
         }
+
         public ObservableCollection<Comanda> GetComenziManager(bool doarActive)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -147,6 +148,7 @@ namespace RestaurantCarol.Layers
             }
             return comenzi;
         }
+
         public void UpdateStareComanda(int idComanda, StareComanda nouaStare)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -159,6 +161,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         private static string GetStareDbString(StareComanda stare)
         {
             return stare switch
@@ -171,6 +174,7 @@ namespace RestaurantCarol.Layers
                 _ => "inregistrata"
             };
         }
+
         public int GetUrmatorulNumarComanda()
         {
             using SqlConnection connection = DALHelper.Connection;
@@ -179,6 +183,7 @@ namespace RestaurantCarol.Layers
             connection.Open();
             return Convert.ToInt32(command.ExecuteScalar());
         }
+
         private static StareComanda GetStareFromDbString(string stareDb)
         {
             return stareDb?.ToLower() switch

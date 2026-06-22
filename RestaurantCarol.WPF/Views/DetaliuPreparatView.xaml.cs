@@ -47,6 +47,7 @@ namespace RestaurantCarol.Views
                 if (e.ButtonState == MouseButtonState.Pressed) DragMove();
             };
         }
+
         private void IncarcaPoza()
         {
             try
@@ -61,6 +62,7 @@ namespace RestaurantCarol.Views
             }
             catch { }
         }
+
         private void Inchide_Click(object sender, RoutedEventArgs e) => viewModel.InchideCommand.Execute(null);
         private void Minus_Click(object sender, RoutedEventArgs e) => viewModel.MinusCommand.Execute(null);
         private void Plus_Click(object sender, RoutedEventArgs e) => viewModel.PlusCommand.Execute(null);

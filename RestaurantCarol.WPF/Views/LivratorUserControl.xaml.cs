@@ -7,23 +7,28 @@ namespace RestaurantCarol.Views
     {
         private AngajatHubView? parentView;
         private ComandaBLL comandaBLL = new ComandaBLL();
+
         public LivratorUserControl()
         {
             InitializeComponent();
         }
+
         public LivratorUserControl(AngajatHubView parent) : this()
         {
             parentView = parent;
         }
+
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             LivratorSession.Reset();
             parentView?.NavigateToHub();
         }
+
         private void VeziComenzi_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateLivratorLaComenzi();
         }
+
         private void AmAjuns_Click(object sender, RoutedEventArgs e)
         {
             if (LivratorSession.ComandaSelectata == null)

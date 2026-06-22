@@ -7,6 +7,7 @@ namespace RestaurantCarol.Views
     public partial class DetaliuMeniuView : Window
     {
         private DetaliuMeniuViewModel viewModel;
+
         public DetaliuMeniuView(Meniu meniu)
         {
             InitializeComponent();
@@ -17,7 +18,10 @@ namespace RestaurantCarol.Views
             cosSection.Visibility = viewModel.PoateAdaugaInCos ? Visibility.Visible : Visibility.Collapsed;
             MouseLeftButtonDown += (_, e) =>
             {
-                if (e.ButtonState == MouseButtonState.Pressed) DragMove();
+                if (e.ButtonState == MouseButtonState.Pressed)
+                {
+                    DragMove();
+                }
             };
         }
     }

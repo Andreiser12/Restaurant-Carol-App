@@ -11,16 +11,19 @@ namespace RestaurantCarol.ViewModels
         public ObservableCollection<Comanda> Comenzi { get; } = new();
         public bool EsteGol { get; private set; }
         public Visibility VizibilitateEmpty => EsteGol ? Visibility.Visible : Visibility.Collapsed;
+
         private Comanda? selectata;
         public Comanda? Selectata
         {
             get => selectata;
             set { selectata = value; NotifyPropertyChanged(); }
         }
+
         public StareComandaListViewModel()
         {
             Incarca();
         }
+
         public void Incarca()
         {
             Comenzi.Clear();
@@ -31,11 +34,13 @@ namespace RestaurantCarol.ViewModels
             NotifyPropertyChanged(nameof(EsteGol));
             NotifyPropertyChanged(nameof(VizibilitateEmpty));
         }
+
         public ICommand DeschideSelectataCommand => new RelayCommand<object>(_ =>
         {
             if (Selectata != null)
                 DeschideDetalii?.Invoke(Selectata);
         });
+
         public ICommand InchideCommand => new RelayCommand<object>(_ => InchideRequested?.Invoke());
         public event Action<Comanda>? DeschideDetalii;
         public event Action? InchideRequested;

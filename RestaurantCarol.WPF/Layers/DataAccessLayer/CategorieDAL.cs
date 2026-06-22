@@ -29,6 +29,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public ObservableCollection<Categorie> GetCategoriiByTip(TipCategorie tip)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -53,6 +54,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public void AddCategorie(Categorie categorie)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -69,6 +71,7 @@ namespace RestaurantCarol.Layers
                 categorie.IdCategorie = (int)paramId.Value;
             }
         }
+
         public void ModifyCategorie(Categorie categorie)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -81,6 +84,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         public void DeleteCategorie(Categorie categorie)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -92,6 +96,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         private TipCategorie GetTipCategorieFromDb(string tipDb)
         {
             if (string.Equals(tipDb, "bautura", StringComparison.OrdinalIgnoreCase) ||

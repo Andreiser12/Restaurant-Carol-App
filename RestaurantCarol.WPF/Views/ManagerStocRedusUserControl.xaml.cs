@@ -10,12 +10,14 @@ namespace RestaurantCarol.Views
     {
         private AngajatHubView? parentView;
         private PreparatBLL preparatBLL = new PreparatBLL();
+
         public ManagerStocRedusUserControl(AngajatHubView parent)
         {
             InitializeComponent();
             parentView = parent;
             IncarcaDate();
         }
+
         private void IncarcaDate()
         {
             try
@@ -39,6 +41,7 @@ namespace RestaurantCarol.Views
                 MessageBox.Show($"Eroare la incarcarea stocului: {ex.Message}", "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void Inapoi_Click(object sender, RoutedEventArgs e)
         {
             parentView?.NavigateToManager();

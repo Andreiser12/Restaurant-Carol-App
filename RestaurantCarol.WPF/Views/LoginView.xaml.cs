@@ -16,6 +16,7 @@ namespace RestaurantCarol.Views
             };
             DataContext = viewModel;
         }
+
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb && viewModel != null)
@@ -23,6 +24,7 @@ namespace RestaurantCarol.Views
                 viewModel.Parola = pb.Password;
             }
         }
+
         private void HandleLoginSuccess()
         {
             MessageBox.Show($"Bine ai venit, {UserSession.CurrentUser?.Prenume}!",
@@ -39,6 +41,7 @@ namespace RestaurantCarol.Views
             }
             this.Close();
         }
+
         private void Inapoi_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mw = new MainWindow();

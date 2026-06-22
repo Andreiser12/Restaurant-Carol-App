@@ -18,10 +18,12 @@ namespace RestaurantCarol.Views
         private CategorieBLL categorieBLL = new CategorieBLL();
         private TipCategorie tipParinte;
         private ModListaCategorii mod;
+
         public ListaCategoriiUserControl()
         {
             InitializeComponent();
         }
+
         public ListaCategoriiUserControl(MeniuRestaurantView parent, TipCategorie tip,
                                           string titlu, string caleImagine) : this()
         {
@@ -30,6 +32,7 @@ namespace RestaurantCarol.Views
             mod = ModListaCategorii.Browse;
             ConfigureazaUI(tip, titlu, caleImagine);
         }
+
         public ListaCategoriiUserControl(AngajatHubView parent, TipCategorie tip,
                                           string titlu, string caleImagine) : this()
         {
@@ -38,6 +41,7 @@ namespace RestaurantCarol.Views
             mod = ModListaCategorii.Edit;
             ConfigureazaUI(tip, titlu, caleImagine);
         }
+
         private void ConfigureazaUI(TipCategorie tip, string titlu, string caleImagine)
         {
             titluText.Text = titlu;
@@ -58,6 +62,7 @@ namespace RestaurantCarol.Views
                 MessageBox.Show($"Eroare la incarcarea categoriilor: {ex.Message}", "Eroare", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             if (mod == ModListaCategorii.Browse)
@@ -65,6 +70,7 @@ namespace RestaurantCarol.Views
             else if (mod == ModListaCategorii.Edit)
                 parentViewBucatar?.NavigateToBucatar();
         }
+
         private void Categorie_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Categorie categorie)

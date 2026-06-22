@@ -39,6 +39,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public ObservableCollection<Alergen> GetAlergeniByPreparat(int idPreparat)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -62,6 +63,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public ObservableCollection<Preparat> GetAllPreparate()
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -96,6 +98,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public ObservableCollection<Preparat> GetTopPopulare(int top = 3)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -130,6 +133,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public ObservableCollection<Alergen> GetAllAlergeni()
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -152,6 +156,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public void AddPreparat(Preparat preparat, List<int> idsAlergeni, string? caleFotografie)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -195,6 +200,7 @@ namespace RestaurantCarol.Layers
                 preparat.IdPreparat = (int)paramId.Value;
             }
         }
+
         public Preparat? GetById(int idPreparat)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -228,6 +234,7 @@ namespace RestaurantCarol.Layers
                 }
             }
         }
+
         public bool CheckDenumireDuplicate(string denumire, int idExclude)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -242,6 +249,7 @@ namespace RestaurantCarol.Layers
                 return (int)result == 1;
             }
         }
+
         public void UpdatePreparat(Preparat preparat, List<int> idsAlergeni,
                                     string actiunePoza, string? caleFotografieNoua)
         {
@@ -283,6 +291,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         public void UpdateStoc(int idPreparat, int cantitateNoua)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -295,6 +304,7 @@ namespace RestaurantCarol.Layers
                 command.ExecuteNonQuery();
             }
         }
+
         public ObservableCollection<Preparat> GetPreparateStocRedus(int prag)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -319,6 +329,7 @@ namespace RestaurantCarol.Layers
                 return result;
             }
         }
+
         public string? DeletePreparat(int idPreparat)
         {
             using (SqlConnection connection = DALHelper.Connection)
@@ -335,16 +346,19 @@ namespace RestaurantCarol.Layers
                 return paramCalePoza.Value as string;
             }
         }
+
         private string? ReadNullableString(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);
             return reader.IsDBNull(idx) ? null : reader.GetString(idx);
         }
+
         private int? ReadNullableInt(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);
             return reader.IsDBNull(idx) ? null : reader.GetInt32(idx);
         }
+
         private decimal? ReadNullableDecimal(SqlDataReader reader, string columnName)
         {
             int idx = reader.GetOrdinal(columnName);
