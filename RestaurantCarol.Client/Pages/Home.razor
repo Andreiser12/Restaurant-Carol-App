@@ -1,0 +1,48 @@
+@page "/"
+@inject NavigationManager Navigation
+
+<PageTitle>Restaurant Carol - European Cuisine Restaurant</PageTitle>
+
+<div class="restaurant-background-page">
+    <!-- Top Header with Double Logo -->
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Carol Logo Left" class="restaurant-logo" />
+
+        <div class="restaurant-header-text">
+            <h1>Restaurant Carol</h1>
+            <p>European Cuisine Restaurant</p>
+        </div>
+
+        <img src="images/carol_logo.png" alt="Carol Logo Right" class="restaurant-logo" />
+    </header>
+
+    <!-- Center Card with Menu Actions -->
+    <div class="carol-card">
+        <button class="btn-carol-gold" @onclick='() => Navigation.NavigateTo("/menu")'>
+            Access as Guest
+        </button>
+
+        <button class="btn-carol-gold" @onclick='() => Navigation.NavigateTo("/login")'>
+            Sign In
+        </button>
+
+        <button class="btn-carol-gold" @onclick='() => Navigation.NavigateTo("/register")'>
+            Register
+        </button>
+
+        <p class="carol-subtext-gold">Interested in joining our team?</p>
+
+        <button class="btn-carol-gold" @onclick="HandleContactClick">
+            Contact Us
+        </button>
+    </div>
+</div>
+
+@code {
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    private async Task HandleContactClick()
+    {
+        await JS.InvokeVoidAsync("alert", "For career opportunities and reservations, please contact us at: contact@restaurantcarol.ro or +40 700 000 000");
+    }
+}

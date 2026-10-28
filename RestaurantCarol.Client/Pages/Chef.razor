@@ -1,0 +1,23 @@
+@page "/chef"
+@attribute [Authorize(Roles = "Chef")]
+
+<PageTitle>Chef Workspace - Restaurant Carol</PageTitle>
+
+<div class="restaurant-background-page">
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Logo" class="restaurant-logo" />
+        <div class="restaurant-header-text">
+            <h1>Kitchen Workspace</h1>
+            <p>Order Preparation & Cooking Station</p>
+        </div>
+    </header>
+
+    <div class="carol-card" style="max-width: 800px;">
+        <h2>👨‍🍳 Active Kitchen Orders</h2>
+        <div class="alert alert-info w-100 text-dark">
+            <strong>Role Verified:</strong> You are logged in as <strong>Chef</strong>. Only authenticated kitchen personnel can view this page.
+        </div>
+        <p style="color: #ffffff;">Incoming client orders waiting to be prepared will appear here in the next milestone.</p>
+        <a href="/dashboard" class="btn-carol-gold">Return to Dashboard</a>
+    </div>
+</div>

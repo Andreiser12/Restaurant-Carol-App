@@ -1,0 +1,38 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <div class="auth-denied-container">
+                        <div class="auth-denied-card">
+                            <h2>Access Denied</h2>
+                            <p>You do not have the required permissions to view this resource.</p>
+                            <div class="d-flex gap-3 justify-content-center mt-3">
+                                <a href="/login" class="btn-gold-action">Sign In With Another Account</a>
+                                <a href="/" class="btn-dark-action">Return to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </NotAuthorized>
+                <Authorizing>
+                    <div class="auth-denied-container">
+                        <p class="text-gold">Verifying authentication...</p>
+                    </div>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Page Not Found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <div class="auth-denied-container">
+                    <div class="auth-denied-card">
+                        <h2>Page Not Found</h2>
+                        <p>Sorry, the page you requested does not exist.</p>
+                        <a href="/" class="btn-gold-action mt-3">Return to Home</a>
+                    </div>
+                </div>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

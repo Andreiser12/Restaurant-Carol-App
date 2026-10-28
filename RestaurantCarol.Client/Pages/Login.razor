@@ -1,0 +1,114 @@
+@page "/login"
+@inject IAuthHttpClient AuthClient
+@inject NavigationManager Navigation
+
+<PageTitle>Sign In - Restaurant Carol</PageTitle>
+
+<div class="restaurant-background-page">
+    <!-- Header -->
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Carol Logo Left" class="restaurant-logo" />
+
+        <div class="restaurant-header-text">
+            <h1>Restaurant Carol</h1>
+            <p>European Cuisine Restaurant</p>
+        </div>
+
+        <img src="images/carol_logo.png" alt="Carol Logo Right" class="restaurant-logo" />
+    </header>
+
+    <!-- Sign In Card (exact clone of LoginView.xaml) -->
+    <div class="carol-card">
+        <h2>Sign In</h2>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="carol-alert-danger">
+                @errorMessage
+            </div>
+        }
+
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+
+            <div class="carol-form-group">
+                <label class="carol-form-label">Email:</label>
+                <InputText class="carol-input" @bind-Value="loginModel.Email" placeholder="Enter your email" />
+                <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small mt-1" />
+            </div>
+
+            <div class="carol-form-group">
+                <label class="carol-form-label">Password:</label>
+                <InputText type="password" class="carol-input" @bind-Value="loginModel.Password" placeholder="Enter your password" />
+                <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small mt-1" />
+            </div>
+
+            <div class="d-flex flex-column align-items-center mt-3">
+                <button type="submit" class="btn-carol-gold" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span>Signing in...</span>
+                    }
+                    else
+                    {
+                        <span>Sign In</span>
+                    }
+                </button>
+
+                <button type="button" class="btn-carol-gold" @onclick='() => Navigation.NavigateTo("/")'>
+                    Back
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginRequest loginModel = new();
+    private string? errorMessage;
+    private bool isLoading;
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await AuthClient.LoginAsync(loginModel);
+
+            if (response.Success && response.User != null)
+            {
+                // Route automatically based on user role (just like the WPF application!)
+                switch (response.User.Role)
+                {
+                    case UserRole.Chef:
+                        Navigation.NavigateTo("/chef");
+                        break;
+                    case UserRole.DeliveryDriver:
+                        Navigation.NavigateTo("/delivery");
+                        break;
+                    case UserRole.Manager:
+                        Navigation.NavigateTo("/manager");
+                        break;
+                    case UserRole.Customer:
+                    default:
+                        Navigation.NavigateTo("/menu");
+                        break;
+                }
+            }
+            else
+            {
+                errorMessage = response.Message ?? "Invalid email or password.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An unexpected error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

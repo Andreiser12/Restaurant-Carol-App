@@ -22,6 +22,7 @@
     <None Remove="Images\ceafaprovance.png" />
     <None Remove="Images\ciorbadeburta.png" />
     <None Remove="Images\ciorbadepui.png" />
+    <None Remove="Images\clientVideo.mp4" />
     <None Remove="Images\coaste.png" />
     <None Remove="Images\cotletdeporc.png" />
     <None Remove="Images\creveti.png" />
@@ -85,6 +86,7 @@
     <Resource Include="Images\ceafaprovance.png" />
     <Resource Include="Images\ciorbadeburta.png" />
     <Resource Include="Images\ciorbadepui.png" />
+    <Resource Include="Images\clientVideo.mp4" />
     <Resource Include="Images\coaste.png" />
     <Resource Include="Images\cotletdeporc.png" />
     <Resource Include="Images\creveti.png" />

@@ -1,0 +1,1020 @@
+@page "/menu"
+@inject IMenuHttpClient MenuClient
+@inject IAuthHttpClient AuthClient
+@inject CartService Cart
+@inject NavigationManager Navigation
+
+<PageTitle>Restaurant Carol - Menu</PageTitle>
+
+<div class="wpf-window-container">
+    <!-- 1. TOP HEADER BAR (matches MeniuRestaurantView.xaml Border Row 0) -->
+    <header class="wpf-menu-header">
+        <!-- Column 0: Loyalty Points Badge -->
+        <div class="wpf-header-col-left">
+            @if (currentUser != null && currentUser.Role == UserRole.Customer)
+            {
+                <div class="wpf-points-badge">
+                    <span>🪙 @currentUser.LoyaltyPoints Points</span>
+                </div>
+            }
+        </div>
+
+        <!-- Column 1: Welcome to Carol Badge -->
+        <div class="wpf-welcome-badge">
+            Bine ai venit la Carol!
+        </div>
+
+        <!-- Column 2: Right Control Panel -->
+        <div class="wpf-header-col-right">
+            @if (currentUser == null)
+            {
+                <!-- Guest Panel (VizibilitatePanouOaspete) -->
+                <button class="wpf-header-btn" @onclick='() => Navigation.NavigateTo("/login")'>
+                    Logheaza-te
+                </button>
+
+                <button class="wpf-header-btn" @onclick='() => Navigation.NavigateTo("/register")'>
+                    Inregistreaza-te
+                </button>
+
+                <div class="wpf-user-pill" @onclick='() => Navigation.NavigateTo("/")' title="Return to Start Page">
+                    <span>Oaspete</span>
+                </div>
+            }
+            else
+            {
+                <!-- Client Panel (VizibilitatePanouClient) -->
+                <!-- Cart Panel -->
+                <div class="wpf-header-panel" @onclick="() => showCartModal = true">
+                    <span class="wpf-panel-title">COS</span>
+                    <span class="wpf-panel-subtitle">@Cart.TotalCount produs(e)</span>
+                    <span class="wpf-panel-highlight">@Cart.TotalPrice.ToString("0.00") lei</span>
+                </div>
+
+                <!-- Address Panel -->
+                <div class="wpf-header-panel" @onclick="HandleAddressClick">
+                    <span class="wpf-panel-title">ADRESA</span>
+                    <span class="wpf-panel-subtitle">Standard</span>
+                </div>
+
+                <!-- Order Status Panel -->
+                <div class="wpf-header-panel" @onclick="HandleStatusClick">
+                    <span class="wpf-panel-title">STARE COMANDA</span>
+                    <span class="wpf-panel-subtitle">Fara comenzi active</span>
+                </div>
+
+                <!-- User Profile & Logout -->
+                <div class="wpf-user-pill" @onclick="HandleLogout" title="Click to Sign Out">
+                    <span>@currentUser.FirstName</span>
+                </div>
+            }
+        </div>
+    </header>
+
+    <!-- 2. MAIN CONTENT AREA (matches contentArea from MeniuRestaurantView.xaml) -->
+    <main class="wpf-content-area">
+        @if (isLoading)
+        {
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 400px;">
+                <p style="color: #D2AF6D; font-size: 1.5rem; font-weight: 600;">Se incarca meniul...</p>
+            </div>
+        }
+        else
+        {
+            <!-- VIEW A: HUB USER CONTROL (matches HubUserControl.xaml) -->
+            @if (currentView == MenuViewType.Hub)
+            {
+                <!-- Row 0: Double Circular Logos + Centered Search Box -->
+                <section class="wpf-hub-search-row">
+                    <!-- Left Circular Logo -->
+                    <div class="wpf-hub-logo-circle">
+                        <img src="images/carol_logo.png" alt="Logo" />
+                    </div>
+
+                    <!-- Center Search Box & Buttons -->
+                    <div class="wpf-search-center-box">
+                        @if (!string.IsNullOrWhiteSpace(searchText) || selectedAllergenIds.Count > 0)
+                        {
+                            <button class="wpf-btn-action" style="background-color: #633333; color: white;" @onclick="ClearFilters">
+                                ✕ Opreste cautarea
+                            </button>
+                        }
+
+                        <div class="wpf-search-input-pill">
+                            <span class="wpf-search-icon">🔍</span>
+                            <input type="text"
+                                   class="wpf-search-textbox"
+                                   placeholder="Cauta preparate..."
+                                   @bind="searchText"
+                                   @bind:event="oninput"
+                                   @onkeyup="ApplyFilters" />
+                        </div>
+
+                        <button class="wpf-btn-action" @onclick="() => showAllergensPanel = !showAllergensPanel">
+                            @(showAllergensPanel ? "Ascunde alergeni" : "Filtreaza dupa alergeni")
+                        </button>
+                    </div>
+
+                    <!-- Right Circular Logo -->
+                    <div class="wpf-hub-logo-circle">
+                        <img src="images/carol_logo.png" alt="Logo" />
+                    </div>
+                </section>
+
+                <!-- Row 1: Expandable Allergens Panel -->
+                @if (showAllergensPanel)
+                {
+                    <div class="wpf-allergens-box">
+                        <p style="color: #D2AF6D; font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+                            Bifeaza alergenii pe care vrei sa-i EVITI:
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var allergen in allAllergens)
+                            {
+                                var isExcluded = selectedAllergenIds.Contains(allergen.Id);
+                                <div class="wpf-allergen-badge @(isExcluded ? "excluded" : "")"
+                                     @onclick="() => ToggleAllergen(allergen.Id)">
+                                    <input type="checkbox" checked="@isExcluded" style="margin-right: 6px; cursor: pointer;" />
+                                    <span>@allergen.Name</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- If searching, show dishes grid directly -->
+                @if (!string.IsNullOrWhiteSpace(searchText) || selectedAllergenIds.Count > 0)
+                {
+                    <h3 class="text-center text-white my-4" style="text-shadow: 0 2px 8px #000;">
+                        Rezultate cautare (@displayedDishes.Count)
+                    </h3>
+                    <div class="wpf-uniform-grid-3">
+                        @foreach (var dish in displayedDishes)
+                        {
+                            <div class="wpf-circle-item-container" @onclick="() => OpenDishDetails(dish)">
+                                <div class="wpf-item-circle">
+                                    <img src="@(string.IsNullOrEmpty(dish.ImagePath) ? "images/carol_logo.png" : dish.ImagePath)" alt="@dish.Name" />
+                                </div>
+                                <span class="wpf-circle-title">@dish.Name</span>
+                                <span class="wpf-circle-price">@dish.Price.ToString("0.00") lei</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <!-- Row 2: The 3 Big Category Circles from HubUserControl.xaml -->
+                    <div class="wpf-uniform-grid-3" style="margin-top: 40px;">
+                        <!-- 1. Cele mai populare -->
+                        <div class="wpf-circle-item-container" @onclick="NavigateToPopularDishes">
+                            <div class="wpf-item-circle">
+                                <img src="images/categorie_populare.png" alt="Cele mai populare" />
+                            </div>
+                            <span class="wpf-circle-title">Cele mai populare</span>
+                        </div>
+
+                        <!-- 2. Mancare -->
+                        <div class="wpf-circle-item-container" @onclick='() => NavigateToSubcategories(CategoryType.Food, "Mancare")'>
+                            <div class="wpf-item-circle">
+                                <img src="images/categorie_mancare.png" alt="Mancare" />
+                            </div>
+                            <span class="wpf-circle-title">Mancare</span>
+                        </div>
+
+                        <!-- 3. Bauturi -->
+                        <div class="wpf-circle-item-container" @onclick='() => NavigateToSubcategories(CategoryType.Drinks, "Bauturi")'>
+                            <div class="wpf-item-circle">
+                                <img src="images/categorie_bauturi.png" alt="Bauturi" />
+                            </div>
+                            <span class="wpf-circle-title">Bauturi</span>
+                        </div>
+                    </div>
+                }
+            }
+
+            <!-- VIEW B: SUBCATEGORIES (matches ListaCategoriiUserControl.xaml) -->
+            else if (currentView == MenuViewType.Categories)
+            {
+                <div class="wpf-sub-header-row">
+                    <button class="wpf-back-button" @onclick="HandleBackClick">←</button>
+                    <div class="text-center">
+                        <div class="wpf-hub-logo-circle mx-auto mb-2">
+                            <img src="@(selectedType == CategoryType.Drinks ? "images/categorie_bauturi.png" : "images/categorie_mancare.png")" alt="Logo" />
+                        </div>
+                        <h2 class="wpf-category-header-title">@currentSectionTitle</h2>
+                    </div>
+                    <div style="width: 50px;"></div>
+                </div>
+
+                <div class="wpf-uniform-grid-3 mt-4">
+                    @foreach (var cat in displayedCategories)
+                    {
+                        <div class="wpf-circle-item-container" @onclick="() => NavigateToDishesByCategory(cat)">
+                            <div class="wpf-item-circle">
+                                <img src="images/carol_logo.png" alt="@cat.Name" />
+                            </div>
+                            <span class="wpf-circle-title">@cat.Name</span>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- VIEW C: DISHES LIST (matches ListaPreparateUserControl.xaml) -->
+            else if (currentView == MenuViewType.Dishes)
+            {
+                <div class="wpf-sub-header-row">
+                    <button class="wpf-back-button" @onclick="HandleBackClick">←</button>
+                    <div class="text-center">
+                        <div class="wpf-hub-logo-circle mx-auto mb-2">
+                            <img src="images/carol_logo.png" alt="Logo" />
+                        </div>
+                        <h2 class="wpf-category-header-title">@currentSectionTitle</h2>
+                    </div>
+                    <div style="width: 50px;"></div>
+                </div>
+
+                @if (displayedDishes.Count == 0)
+                {
+                    <p class="text-center my-5" style="color: #D2AF6D; font-size: 1.3rem;">
+                        Nu exista preparate disponibile in aceasta categorie.
+                    </p>
+                }
+                else
+                {
+                    <div class="wpf-uniform-grid-3 mt-4">
+                        @foreach (var dish in displayedDishes)
+                        {
+                            <div class="wpf-circle-item-container" @onclick="() => OpenDishDetails(dish)">
+                                <div class="wpf-item-circle">
+                                    <img src="@(string.IsNullOrEmpty(dish.ImagePath) ? "images/carol_logo.png" : dish.ImagePath)" alt="@dish.Name" />
+                                </div>
+                                <span class="wpf-circle-title">@dish.Name</span>
+                                <span class="wpf-circle-price">@dish.Price.ToString("0.00") lei</span>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    </main>
+
+    <!-- 3. DISH DETAIL MODAL (matches DetaliuPreparatView.xaml) -->
+    @if (selectedDish != null)
+    {
+        <div class="wpf-modal-overlay" @onclick="CloseDishDetails">
+            <div class="wpf-modal-card" @onclick:stopPropagation="true">
+                <button class="wpf-modal-close-btn" @onclick="CloseDishDetails">✕</button>
+
+                <div class="wpf-modal-img-circle">
+                    <img src="@(string.IsNullOrEmpty(selectedDish.ImagePath) ? "images/carol_logo.png" : selectedDish.ImagePath)" alt="@selectedDish.Name" />
+                </div>
+
+                <h2 style="color: #D2AF6D; text-align: center; font-size: 24px; font-weight: 600; margin-bottom: 6px;">
+                    @selectedDish.Name
+                </h2>
+                <h4 style="color: #ffffff; text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 14px;">
+                    @selectedDish.Price.ToString("0.00") lei
+                </h4>
+
+                @if (!string.IsNullOrEmpty(selectedDish.Description))
+                {
+                    <p style="color: #cccccc; font-size: 14px; text-align: center; line-height: 1.5; margin-bottom: 16px;">
+                        @selectedDish.Description
+                    </p>
+                }
+
+                <!-- Nutritional values grid -->
+                <div class="wpf-nutrition-grid">
+                    <div>Portie: <span>@selectedDish.PortionSize g</span></div>
+                    <div>Calorii: <span>@(selectedDish.Calories ?? 0) kcal</span></div>
+                    <div>Proteine: <span>@(selectedDish.Proteins ?? 0) g</span></div>
+                    <div>Grasimi: <span>@(selectedDish.Fats ?? 0) g</span></div>
+                    <div>Carbohidrati: <span>@(selectedDish.Carbohydrates ?? 0) g</span></div>
+                    <div>Sare: <span>@(selectedDish.Salt ?? 0) g</span></div>
+                </div>
+
+                @if (selectedDish.Allergens.Count > 0)
+                {
+                    <div style="margin: 12px 0; font-size: 13px;">
+                        <span style="color: #D2AF6D; font-weight: 600;">Alergeni: </span>
+                        <span style="color: #ffb3b3;">@string.Join(", ", selectedDish.Allergens.Select(a => a.Name))</span>
+                    </div>
+                }
+
+                <!-- Quantity selector -->
+                <div class="d-flex align-items-center justify-content-center gap-3 my-3">
+                    <button class="wpf-qty-btn" @onclick="() => { if (orderQuantity > 1) orderQuantity--; }">-</button>
+                    <span style="font-size: 22px; font-weight: bold; min-width: 40px; text-align: center; color: white;">@orderQuantity</span>
+                    <button class="wpf-qty-btn" @onclick="() => orderQuantity++">+</button>
+                </div>
+
+                <!-- Add to cart -->
+                <button class="wpf-btn-gold-full" @onclick="AddToCart">
+                    Adauga in cos • @((selectedDish.Price * orderQuantity).ToString("0.00")) lei
+                </button>
+            </div>
+        </div>
+    }
+
+    <!-- 4. CART MODAL -->
+    @if (showCartModal)
+    {
+        <div class="wpf-modal-overlay" @onclick="() => showCartModal = false">
+            <div class="wpf-modal-card" @onclick:stopPropagation="true">
+                <button class="wpf-modal-close-btn" @onclick="() => showCartModal = false">✕</button>
+
+                <h2 style="color: #D2AF6D; text-align: center; font-size: 26px; margin-bottom: 20px;">Cosul Tau</h2>
+
+                @if (Cart.Items.Count == 0)
+                {
+                    <p class="text-center my-4" style="color: #999999;">Cosul de cumparaturi este gol.</p>
+                }
+                else
+                {
+                    <div style="max-height: 45vh; overflow-y: auto; margin-bottom: 20px;">
+                        @foreach (var item in Cart.Items)
+                        {
+                            <div class="d-flex align-items-center justify-content-between p-2 mb-2" style="background: rgba(0,0,0,0.35); border-radius: 8px;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="@(string.IsNullOrEmpty(item.ImagePath) ? "images/carol_logo.png" : item.ImagePath)" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" />
+                                    <div>
+                                        <div style="font-weight: 600; color: #fff; font-size: 14px;">@item.Name</div>
+                                        <div style="color: #D2AF6D; font-size: 13px;">@item.Price.ToString("0.00") lei</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="wpf-qty-btn" style="width: 28px; height: 28px; font-size: 14px;" @onclick="() => Cart.UpdateQuantity(item.DishId, item.Quantity - 1)">-</button>
+                                    <span style="font-weight: bold; min-width: 24px; text-align: center; color: white;">@item.Quantity</span>
+                                    <button class="wpf-qty-btn" style="width: 28px; height: 28px; font-size: 14px;" @onclick="() => Cart.UpdateQuantity(item.DishId, item.Quantity + 1)">+</button>
+                                    <span style="font-weight: bold; color: #D2AF6D; margin-left: 8px; min-width: 70px; text-align: right;">
+                                        @item.Subtotal.ToString("0.00") lei
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3" style="border-top: 1px solid #D2AF6D;">
+                        <span style="font-size: 18px; font-weight: bold; color: white;">Total de plata:</span>
+                        <span style="font-size: 22px; font-weight: bold; color: #D2AF6D;">@Cart.TotalPrice.ToString("0.00") lei</span>
+                    </div>
+
+                    @if (currentUser == null)
+                    {
+                        <div class="alert alert-warning text-dark mt-3 p-2 text-center" style="font-size: 13px;">
+                            Navighezi ca <strong>Oaspete</strong>. Te rugam sa te autentifici pentru a plasa comanda.
+                        </div>
+                        <button class="wpf-btn-gold-full mt-2" @onclick='() => Navigation.NavigateTo("/login")'>
+                            Logheaza-te pentru comanda
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="wpf-btn-gold-full mt-2" @onclick="HandleCheckout">
+                            Plaseaza Comanda
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- ========================================================================= -->
+<!-- DEDICATED INLINE CSS (GUARANTEES 1-TO-1 VISUAL CLONE REGARDLESS OF CACHE) -->
+<!-- ========================================================================= -->
+<style>
+    /* Full Page Background */
+    .wpf-window-container {
+        min-height: 100vh;
+        width: 100%;
+        background-image: linear-gradient(rgba(30, 28, 29, 0.70), rgba(30, 28, 29, 0.70)), url('/images/interior_background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        flex-direction: column;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    /* 1. Header Bar (matches MeniuRestaurantView.xaml) */
+    .wpf-menu-header {
+        background-color: #EB3A3A3A;
+        height: 100px;
+        padding: 0 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .wpf-header-col-left {
+        min-width: 160px;
+    }
+
+    .wpf-points-badge {
+        background-color: #EB7A6B14;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .wpf-welcome-badge {
+        background-color: #EB7A6B14;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 600;
+        padding: 12px 32px;
+        border-radius: 6px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .wpf-header-col-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .wpf-header-btn {
+        background-color: #F4B860;
+        color: #3A3A3A;
+        font-size: 13px;
+        font-weight: 600;
+        width: 135px;
+        height: 44px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .wpf-header-btn:hover {
+        background-color: #e5a747;
+    }
+
+    .wpf-user-pill {
+        background-color: #EB7A6B14;
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .wpf-header-panel {
+        background-color: #EB3A3A3A;
+        border-radius: 6px;
+        padding: 8px 16px;
+        min-width: 110px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: background-color 0.2s;
+    }
+
+    .wpf-header-panel:hover {
+        background-color: #4a4546;
+    }
+
+    .wpf-panel-title {
+        font-size: 12px;
+        font-weight: bold;
+        color: #D2AF6D;
+    }
+
+    .wpf-panel-subtitle {
+        font-size: 11px;
+        color: #D2AF6D;
+        margin-top: 3px;
+    }
+
+    .wpf-panel-highlight {
+        font-size: 12px;
+        font-weight: 600;
+        color: #D2AF6D;
+        margin-top: 2px;
+    }
+
+    /* 2. Content Area */
+    .wpf-content-area {
+        padding: 30px 40px 60px 40px;
+        max-width: 1300px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* Hub Search Row (Double circular logos flanking 450px search box) */
+    .wpf-hub-search-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 25px;
+    }
+
+    .wpf-hub-logo-circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #3A3A3A;
+        background-color: transparent;
+        flex-shrink: 0;
+    }
+
+    .wpf-hub-logo-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .wpf-search-center-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 450px;
+    }
+
+    .wpf-search-input-pill {
+        background-color: #ffffff;
+        border-radius: 22px;
+        padding: 6px 18px;
+        width: 100%;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .wpf-search-icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+
+    .wpf-search-textbox {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 15px;
+        color: #333333;
+    }
+
+    .wpf-btn-action {
+        background-color: #D2AF6D;
+        color: #373334;
+        font-size: 13px;
+        font-weight: 600;
+        height: 36px;
+        width: 100%;
+        border-radius: 18px;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.2s;
+    }
+
+    .wpf-btn-action:hover {
+        background-color: #bfa05d;
+    }
+
+    /* Allergens Box */
+    .wpf-allergens-box {
+        background-color: #373334;
+        border-radius: 12px;
+        padding: 16px 22px;
+        margin: 0 auto 30px auto;
+        max-width: 900px;
+        width: 100%;
+    }
+
+    .wpf-allergen-badge {
+        background-color: #373334;
+        border: 1px solid #D2AF6D;
+        border-radius: 14px;
+        padding: 5px 12px;
+        color: #D2AF6D;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+    }
+
+    .wpf-allergen-badge.excluded {
+        background-color: #b33939;
+        color: #ffffff;
+        border-color: #ff6b6b;
+    }
+
+    /* Uniform Grid for Categories & Dishes (matches UniformGrid Columns=3) */
+    .wpf-uniform-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        justify-items: center;
+        align-items: end;
+        width: 100%;
+    }
+
+    .wpf-circle-item-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        outline: none;
+        transition: transform 0.2s;
+        text-align: center;
+    }
+
+    .wpf-circle-item-container:hover {
+        transform: translateY(-6px);
+    }
+
+    /* Exact Circle Button from WPF (Width=280 Height=280 CornerRadius=140 Stroke=#3A3A3A) */
+    .wpf-item-circle {
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #3A3A3A;
+        background-color: transparent;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        transition: border 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wpf-circle-item-container:hover .wpf-item-circle {
+        border-color: #D2AF6D;
+        border-width: 5px;
+    }
+
+    .wpf-item-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .wpf-circle-title {
+        margin-top: 15px;
+        font-size: 22px;
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+        max-width: 280px;
+    }
+
+    .wpf-circle-price {
+        margin-top: 4px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #D2AF6D;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    }
+
+    /* Subcategories / Dishes Header Row with Back Button */
+    .wpf-sub-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+    }
+
+    .wpf-back-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #D2AF6D;
+        color: #373334;
+        font-size: 24px;
+        font-weight: bold;
+        border: 2px solid #3A3A3A;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .wpf-back-button:hover {
+        background-color: #bfa05d;
+    }
+
+    .wpf-category-header-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    }
+
+    /* Modals (matches DetaliuPreparatView.xaml) */
+    .wpf-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 20px;
+    }
+
+    .wpf-modal-card {
+        background-color: #373334;
+        border-radius: 12px;
+        width: 500px;
+        max-width: 95vw;
+        padding: 30px;
+        position: relative;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    }
+
+    .wpf-modal-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #D2AF6D;
+        color: #373334;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wpf-modal-img-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        margin: 0 auto 15px auto;
+        overflow: hidden;
+        border: 3px solid #D2AF6D;
+    }
+
+    .wpf-modal-img-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .wpf-nutrition-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        background: rgba(0,0,0,0.25);
+        padding: 10px;
+        border-radius: 6px;
+        margin: 12px 0;
+        font-size: 13px;
+        color: white;
+    }
+
+    .wpf-nutrition-grid span {
+        color: #D2AF6D;
+        font-weight: 600;
+    }
+
+    .wpf-qty-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #D2AF6D;
+        color: #373334;
+        font-size: 20px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+    .wpf-btn-gold-full {
+        background-color: #D2AF6D;
+        color: #373334;
+        font-size: 16px;
+        font-weight: 600;
+        height: 44px;
+        width: 100%;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .wpf-btn-gold-full:hover {
+        background-color: #bfa05d;
+    }
+
+    @@media (max-width: 992px) {
+        .wpf-uniform-grid-3 {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        .wpf-hub-search-row {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .wpf-hub-logo-circle {
+            width: 140px;
+            height: 140px;
+        }
+        .wpf-search-center-box {
+            width: 100%;
+            max-width: 380px;
+        }
+    }
+</style>
+
+@code {
+    private enum MenuViewType { Hub, Categories, Dishes }
+
+    private MenuViewType currentView = MenuViewType.Hub;
+    private string currentSectionTitle = "Meniu";
+    private CategoryType? selectedType;
+
+    private UserDto? currentUser;
+    private bool isLoading = true;
+
+    private List<CategoryDto> allCategories = new();
+    private List<CategoryDto> displayedCategories = new();
+
+    private List<DishDto> allDishes = new();
+    private List<DishDto> displayedDishes = new();
+
+    private List<AllergenDto> allAllergens = new();
+    private HashSet<int> selectedAllergenIds = new();
+
+    private string searchText = string.Empty;
+    private bool showAllergensPanel = false;
+
+    private DishDto? selectedDish;
+    private int orderQuantity = 1;
+    private bool showCartModal = false;
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cart.OnChange += StateHasChanged;
+        currentUser = await AuthClient.GetCurrentUserAsync();
+
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        isLoading = true;
+        try
+        {
+            allCategories = await MenuClient.GetCategoriesAsync();
+            allAllergens = await MenuClient.GetAllergensAsync();
+            allDishes = await MenuClient.GetDishesAsync();
+            displayedDishes = allDishes;
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", $"Failed loading menu data: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void NavigateToSubcategories(CategoryType type, string title)
+    {
+        selectedType = type;
+        currentSectionTitle = title;
+        displayedCategories = allCategories.Where(c => c.Type == type).ToList();
+        currentView = MenuViewType.Categories;
+    }
+
+    private async Task NavigateToPopularDishes()
+    {
+        isLoading = true;
+        currentSectionTitle = "Cele mai populare";
+        displayedDishes = await MenuClient.GetPopularDishesAsync(6);
+        currentView = MenuViewType.Dishes;
+        isLoading = false;
+    }
+
+    private async Task NavigateToDishesByCategory(CategoryDto category)
+    {
+        isLoading = true;
+        currentSectionTitle = category.Name;
+        displayedDishes = await MenuClient.GetDishesAsync(categoryId: category.Id);
+        currentView = MenuViewType.Dishes;
+        isLoading = false;
+    }
+
+    private void HandleBackClick()
+    {
+        if (currentView == MenuViewType.Dishes && selectedType.HasValue)
+        {
+            currentView = MenuViewType.Categories;
+        }
+        else
+        {
+            currentView = MenuViewType.Hub;
+            selectedType = null;
+            currentSectionTitle = "Meniu";
+        }
+    }
+
+    private async Task ApplyFilters()
+    {
+        isLoading = true;
+        displayedDishes = await MenuClient.GetDishesAsync(
+            search: searchText,
+            excludedAllergenIds: selectedAllergenIds.ToList()
+        );
+        isLoading = false;
+    }
+
+    private async Task ToggleAllergen(int allergenId)
+    {
+        if (selectedAllergenIds.Contains(allergenId))
+        {
+            selectedAllergenIds.Remove(allergenId);
+        }
+        else
+        {
+            selectedAllergenIds.Add(allergenId);
+        }
+        await ApplyFilters();
+    }
+
+    private async Task ClearFilters()
+    {
+        searchText = string.Empty;
+        selectedAllergenIds.Clear();
+        showAllergensPanel = false;
+        await ApplyFilters();
+    }
+
+    private void OpenDishDetails(DishDto dish)
+    {
+        selectedDish = dish;
+        orderQuantity = 1;
+    }
+
+    private void CloseDishDetails()
+    {
+        selectedDish = null;
+        orderQuantity = 1;
+    }
+
+    private void AddToCart()
+    {
+        if (selectedDish != null)
+        {
+            Cart.AddToCart(selectedDish, orderQuantity);
+            CloseDishDetails();
+        }
+    }
+
+    private async Task HandleCheckout()
+    {
+        await JS.InvokeVoidAsync("alert", $"Plasarea comenzii va fi finalizata in pasul urmator! Total: {Cart.TotalPrice:0.00} lei");
+    }
+
+    private async Task HandleAddressClick()
+    {
+        await JS.InvokeVoidAsync("alert", "Selectia adresei de livrare va fi disponibila la finalizarea comenzii.");
+    }
+
+    private async Task HandleStatusClick()
+    {
+        await JS.InvokeVoidAsync("alert", "Nu exista comenzi in desfasurare.");
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthClient.LogoutAsync();
+        currentUser = null;
+        Navigation.NavigateTo("/", forceLoad: false);
+    }
+
+    public void Dispose()
+    {
+        Cart.OnChange -= StateHasChanged;
+    }
+}

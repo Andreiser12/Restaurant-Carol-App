@@ -1,0 +1,104 @@
+@page "/dashboard"
+@attribute [Authorize]
+@inject IAuthHttpClient AuthClient
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard - Restaurant Carol</PageTitle>
+
+<div class="restaurant-background-page">
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Logo" class="restaurant-logo" />
+        <div class="restaurant-header-text">
+            <h1>Restaurant Carol</h1>
+            <p>Welcome to your portal</p>
+        </div>
+    </header>
+
+    <div class="carol-card" style="max-width: 750px;">
+        <h2>User Profile</h2>
+
+        @if (user == null)
+        {
+            <p class="text-gold">Loading user profile...</p>
+        }
+        else
+        {
+            <div class="w-100 text-start px-3" style="color: #ffffff;">
+                <p><strong>Name:</strong> @user.FirstName @user.LastName</p>
+                <p><strong>Email:</strong> @user.Email</p>
+                <p><strong>Role:</strong> <span class="badge bg-warning text-dark">@user.Role</span></p>
+                @if (user.Role == UserRole.Customer)
+                {
+                    <p><strong>Loyalty Points:</strong> 🪙 @user.LoyaltyPoints points</p>
+                }
+            </div>
+
+            <hr style="border-color: var(--carol-gold); width: 100%; margin: 20px 0;" />
+
+            <!-- Role-Specific Action Hub -->
+            @if (user.Role == UserRole.Customer)
+            {
+                <h3 style="color: var(--carol-gold); font-size: 1.4rem;">Customer Services</h3>
+                <button class="btn-carol-gold" @onclick='() => Navigation.NavigateTo("/menu")'>
+                    Browse Menu & Order
+                </button>
+            }
+            else
+            {
+                <h3 style="color: var(--carol-gold); font-size: 1.4rem;">Employee Hub</h3>
+                <p class="text-muted small">Select your designated workspace:</p>
+
+                <div class="role-cards-grid">
+                    @if (user.Role == UserRole.Chef || user.Role == UserRole.Manager)
+                    {
+                        <a href="/chef" class="role-circle-card">
+                            <div class="role-circle-image">
+                                <img src="images/carol_logo.png" alt="Chef" />
+                            </div>
+                            <span class="role-circle-title">Chef Dashboard</span>
+                        </a>
+                    }
+
+                    @if (user.Role == UserRole.DeliveryDriver || user.Role == UserRole.Manager)
+                    {
+                        <a href="/delivery" class="role-circle-card">
+                            <div class="role-circle-image">
+                                <img src="images/carol_logo.png" alt="Delivery Driver" />
+                            </div>
+                            <span class="role-circle-title">Delivery Driver</span>
+                        </a>
+                    }
+
+                    @if (user.Role == UserRole.Manager)
+                    {
+                        <a href="/manager" class="role-circle-card">
+                            <div class="role-circle-image">
+                                <img src="images/carol_logo.png" alt="Manager" />
+                            </div>
+                            <span class="role-circle-title">Manager Workspace</span>
+                        </a>
+                    }
+                </div>
+            }
+
+            <button class="btn-carol-gold mt-4" style="background-color: #633333; color: #ffffff;" @onclick="HandleLogout">
+                Sign Out
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    private UserDto? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthClient.GetCurrentUserAsync();
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthClient.LogoutAsync();
+        Navigation.NavigateTo("/", forceLoad: false);
+    }
+}

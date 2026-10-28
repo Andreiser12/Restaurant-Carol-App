@@ -1,0 +1,10 @@
+/* Reset template styles to allow full-width custom layout */
+.main-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}

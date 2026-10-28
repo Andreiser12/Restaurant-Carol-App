@@ -1,0 +1,23 @@
+@page "/delivery"
+@attribute [Authorize(Roles = "DeliveryDriver")]
+
+<PageTitle>Delivery Hub - Restaurant Carol</PageTitle>
+
+<div class="restaurant-background-page">
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Logo" class="restaurant-logo" />
+        <div class="restaurant-header-text">
+            <h1>Delivery Station</h1>
+            <p>Ready Orders & Dispatch</p>
+        </div>
+    </header>
+
+    <div class="carol-card" style="max-width: 800px;">
+        <h2>🛵 Orders Ready for Delivery</h2>
+        <div class="alert alert-info w-100 text-dark">
+            <strong>Role Verified:</strong> You are logged in as <strong>DeliveryDriver</strong>. Only delivery personnel can view this page.
+        </div>
+        <p style="color: #ffffff;">Prepared orders ready for customer dispatch will be listed here.</p>
+        <a href="/dashboard" class="btn-carol-gold">Return to Dashboard</a>
+    </div>
+</div>

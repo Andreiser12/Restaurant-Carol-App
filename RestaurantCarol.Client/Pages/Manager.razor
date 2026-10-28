@@ -1,0 +1,23 @@
+@page "/manager"
+@attribute [Authorize(Roles = "Manager")]
+
+<PageTitle>Management - Restaurant Carol</PageTitle>
+
+<div class="restaurant-background-page">
+    <header class="restaurant-header">
+        <img src="images/carol_logo.png" alt="Logo" class="restaurant-logo" />
+        <div class="restaurant-header-text">
+            <h1>Executive Management</h1>
+            <p>Administration & Reports</p>
+        </div>
+    </header>
+
+    <div class="carol-card" style="max-width: 800px;">
+        <h2>👔 Manager Administration</h2>
+        <div class="alert alert-info w-100 text-dark">
+            <strong>Role Verified:</strong> You are logged in as <strong>Manager</strong>. You have full access across the entire platform.
+        </div>
+        <p style="color: #ffffff;">Dishes catalog, employee accounts, inventory levels, and order histories will be managed from this hub.</p>
+        <a href="/dashboard" class="btn-carol-gold">Return to Dashboard</a>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantCarol.Shared\RestaurantCarol.Shared.csproj" />
+    <ProjectReference Include="..\RestaurantCarol.Domain\RestaurantCarol.Domain.csproj" />
+    <ProjectReference Include="..\RestaurantCarol.Persistence\RestaurantCarol.Persistence.csproj" />
+    <ProjectReference Include="..\RestaurantCarol.Infrastructure\RestaurantCarol.Infrastructure.csproj" />
+    <ProjectReference Include="..\RestaurantCarol.Gateway\RestaurantCarol.Gateway.csproj" />
+  </ItemGroup>
+
+</Project>
